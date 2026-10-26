@@ -1,0 +1,65 @@
+{
+  "glass": [
+    "#prev-cap div"
+  ],
+  "relative": [
+    "#prev-cap div"
+  ],
+  "hide": [
+    "#tint"
+  ],
+  "tintMedia": [
+    "#frog img"
+  ],
+  "css": "#paint { filter: grayscale(1) contrast(0.9); opacity: 0.12; }\n#word { font-family: \"Paint LM\", serif; color: var(--ink); text-shadow: 0 14px 40px rgba(20,20,30,0.10); }\n.band svg { filter: drop-shadow(0 3px 6px rgba(20,20,30,0.14)); }\n#tag .t { color: var(--ink); }\n#prev-cap div { color: var(--ink); }",
+  "ambient": {
+    "blobs": [
+      [
+        1480,
+        240,
+        620
+      ],
+      [
+        380,
+        860,
+        560
+      ],
+      [
+        1200,
+        960,
+        420
+      ]
+    ]
+  },
+  "dropSlots": [],
+  "media": [
+    {
+      "name": "previous-footage",
+      "selector": "#fjord",
+      "kind": "footage",
+      "aspect": "16:9",
+      "note": "full-frame clip of the previous scene that the brush wipes away (0-2.6 s)"
+    },
+    {
+      "name": "previous-poster",
+      "selector": "#prev img",
+      "kind": "photo",
+      "aspect": "16:9",
+      "note": "poster frame under the clip"
+    },
+    {
+      "name": "painted-canvas",
+      "selector": "#paint",
+      "kind": "photo",
+      "aspect": "2040:1160",
+      "note": "painterly backdrop revealed by the brush; shown as a faint grayscale texture on white so the background stays white in every theme"
+    },
+    {
+      "name": "mascot",
+      "selector": "#frog img",
+      "kind": "avatar",
+      "aspect": "1:1",
+      "note": "round mascot badge that pops up next to the wordmark"
+    }
+  ]
+}

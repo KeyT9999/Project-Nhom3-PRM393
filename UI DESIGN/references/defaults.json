@@ -1,0 +1,65 @@
+{
+  "slug": "bs-launchmotion-cta-brush-wipe-sunset",
+  "title": "Brush Wipe Finale",
+  "mode": "light",
+  "durationSeconds": 8.6,
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "slots": {
+    "previous-caption": "Your next trip starts here",
+    "brand": "drift",
+    "tagline": "Trips planned while you sleep.",
+    "url": "drift.travel"
+  },
+  "limits": {
+    "previous-caption": 32,
+    "brand": 8,
+    "tagline": 34,
+    "url": 18
+  },
+  "notes": {
+    "previous-caption": "caption on the outgoing clip",
+    "brand": "painted wordmark (Agbalumo), paints in glyph by glyph"
+  },
+  "logos": [],
+  "media": [
+    {
+      "name": "previous-footage",
+      "selector": "#fjord",
+      "kind": "footage",
+      "aspect": "16:9",
+      "note": "full-frame clip of the previous scene that the brush wipes away (0-2.6 s)"
+    },
+    {
+      "name": "previous-poster",
+      "selector": "#prev img",
+      "kind": "photo",
+      "aspect": "16:9",
+      "note": "poster frame under the clip"
+    },
+    {
+      "name": "painted-canvas",
+      "selector": "#paint",
+      "kind": "photo",
+      "aspect": "2040:1160",
+      "note": "painterly backdrop revealed by the brush; shown as a faint grayscale texture on white so the background stays white in every theme"
+    },
+    {
+      "name": "mascot",
+      "selector": "#frog img",
+      "kind": "avatar",
+      "aspect": "1:1",
+      "note": "round mascot badge that pops up next to the wordmark"
+    }
+  ],
+  "themes": [
+    "blue",
+    "mono",
+    "orange"
+  ],
+  "fonts": {
+    "display": "Smiley Sans",
+    "ui": "Inter"
+  }
+}

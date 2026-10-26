@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1920, height=1080" />
+<title>Brush Wipe Finale</title>
+<script src="vendor/gsap.min.js"></script>
+<style>
+@font-face { font-family: "Inter LM"; src: url("assets/inter.woff2") format("woff2"); font-weight: 100 900; }
+@font-face { font-family: "Paint LM"; src: url("assets/agbalumo.ttf") format("truetype"); font-weight: 400; }
+:root {
+  --bg: #F4F6FA; --surface: #FFFFFF; --line: #E3E8F0; --ink: #0B1220; --muted: #667085; --faint: #98A2B3;
+  --blue: #2F6BFF; --b600: #1D4ED8; --b700: #1638A8;
+  --font: "Inter LM", Inter, system-ui, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+#main { position: relative; width: 1920px; height: 1080px; overflow: hidden; font-family: var(--font); color: var(--ink);
+  background: var(--bg); -webkit-font-smoothing: antialiased; }
+.abs { position: absolute; }
+.layer { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+
+/* new scene: painted sky */
+#paint { left: -60px; top: -40px; width: 2040px; height: 1160px; object-fit: cover; }
+#tint { background: radial-gradient(1200px 700px at 50% 42%, rgba(234,241,255,0.28), transparent 70%), linear-gradient(180deg, rgba(22,56,168,0.10), rgba(22,56,168,0.25)); }
+#word { left: 0; top: 196px; width: 1920px; text-align: center; font-family: "Paint LM", serif; font-size: 360px; line-height: 1.1; color: #FFFFFF;
+  text-shadow: 0 10px 40px rgba(16,32,96,0.35); letter-spacing: -0.01em; }
+#word span { display: inline-block; }
+.band { left: 0; width: 1920px; display: flex; justify-content: center; }
+.band .in { position: relative; }
+.band svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.band .t { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; letter-spacing: -0.02em; white-space: nowrap; }
+#tag { top: 642px; }
+#tag .in { width: 1060px; height: 124px; }
+#tag .t { font-size: 54px; font-weight: 600; color: #0B1A3A; }
+#url { top: 790px; }
+#url .in { width: 500px; height: 84px; }
+#url .t { font-size: 34px; font-weight: 500; color: var(--b700); }
+#frog { left: 1366px; top: 300px; width: 184px; height: 184px; opacity: 0; }
+#frog img { width: 100%; height: 100%; border-radius: 50%; display: block; box-shadow: 0 0 0 5px #F7F9FC, 0 14px 30px -10px rgba(16,32,96,0.5); }
+
+/* previous scene, wiped away by the brush */
+#prev { background: #0B1220; }
+#prev img, #prev video { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; }
+#prev-cap { left: 0; top: 820px; width: 1920px; display: flex; justify-content: center; }
+#prev-cap div { height: 92px; padding: 0 40px; border-radius: 999px; background: rgba(255,255,255,0.92); font-size: 40px; font-weight: 600; letter-spacing: -0.025em;
+  display: flex; align-items: center; box-shadow: 0 20px 50px -20px rgba(0,0,0,0.5); }
+#fringe { background: rgba(247,249,252,0.85); }
+</style>
+</head>
+<body>
+<div id="main" data-composition-id="main" data-start="0" data-duration="8.6" data-width="1920" data-height="1080">
+  <img id="paint" class="abs" src="assets/painting.webp" alt="" />
+  <div id="tint" class="layer"></div>
+
+  <div id="word" class="abs" data-slot="brand">drift</div>
+  <div id="frog" class="abs"><img src="assets/frog.webp" alt="" /></div>
+  <div id="tag" class="band abs"><div class="in"><svg id="tag-svg" viewBox="0 0 1060 124" preserveAspectRatio="none"></svg><div class="t" data-slot="tagline">Trips planned while you sleep.</div></div></div>
+  <div id="url" class="band abs"><div class="in"><svg id="url-svg" viewBox="0 0 500 84" preserveAspectRatio="none"></svg><div class="t" data-slot="url">drift.travel</div></div></div>
+
+  <div id="prev" class="layer">
+    <img src="assets/fjord-poster.jpg" alt="" />
+    <video id="fjord" class="clip" src="assets/fjord.mp4" data-start="0" data-duration="2.6" data-track-index="0" muted playsinline></video>
+    <div id="prev-cap" class="abs"><div data-slot="previous-caption">Your next trip starts here</div></div>
+  </div>
+  <div id="fringe" class="layer"></div>
+</div>
+
+<script>
+const DUR = 8.6;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const tl = gsap.timeline({ paused: true });
+window.__timelines = window.__timelines || {};
+window.__timelines["main"] = tl;
+tl.set({}, {}, DUR);
+
+// deterministic noise
+let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+// ragged bristle edge: x offset per y sample
+const EDGE = [];
+for (let y = -20; y <= 1100; y += 16) EDGE.push([y, (rnd() - 0.5) * 50 + (rnd() < 0.18 ? -60 - rnd() * 90 : 0) + Math.sin(y / 140) * 40]);
+const brush = { e: 2200 };
+function drawBrush() {
+  // the old scene keeps everything left of the edge; the brush sweeps leftward across the frame (with a slight slant)
+  const pts = EDGE.map(([y, j]) => `${(brush.e + j + (y - 540) * 0.22).toFixed(1)}px ${y}px`);
+  $('#prev').style.clipPath = `polygon(-20px -20px, ${pts.join(', ')}, -20px 1100px)`;
+  const fr = EDGE.map(([y, j]) => `${(brush.e + j + (y - 540) * 0.22).toFixed(1)}px ${y}px`);
+  const back = EDGE.slice().reverse().map(([y, j]) => `${(brush.e + j * 0.6 + 26 + (y - 540) * 0.22).toFixed(1)}px ${y}px`);
+  $('#fringe').style.clipPath = `polygon(${fr.join(', ')}, ${back.join(', ')})`;
+}
+drawBrush();
+
+// ragged paint swipe shapes for the bands
+function swipe(svg, w, h) {
+  const top = [], bot = [];
+  for (let x = 0; x <= w; x += 20) { top.push(`${x},${(4 + rnd() * 10).toFixed(1)}`); bot.push(`${x},${(h - 4 - rnd() * 10).toFixed(1)}`); }
+  const left = `${(rnd() * 16).toFixed(1)},${h * 0.5}`, right = `${(w - rnd() * 16).toFixed(1)},${h * 0.5}`;
+  svg.innerHTML = `<polygon fill="#F7F9FC" points="${left} ${top.join(' ')} ${right} ${bot.reverse().join(' ')}"/>` +
+    Array.from({ length: 7 }, () => `<rect x="${(rnd() * w * 0.9).toFixed(0)}" y="${(10 + rnd() * (h - 24)).toFixed(0)}" width="${(60 + rnd() * 200).toFixed(0)}" height="2" fill="#E3E8F0"/>`).join('');
+}
+swipe($('#tag-svg'), 1060, 124);
+swipe($('#url-svg'), 500, 84);
+
+// ── S0 · 0–1.4 · the previous scene plays
+tl.fromTo('#prev-cap div', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' }, 0.15);
+tl.fromTo('#prev img', { scale: 1.04 }, { scale: 1.1, duration: 2.6, ease: 'none' }, 0);
+
+// ── S1 · 1.35–2.35 · a ragged brush sweeps it away to the left
+tl.fromTo(brush, { e: 2200 }, { e: -620, duration: 1.0, ease: 'expo.inOut', onUpdate: drawBrush, immediateRender: false }, 1.35);
+tl.set(['#prev', '#fringe'], { visibility: 'hidden' }, 2.4);
+tl.fromTo('#paint', { scale: 1.12, x: 60 }, { scale: 1.0, x: 0, duration: 7.2, ease: 'power2.out' }, 1.35);
+
+// ── S2 · 2.2–3.4 · the wordmark paints in glyph by glyph
+const word = $('#word'); const txt = word.textContent; word.textContent = '';
+const glyphs = [...txt].map(ch => { const s = document.createElement('span'); s.textContent = ch; word.append(s); return s; });
+glyphs.forEach((g, i) => {
+  const t = 2.2 + i * 0.16;
+  tl.fromTo(g, { clipPath: 'inset(-20% 100% -20% 0%)', y: 18, rotation: -3 }, { clipPath: 'inset(-20% -10% -20% 0%)', y: 0, rotation: 0, duration: 0.42, ease: 'power2.out' }, t);
+});
+tl.fromTo('#word', { scale: 1.04 }, { scale: 1, duration: 1.6, ease: 'expo.out', transformOrigin: '50% 60%' }, 2.2);
+
+// ── S3 · 3.4–4.6 · two paint swipes wipe on left to right, carrying the copy
+tl.fromTo('#tag .in', { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, ease: 'expo.inOut' }, 3.35);
+tl.fromTo('#tag .in', { x: -30 }, { x: 0, duration: 0.9, ease: 'expo.out' }, 3.35);
+tl.fromTo('#url .in', { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'expo.inOut' }, 3.85);
+tl.fromTo('#url .in', { x: -20 }, { x: 0, duration: 0.8, ease: 'expo.out' }, 3.85);
+
+// ── S4 · 4.6–8.6 · the frog pops up behind the tagline, hops, then everything holds
+tl.fromTo('#frog', { opacity: 0, y: 90, scale: 0.4 }, { opacity: 1, y: 0, scale: 1, duration: 0.55, ease: 'back.out(3)' }, 4.65);
+tl.to('#frog', { rotation: -10, duration: 0.18, ease: 'power2.out' }, 5.25);
+tl.to('#frog', { rotation: 6, duration: 0.22, ease: 'power2.inOut' }, 5.43);
+tl.to('#frog', { rotation: 0, duration: 0.3, ease: 'back.out(3)' }, 5.65);
+tl.to('#frog', { y: -36, duration: 0.22, ease: 'power2.out' }, 6.4);
+tl.to('#frog', { y: 0, duration: 0.4, ease: 'bounce.out' }, 6.62);
+tl.to('#frog', { scaleY: 0.86, scaleX: 1.08, duration: 0.08, ease: 'power2.out', transformOrigin: '50% 100%' }, 7.0);
+tl.to('#frog', { scaleY: 1, scaleX: 1, duration: 0.3, ease: 'back.out(3)', transformOrigin: '50% 100%' }, 7.08);
+// slow breathing on the type
+tl.fromTo('#word', { y: 0 }, { y: -8, duration: 3.8, ease: 'sine.inOut' }, 4.8);
+</script>
+</body>
+</html>
