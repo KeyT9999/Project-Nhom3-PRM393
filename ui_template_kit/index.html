@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple Store Pro – Chuyên Gia iPhone 16 Pro Max Chính Hãng (Liquid-Glass Edition)</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ==========================================================================
+       AMBIENT LIQUID MESH GRADIENT CANVAS (THE ESSENTIAL LIQUID-GLASS BACKDROP)
+       Moving colored light blobs shine through translucent glass cards.
+       ========================================================================== -->
+  <div class="liquid-ambient-canvas" aria-hidden="true">
+    <div class="liquid-orb orb-1"></div>
+    <div class="liquid-orb orb-2"></div>
+    <div class="liquid-orb orb-3"></div>
+    <div class="liquid-orb orb-4"></div>
+    <div id="liquidCursorGlow" class="liquid-cursor-glow"></div>
+  </div>
+
+  <div class="page-content-wrapper">
+
+    <!-- ==========================================================================
+         0. MASTER TOP CONTROL BAR (VIEW SWITCHER & LIQUID-GLASS CONTROLS)
+         ========================================================================== -->
+    <div class="kit-control-bar">
+      <div class="kit-title-group">
+        <div class="kit-apple-logo"></div>
+        <strong>Apple Store Pro Studio</strong>
+        <span class="kit-badge">Slate Navy: #243342</span>
+        <span class="kit-badge">Apple Intelligence Ready</span>
+        <span class="kit-badge" style="background: rgba(0, 113, 227, 0.25); color: #93C5FD; border-color: rgba(96, 165, 250, 0.4);">💧 Liquid-Glass Refraction Active</span>
+      </div>
+
+      <div class="kit-actions">
+        <button id="btnKitLanding" class="kit-tab-btn active">🌐 iPhone Flagship Store</button>
+        <button id="btnKitMobile" class="kit-tab-btn">📱 Mobile App Simulator</button>
+        <button id="btnKitTokens" class="kit-tab-btn">🎨 Design Tokens & Glass Lab</button>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         VIEW 1: IPHONE FLAGSHIP STORE (LIQUID-GLASS WITH REAL PRODUCT PHOTOGRAPHY)
+         ========================================================================== -->
+    <div id="view_landing" class="view-container active">
+
+      <!-- 1. Floating Liquid-Glass Navbar -->
+      <header class="nexora-navbar">
+        <div class="container">
+          <div class="navbar-floating-glass liquid-glass-navbar">
+            <!-- Apple Brand Left -->
+            <a href="#" class="nav-brand">
+              <svg width="20" height="24" viewBox="0 0 170 170" fill="currentColor">
+                <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.69-3.04-7.69-7.85-12-14.43-5.6-8.58-10.05-18.49-13.34-29.74-3.29-11.24-4.94-22.1-4.94-32.57 0-14.89 3.86-27.42 11.59-37.58 7.73-10.16 17.51-15.34 29.34-15.55 4.36 0 9.4 1.15 15.11 3.44 5.72 2.29 9.46 3.49 11.23 3.59 1.57-.1 5.37-1.35 11.41-3.74 6.04-2.39 11.02-3.44 14.93-3.17 13.92.83 24.63 5.75 32.13 14.75-12.18 7.37-18.15 17.58-17.91 30.64.24 10.16 4.19 18.66 11.85 25.5 3.69 3.35 7.91 5.86 12.66 7.53-2.61 7.6-5.87 15.42-9.78 23.46zM119.22 33.15c0-7.39 2.66-14.4 7.98-21.03 5.32-6.63 11.97-10.87 19.95-12.12.22 1.09.33 2.18.33 3.26 0 7.39-2.77 14.51-8.31 21.36-5.54 6.85-12.3 11.19-20.27 12.02-.22-1.09-.33-2.18-.33-3.49z"/>
+              </svg>
+              <span>Apple Store</span>
+            </a>
+
+            <!-- Menu Center -->
+            <nav>
+              <ul class="nav-menu">
+                <li><a href="#hero" class="nav-link">iPhone 16 Pro</a></li>
+                <li><a href="#lineup" class="nav-link">Dòng iPhone</a></li>
+                <li><a href="#compare" class="nav-link">So Sánh</a></li>
+                <li><a href="#features" class="nav-link">Tính Năng</a></li>
+                <li><a href="#accessories" class="nav-link">Phụ Kiện</a></li>
+              </ul>
+            </nav>
+
+            <!-- Right Actions -->
+            <div class="nav-right">
+              <!-- Search Input -->
+              <div class="nav-search-liquid">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" placeholder="Tìm kiếm iPhone, phụ kiện...">
+              </div>
+
+              <!-- Account Profile -->
+              <button class="nav-icon-btn" title="Tài khoản Apple ID">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </button>
+
+              <!-- Shopping Bag with Badge -->
+              <button class="nav-icon-btn" title="Túi hàng">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span id="navCartCount" class="cart-counter-badge" style="display: none;">0</span>
+              </button>
+
+              <!-- CTA Button -->
+              <button class="btn-pill-dark trigger-buy-action">Đặt Hàng Ngay</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- 2. Hero Section (3-Column Asymmetric Grid per Test_UI.md with Real Photography) -->
+      <section id="hero" class="nexora-hero-section">
+        <div class="container hero-grid">
+          
+          <!-- Cột Trái: Text, Color Finish, Capacity Selector & Buy Action -->
+          <div class="hero-content-col">
+            <span class="eyebrow-text">APPLE INTELLIGENCE ĐÃ SẴN SÀNG</span>
+            <h1 class="hero-h1">
+              iPhone 16 Pro Max<br>
+              Titanium Siêu Bền.<br>
+              Đẳng Cấp Pro.
+            </h1>
+            <p class="hero-desc">
+              Thiết kế bằng titan cấp 5 hàng không vũ trụ với viền màn hình mỏng nhất từng có trên iPhone. Nút Điều Khiển Camera hoàn toàn mới và chip A18 Pro định hình tương lai.
+            </p>
+
+            <!-- Price Display -->
+            <div class="hero-price-tag">
+              <span>Giá từ:</span> <strong id="heroPriceValue">34.990.000 ₫</strong>
+            </div>
+
+            <!-- Finish Color Swatch Selector -->
+            <div class="hero-finish-selector">
+              <span id="heroFinishLabel" class="finish-label">Màu sắc: Titan Sa Mạc (Desert)</span>
+              <div class="color-dots-group">
+                <button class="color-circle-btn selected" data-finish="desert" title="Titan Sa Mạc">
+                  <div class="color-dot-fill" style="background: #D4C8B8;"></div>
+                </button>
+                <button class="color-circle-btn" data-finish="natural" title="Titan Tự Nhiên">
+                  <div class="color-dot-fill" style="background: #9C968F;"></div>
+                </button>
+                <button class="color-circle-btn" data-finish="white" title="Titan Trắng">
+                  <div class="color-dot-fill" style="background: #F5F5F7; border: 1px solid #D1D5DB;"></div>
+                </button>
+                <button class="color-circle-btn" data-finish="black" title="Titan Đen">
+                  <div class="color-dot-fill" style="background: #28282B;"></div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Capacity Selector (256GB, 512GB, 1TB) -->
+            <div class="storage-selector-group">
+              <button class="storage-pill active" data-capacity="256GB">256GB</button>
+              <button class="storage-pill" data-capacity="512GB">512GB</button>
+              <button class="storage-pill" data-capacity="1TB">1TB</button>
+            </div>
+
+            <div class="hero-cta-actions">
+              <button class="btn-pill-dark trigger-buy-action">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                Mua Ngay
+              </button>
+              <a href="#compare" class="link-learn-more">
+                So sánh cấu hình
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Cột Giữa: Real Studio Product Photography (iPhone on Organic Rock Pedestal) -->
+          <div class="hero-phone-stage">
+            <div class="rock-pedestal">
+              <img id="heroPhoneRealImage" 
+                   src="images/hero_iphone_rock.jpg" 
+                   alt="Apple iPhone 16 Pro Max trên bệ đá tự nhiên" 
+                   class="hero-phone-real-img"
+                   loading="eager">
+              <div class="pedestal-rock-shadow"></div>
+            </div>
+          </div>
+
+          <!-- Cột Phải: 4 Vertical Pro Feature Cards (Genuine Liquid-Glass) -->
+          <div class="hero-features-list">
+            <!-- Feature 1: Camera Fusion & Camera Control -->
+            <div class="liquid-glass-card feature-item-card">
+              <div class="feature-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
+              <div class="feature-info">
+                <h4>Camera 48MP Fusion & Nút Mới</h4>
+                <p>Nút Điều Khiển Camera cảm ứng lực hoàn toàn mới cùng cảm biến quad-pixel thế hệ 2.</p>
+              </div>
+            </div>
+
+            <!-- Feature 2: Display ProMotion 120Hz -->
+            <div class="liquid-glass-card feature-item-card">
+              <div class="feature-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg>
+              </div>
+              <div class="feature-info">
+                <h4>Super Retina XDR 6.9" 120Hz</h4>
+                <p>Màn hình OLED viền siêu mỏng nhất lịch sử Apple, độ sáng đỉnh 2.000 nit ngoài trời.</p>
+              </div>
+            </div>
+
+            <!-- Feature 3: Chip Apple A18 Pro -->
+            <div class="liquid-glass-card feature-item-card">
+              <div class="feature-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+              </div>
+              <div class="feature-info">
+                <h4>Chip Apple A18 Pro 3nm</h4>
+                <p>Neural Engine 16 lõi xử lý Apple Intelligence trực tiếp trên thiết bị, ray tracing GPU 6 lõi.</p>
+              </div>
+            </div>
+
+            <!-- Feature 4: Battery Life -->
+            <div class="liquid-glass-card feature-item-card">
+              <div class="feature-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="10" x="2" y="7" rx="2" ry="2"/><line x1="22" x2="22" y1="11" y2="13"/></svg>
+              </div>
+              <div class="feature-info">
+                <h4>Thời Lượng Pin Đến 33 Giờ</h4>
+                <p>Kỷ lục pin bền bỉ nhất trên iPhone từ trước tới nay, sạc nhanh MagSafe công suất 25W.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 3. Product Lineup Grid (Real Catalog Photography for All 4 Models) -->
+      <section id="lineup" class="section-lineup">
+        <div class="container">
+          <div class="section-head-between">
+            <div>
+              <span class="eyebrow-text">DÒNG SẢN PHẨM MỚI NHẤT</span>
+              <h2>Khám Phá Các Phiên Bản iPhone 16</h2>
+            </div>
+            <a href="#compare" class="link-view-all">
+              Xem toàn bộ bảng so sánh
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+            </a>
+          </div>
+
+          <div class="lineup-cards-grid">
+            <!-- Model 1: iPhone 16 Pro Max -->
+            <div class="liquid-glass-card lineup-card" onclick="selectModelFromLineup('iPhone 16 Pro Max', '34.990.000 ₫', 'images/lineup_16_promax.jpg', 'desert')">
+              <div class="lineup-thumb-area">
+                <img src="images/lineup_16_promax.jpg" alt="Apple iPhone 16 Pro Max Desert Titanium" loading="lazy">
+              </div>
+              <h3 class="lineup-name">iPhone 16 Pro Max</h3>
+              <p class="lineup-tagline">Màn hình 6.9" lớn nhất, khung titan cấp 5, chip A18 Pro và camera telephoto 5x.</p>
+              <div class="lineup-bottom-row">
+                <span class="lineup-price">Từ 34.990.000 ₫</span>
+                <button class="circle-arrow-btn" title="Chọn mua">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Model 2: iPhone 16 Pro -->
+            <div class="liquid-glass-card lineup-card" onclick="selectModelFromLineup('iPhone 16 Pro', '28.990.000 ₫', 'images/lineup_16_pro.jpg', 'natural')">
+              <div class="lineup-thumb-area">
+                <img src="images/lineup_16_pro.jpg" alt="Apple iPhone 16 Pro Natural Titanium" loading="lazy">
+              </div>
+              <h3 class="lineup-name">iPhone 16 Pro</h3>
+              <p class="lineup-tagline">Màn hình 6.3" ProMotion 120Hz, hiệu năng A18 Pro toàn năng trong kích thước nhỏ gọn.</p>
+              <div class="lineup-bottom-row">
+                <span class="lineup-price">Từ 28.990.000 ₫</span>
+                <button class="circle-arrow-btn" title="Chọn mua">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Model 3: iPhone 16 Plus -->
+            <div class="liquid-glass-card lineup-card" onclick="selectModelFromLineup('iPhone 16 Plus', '25.990.000 ₫', 'images/lineup_16_plus.jpg', 'teal')">
+              <div class="lineup-thumb-area">
+                <img src="images/lineup_16_plus.jpg" alt="Apple iPhone 16 Plus Teal Green" loading="lazy">
+              </div>
+              <h3 class="lineup-name">iPhone 16 Plus</h3>
+              <p class="lineup-tagline">Màn hình 6.7" rộng rãi, thời lượng pin cả ngày và cụm camera dọc sắc nét.</p>
+              <div class="lineup-bottom-row">
+                <span class="lineup-price">Từ 25.990.000 ₫</span>
+                <button class="circle-arrow-btn" title="Chọn mua">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Model 4: iPhone 16 -->
+            <div class="liquid-glass-card lineup-card" onclick="selectModelFromLineup('iPhone 16', '21.990.000 ₫', 'images/lineup_16_standard.jpg', 'ultramarine')">
+              <div class="lineup-thumb-area">
+                <img src="images/lineup_16_standard.jpg" alt="Apple iPhone 16 Ultramarine Blue" loading="lazy">
+              </div>
+              <h3 class="lineup-name">iPhone 16</h3>
+              <p class="lineup-tagline">Màn hình 6.1" nhỏ gọn, chip A18, Nút Tác Vụ và Nút Điều Khiển Camera tiện lợi.</p>
+              <div class="lineup-bottom-row">
+                <span class="lineup-price">Từ 21.990.000 ₫</span>
+                <button class="circle-arrow-btn" title="Chọn mua">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Specification Comparison Table with Real Mini Thumbnails -->
+      <section id="compare" class="section-comparison">
+        <div class="container">
+          <div class="section-head-between">
+            <div>
+              <span class="eyebrow-text">SO SÁNH CẤU HÌNH CHI TIẾT</span>
+              <h2>iPhone Nào Phù Hợp Nhất Với Bạn?</h2>
+            </div>
+          </div>
+
+          <div class="liquid-glass-card comparison-table-wrapper">
+            <table class="compare-table">
+              <thead>
+                <tr>
+                  <th class="col-label">Thông Số Kỹ Thuật</th>
+                  <th class="model-header-cell">
+                    <div class="model-header-flex">
+                      <div class="model-mini-thumb">
+                        <img src="images/lineup_16_promax.jpg" alt="iPhone 16 Pro Max" class="model-mini-real-img" style="width: 32px; height: 44px; object-fit: contain;">
+                      </div>
+                      <div>
+                        <strong>16 Pro Max</strong><br>
+                        <small style="color: var(--brand-700); font-weight: 700;">Từ 34.990.000 ₫</small>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="model-header-cell">
+                    <div class="model-header-flex">
+                      <div class="model-mini-thumb">
+                        <img src="images/lineup_16_pro.jpg" alt="iPhone 16 Pro" class="model-mini-real-img" style="width: 32px; height: 44px; object-fit: contain;">
+                      </div>
+                      <div>
+                        <strong>16 Pro</strong><br>
+                        <small style="color: var(--brand-700); font-weight: 700;">Từ 28.990.000 ₫</small>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="model-header-cell">
+                    <div class="model-header-flex">
+                      <div class="model-mini-thumb">
+                        <img src="images/lineup_16_plus.jpg" alt="iPhone 16 Plus" class="model-mini-real-img" style="width: 32px; height: 44px; object-fit: contain;">
+                      </div>
+                      <div>
+                        <strong>16 Plus</strong><br>
+                        <small style="color: var(--brand-700); font-weight: 700;">Từ 25.990.000 ₫</small>
+                      </div>
+                    </div>
+                  </th>
+                  <th class="model-header-cell">
+                    <div class="model-header-flex">
+                      <div class="model-mini-thumb">
+                        <img src="images/lineup_16_standard.jpg" alt="iPhone 16" class="model-mini-real-img" style="width: 32px; height: 44px; object-fit: contain;">
+                      </div>
+                      <div>
+                        <strong>iPhone 16</strong><br>
+                        <small style="color: var(--brand-700); font-weight: 700;">Từ 21.990.000 ₫</small>
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="col-label">Màn Hình & Tần Số Quét</td>
+                  <td class="spec-cell-text">6.9" Super Retina XDR<br><strong>ProMotion 120Hz</strong> Always-On</td>
+                  <td class="spec-cell-text">6.3" Super Retina XDR<br><strong>ProMotion 120Hz</strong> Always-On</td>
+                  <td class="spec-cell-text">6.7" Super Retina XDR<br>Tần số quét chuẩn 60Hz</td>
+                  <td class="spec-cell-text">6.1" Super Retina XDR<br>Tần số quét chuẩn 60Hz</td>
+                </tr>
+                <tr>
+                  <td class="col-label">Chip Xử Lý & Đồ Họa</td>
+                  <td class="spec-cell-text"><strong>Apple A18 Pro (3nm)</strong><br>GPU 6 lõi Ray Tracing</td>
+                  <td class="spec-cell-text"><strong>Apple A18 Pro (3nm)</strong><br>GPU 6 lõi Ray Tracing</td>
+                  <td class="spec-cell-text"><strong>Apple A18 (3nm)</strong><br>GPU 5 lõi</td>
+                  <td class="spec-cell-text"><strong>Apple A18 (3nm)</strong><br>GPU 5 lõi</td>
+                </tr>
+                <tr>
+                  <td class="col-label">Hệ Thống Camera</td>
+                  <td class="spec-cell-text"><strong>3 Camera Pro 48MP:</strong><br>Fusion + Ultra Wide 48MP<br>+ <strong>Telephoto 5x</strong></td>
+                  <td class="spec-cell-text"><strong>3 Camera Pro 48MP:</strong><br>Fusion + Ultra Wide 48MP<br>+ <strong>Telephoto 5x</strong></td>
+                  <td class="spec-cell-text"><strong>Hệ Thống Camera Kép:</strong><br>Fusion 48MP<br>+ Ultra Wide 12MP (2x)</td>
+                  <td class="spec-cell-text"><strong>Hệ Thống Camera Kép:</strong><br>Fusion 48MP<br>+ Ultra Wide 12MP (2x)</td>
+                </tr>
+                <tr>
+                  <td class="col-label">Nút Điều Khiển Camera</td>
+                  <td class="spec-cell-text">Có (Cảm ứng lực & trượt)</td>
+                  <td class="spec-cell-text">Có (Cảm ứng lực & trượt)</td>
+                  <td class="spec-cell-text">Có (Cảm ứng lực & trượt)</td>
+                  <td class="spec-cell-text">Có (Cảm ứng lực & trượt)</td>
+                </tr>
+                <tr>
+                  <td class="col-label">Thời Lượng Xem Video</td>
+                  <td class="spec-cell-text"><strong>Lên đến 33 giờ</strong> (Pin khủng nhất)</td>
+                  <td class="spec-cell-text">Lên đến 27 giờ</td>
+                  <td class="spec-cell-text">Lên đến 27 giờ</td>
+                  <td class="spec-cell-text">Lên đến 22 giờ</td>
+                </tr>
+                <tr>
+                  <td class="col-label">Chất Liệu Khung Viền</td>
+                  <td class="spec-cell-text">Titan cấp 5 hàng không vũ trụ</td>
+                  <td class="spec-cell-text">Titan cấp 5 hàng không vũ trụ</td>
+                  <td class="spec-cell-text">Nhôm chuẩn hàng không pha màu</td>
+                  <td class="spec-cell-text">Nhôm chuẩn hàng không pha màu</td>
+                </tr>
+                <tr>
+                  <td class="col-label">Cổng Kết Nối & Tốc Độ</td>
+                  <td class="spec-cell-text">USB-C hỗ trợ <strong>USB 3 (10Gb/s)</strong></td>
+                  <td class="spec-cell-text">USB-C hỗ trợ <strong>USB 3 (10Gb/s)</strong></td>
+                  <td class="spec-cell-text">USB-C hỗ trợ USB 2 (480Mb/s)</td>
+                  <td class="spec-cell-text">USB-C hỗ trợ USB 2 (480Mb/s)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Split Feature Banners with Real Alpine Landscape & Macro Lens -->
+      <section id="features" class="section-feature-split">
+        <div class="container feature-split-grid">
+          
+          <!-- Banner Trái: Real Alpine Mountain Landscape & Video 4K 120 fps -->
+          <div class="camera-showcase-banner">
+            <img src="images/scenic_mountain_banner.jpg" class="camera-scenic-bg" alt="Dãy núi Alps chụp bằng iPhone 16 Pro Max" loading="lazy">
+            
+            <div class="camera-content-box">
+              <span class="eyebrow-text" style="color: #60A5FA;">QUAY PHIM CHUẨN ĐIỆN ẢNH</span>
+              <h3>Độ Chi Tiết Tuyệt Đối Trong Từng Khoảnh Khắc</h3>
+              <p>Quay video 4K 120 fps Dolby Vision đầu tiên trên thế giới. Bốn micrô chuẩn phòng thu giảm thiểu tiếng gió và thu âm không gian Spatial Audio đỉnh cao.</p>
+              <button class="btn-pill-white trigger-buy-action">Khám Phá Cụm Camera</button>
+            </div>
+
+            <!-- Real Macro Camera Module Island Element -->
+            <div class="camera-close-up-lens">
+              <img src="images/camera_macro_lens.jpg" class="camera-macro-real-img" alt="Cận cảnh cụm camera 48MP Pro Max" loading="lazy">
+            </div>
+          </div>
+
+          <!-- Banner Phải: Sức Mạnh Apple A18 Pro & Apple Intelligence -->
+          <div class="liquid-glass-card performance-power-card">
+            <div class="perf-head">
+              <span class="eyebrow-text">KIẾN TRÚC 3NM THẾ HỆ THỨ 2</span>
+              <h3>Sức Mạnh Vượt Xa Giới Hạn Cùng A18 Pro</h3>
+              <p>Băng thông bộ nhớ tăng 17%, GPU 6 lõi nhanh hơn 20% so với A17 Pro và hỗ trợ Ray Tracing cấp phần cứng cho các tựa game bom tấn AAA.</p>
+            </div>
+
+            <div class="perf-badges-2x2">
+              <div class="perf-mini-card">
+                <div class="perf-mini-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/></svg>
+                </div>
+                <div class="perf-mini-info">
+                  <strong>16-Core Neural</strong>
+                  <span>35 nghìn tỷ phép tính/giây</span>
+                </div>
+              </div>
+
+              <div class="perf-mini-card">
+                <div class="perf-mini-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <div class="perf-mini-info">
+                  <strong>6-Core GPU</strong>
+                  <span>Ray Tracing nhanh gấp 2x</span>
+                </div>
+              </div>
+
+              <div class="perf-mini-card">
+                <div class="perf-mini-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <div class="perf-mini-info">
+                  <strong>Apple Intelligence</strong>
+                  <span>AI cá nhân hóa an toàn</span>
+                </div>
+              </div>
+
+              <div class="perf-mini-card">
+                <div class="perf-mini-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                </div>
+                <div class="perf-mini-info">
+                  <strong>Tiết Kiệm Pin 20%</strong>
+                  <span>Tản nhiệt bằng titan</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 6. Official Apple Accessories & Testimonial Section with Real Product Photos -->
+      <section id="accessories" class="section-acc-review">
+        <div class="container acc-review-grid">
+          
+          <!-- Khối Trái: Phụ Kiện Apple Chính Hãng (Real Photos) -->
+          <div>
+            <span class="eyebrow-text">HỆ SINH THÁI ĐỒNG BỘ</span>
+            <h2 style="font-size: 26px; font-weight: 800; color: var(--ink); margin-top: 4px;">Phụ Kiện Chính Hãng Cho iPhone 16</h2>
+
+            <div class="acc-subgrid">
+              <!-- Item 1: AirPods Pro 2 -->
+              <div class="liquid-glass-card acc-item-card" onclick="addAccessoryToCart('AirPods Pro 2 USB-C', '6.190.000 ₫')">
+                <div class="acc-thumb-box">
+                  <img src="images/acc_airpods_pro.jpg" alt="Apple AirPods Pro 2 USB-C" loading="lazy">
+                </div>
+                <div class="acc-name">AirPods Pro 2 (USB-C)</div>
+                <div class="acc-price">6.190.000 ₫</div>
+              </div>
+
+              <!-- Item 2: MagSafe Clear Case -->
+              <div class="liquid-glass-card acc-item-card" onclick="addAccessoryToCart('Ốp lưng MagSafe Trong Suốt', '1.490.000 ₫')">
+                <div class="acc-thumb-box">
+                  <img src="images/acc_clear_case.jpg" alt="Ốp lưng MagSafe Trong Suốt" loading="lazy">
+                </div>
+                <div class="acc-name">Ốp Trong Suốt MagSafe</div>
+                <div class="acc-price">1.490.000 ₫</div>
+              </div>
+
+              <!-- Item 3: MagSafe Charger 25W -->
+              <div class="liquid-glass-card acc-item-card" onclick="addAccessoryToCart('Bộ Sạc MagSafe 25W', '1.190.000 ₫')">
+                <div class="acc-thumb-box">
+                  <img src="images/acc_magsafe_charger.jpg" alt="Bộ Sạc MagSafe 25W Nhanh" loading="lazy">
+                </div>
+                <div class="acc-name">Sạc MagSafe Nhanh 25W</div>
+                <div class="acc-price">1.190.000 ₫</div>
+              </div>
+
+              <!-- Item 4: FineWoven Wallet -->
+              <div class="liquid-glass-card acc-item-card" onclick="addAccessoryToCart('Ví Da FineWoven MagSafe', '1.690.000 ₫')">
+                <div class="acc-thumb-box">
+                  <img src="images/acc_finewoven_wallet.jpg" alt="Ví Da MagSafe FineWoven" loading="lazy">
+                </div>
+                <div class="acc-name">Ví MagSafe FineWoven</div>
+                <div class="acc-price">1.690.000 ₫</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Khối Phải: Đánh Giá Của Khách Hàng -->
+          <div class="liquid-glass-card testimonial-card">
+            <div>
+              <div class="stars-row">★★★★★</div>
+              <p id="reviewQuoteText" class="review-quote">
+                "Khung viền Titan Sa Mạc cầm nhẹ và đầm tay bất ngờ. Nút Camera Control mới mở camera tức thì, quay video 4K 120fps đẹp như phim rạp. Thật sự xứng đáng với đẳng cấp Pro Max!"
+              </p>
+            </div>
+
+            <div class="review-author-row">
+              <div class="author-info-flex">
+                <div id="reviewAuthorAvatar" class="author-avatar">HL</div>
+                <div class="author-name-title">
+                  <strong id="reviewAuthorName">Hoàng Long</strong>
+                  <span id="reviewAuthorRole">Chủ sở hữu iPhone 16 Pro Max 512GB (Đã xác minh)</span>
+                </div>
+              </div>
+
+              <div class="carousel-nav-arrows">
+                <button id="btnReviewPrev" class="carousel-btn" title="Đánh giá trước">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <button id="btnReviewNext" class="carousel-btn" title="Đánh giá tiếp">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 7. Footer Banner & Trust Badges (Real Horizontal Titanium Phone on Dark Surface) -->
+      <footer class="nexora-footer-section">
+        <div class="container">
+          
+          <div class="footer-upgrade-banner">
+            <div class="footer-banner-left">
+              <span class="eyebrow-text">SẴN SÀNG NÂNG CẤP?</span>
+              <h2>iPhone 16 Pro Max Đang Chờ Bạn Sở Hữu.</h2>
+              <p>Nhận ngay ưu đãi trả góp 0% lãi suất, thu cũ đổi mới trợ giá lên tới 3.000.000 ₫ và bảo hành 1 đổi 1 chính hãng.</p>
+              <button class="btn-pill-white trigger-buy-action">Đặt Hàng Ngay Hôm Nay</button>
+            </div>
+
+            <div class="footer-banner-phone-visual">
+              <img src="images/footer_phone_dark.jpg" class="footer-phone-real-img" alt="Apple iPhone 16 Pro Dark Titanium nằm trên bàn kính" loading="lazy">
+            </div>
+
+            <!-- 3 Trust Badges per Test_UI.md -->
+            <div class="trust-badges-row">
+              <div class="trust-badge-item">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="12" x="1" y="3" rx="2"/><circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="17.5" r="2.5"/><path d="M17 11h4l2 4v2h-4"/></svg>
+                <div class="trust-badge-text">
+                  <strong>Giao Hỏa Tốc 2 Giờ</strong>
+                  <span>Miễn phí giao hàng toàn quốc</span>
+                </div>
+              </div>
+
+              <div class="trust-badge-item">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <div class="trust-badge-text">
+                  <strong>Apple VN/A Chính Hãng</strong>
+                  <span>Bảo hành 1 đổi 1 trong 12 tháng</span>
+                </div>
+              </div>
+
+              <div class="trust-badge-item">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                <div class="trust-badge-text">
+                  <strong>Trả Góp 0% Lãi Suất</strong>
+                  <span>Hỗ trợ Apple Pay & thẻ tín dụng</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer-sub-links">
+            <div>© 2026 Apple Store Pro VN/A. All rights reserved. PRM393 E-Commerce Project.</div>
+            <div style="display: flex; gap: 24px;">
+              <a href="#" style="color: #64748B; text-decoration: none;">Chính sách bảo hành</a>
+              <a href="#" style="color: #64748B; text-decoration: none;">Chính sách đổi trả</a>
+              <a href="#" style="color: #64748B; text-decoration: none;">Bảo mật thông tin</a>
+            </div>
+          </div>
+
+        </div>
+      </footer>
+
+    </div>
+
+    <!-- ==========================================================================
+         VIEW 2: MOBILE APP SIMULATOR (PRM393 IPHONE SHOPPING APP WITH REAL PHOTOS)
+         ========================================================================== -->
+    <div id="view_mobile" class="view-container">
+      <div class="container mobile-view-wrapper">
+        
+        <div style="text-align: center; margin-bottom: 24px;">
+          <h2 style="font-size: 26px; font-weight: 800; color: var(--ink);">Mô Phỏng Ứng Dụng Mua Sắm iPhone (Mobile App)</h2>
+          <p style="color: var(--ink-muted); font-size: 14px;">Giao diện di động PRM393 với tab bar kính mờ Liquid-Glass và ảnh sản phẩm thật</p>
+        </div>
+
+        <!-- Phone Mockup Frame -->
+        <div class="phone-mockup-frame">
+          <!-- Status Bar -->
+          <div class="phone-status-bar">
+            <span id="phoneDigitalClock">09:41</span>
+            <div class="camera-cutout"></div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <svg width="14" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.86a10 10 0 0 1 14 0"/><path d="M8.5 16.43a5 5 0 0 1 7 0"/></svg>
+              <svg width="16" height="12" viewBox="0 0 24 24" fill="currentColor"><rect width="18" height="12" x="2" y="6" rx="2"/><line x1="22" x2="22" y1="10" y2="14"/></svg>
+            </div>
+          </div>
+
+          <!-- Dynamic Island Notification Island -->
+          <div style="padding: 10px 16px 0;">
+            <div style="background: rgba(15, 23, 34, 0.95); backdrop-filter: blur(20px); border-radius: 20px; padding: 10px 16px; color: white; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 8px 24px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15);">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: #D4C8B8; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #0F1722; font-weight: 800;"></div>
+                <div>
+                  <div style="font-size: 11.5px; font-weight: 700;">iPhone 16 Pro Max (Desert)</div>
+                  <div style="font-size: 10px; color: #94A3B8;">Sẵn hàng giao 2H • Miễn phí</div>
+                </div>
+              </div>
+              <span style="font-size: 11px; font-weight: 800; color: #60A5FA;">34.990.000 ₫</span>
+            </div>
+          </div>
+
+          <!-- Phone Viewport Content -->
+          <div class="phone-viewport" style="padding: 16px;">
+            <!-- Mobile Search Bar in Glass -->
+            <div style="background: rgba(255,255,255,0.85); backdrop-filter: blur(14px); border: 1.5px solid rgba(255,255,255,0.9); border-radius: 14px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <input type="text" placeholder="Tìm kiếm mẫu iPhone, phụ kiện..." style="border: none; background: transparent; outline: none; font-size: 13px; width: 100%;">
+            </div>
+
+            <!-- Featured Mobile Card (Liquid-Glass with Real Image) -->
+            <div class="liquid-glass-card" style="padding: 16px; margin-bottom: 16px; border-radius: 20px;">
+              <span class="eyebrow-text" style="font-size: 10px; margin-bottom: 4px;">FLAGSHIP MODEL</span>
+              <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 10px;">
+                <img src="images/lineup_16_promax.jpg" alt="iPhone 16 Pro Max" style="width: 72px; height: 90px; object-fit: contain; border-radius: 10px;">
+                <div>
+                  <h4 style="font-size: 16px; font-weight: 800; color: var(--ink); margin-bottom: 2px;">iPhone 16 Pro Max</h4>
+                  <p style="font-size: 11.5px; color: var(--ink-muted); margin-bottom: 4px;">Titan Sa Mạc • Chip A18 Pro</p>
+                  <strong style="font-size: 15px; color: var(--brand-700);">34.990.000 ₫</strong>
+                </div>
+              </div>
+              <button class="btn-pill-dark trigger-buy-action" style="width: 100%; justify-content: center; padding: 8px; font-size: 12.5px;">Thêm Vào Giỏ Hàng</button>
+            </div>
+
+            <!-- Lineup Horizontal Quick Grid -->
+            <div style="font-size: 13px; font-weight: 800; color: var(--ink); margin-bottom: 10px;">Dòng Máy Mới</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+              <!-- Mini Model 1 -->
+              <div class="liquid-glass-card" style="padding: 12px; border-radius: 16px; text-align: center;">
+                <img src="images/lineup_16_pro.jpg" alt="iPhone 16 Pro" style="height: 70px; object-fit: contain; margin-bottom: 6px;">
+                <div style="font-size: 12px; font-weight: 800; color: var(--ink);">iPhone 16 Pro</div>
+                <div style="font-size: 11px; font-weight: 800; color: var(--brand-700);">28.990.000 ₫</div>
+              </div>
+              <!-- Mini Model 2 -->
+              <div class="liquid-glass-card" style="padding: 12px; border-radius: 16px; text-align: center;">
+                <img src="images/lineup_16_standard.jpg" alt="iPhone 16" style="height: 70px; object-fit: contain; margin-bottom: 6px;">
+                <div style="font-size: 12px; font-weight: 800; color: var(--ink);">iPhone 16</div>
+                <div style="font-size: 11px; font-weight: 800; color: var(--brand-700);">21.990.000 ₫</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phone Liquid-Glass Bottom Dock / Nav Bar -->
+          <div class="phone-nav-bar" style="background: rgba(255,255,255,0.75); backdrop-filter: blur(24px) saturate(200%); border-top: 1.5px solid rgba(255,255,255,0.85);">
+            <button class="phone-nav-tab active">
+              <div class="phone-nav-icon-wrapper">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              <span>Khám Phá</span>
+            </button>
+            <button class="phone-nav-tab">
+              <div class="phone-nav-icon-wrapper">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+              </div>
+              <span>Dòng iPhone</span>
+            </button>
+            <button class="phone-nav-tab">
+              <div class="phone-nav-icon-wrapper">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+              </div>
+              <span>Túi Hàng</span>
+            </button>
+            <button class="phone-nav-tab">
+              <div class="phone-nav-icon-wrapper">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <span>Apple ID</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         VIEW 3: DESIGN SYSTEM, LIQUID-GLASS LAB & COLOR TOKENS (Test_UI.md)
+         ========================================================================== -->
+    <div id="view_tokens" class="view-container">
+      <div class="container ds-view-wrapper">
+
+        <!-- 1. Color Palette Tokens from Test_UI.md -->
+        <div class="liquid-glass-card ds-section-card">
+          <span class="eyebrow-text">COLOR SPECIFICATIONS (TEST_UI.MD)</span>
+          <h3>Bảng Mã Màu Titan Độc Quyền (#243342)</h3>
+          <p>Trích xuất chuẩn xác từ tài liệu thiết kế Test_UI.md cho hệ thống chuyên bán iPhone cao cấp.</p>
+
+          <div class="ds-swatches-grid">
+            <div class="ds-swatch-box">
+              <div class="ds-color-block" style="background: #243342;"></div>
+              <strong>Primary Titanium Navy</strong>
+              <code>#243342 (brand-700)</code>
+            </div>
+
+            <div class="ds-swatch-box">
+              <div class="ds-color-block" style="background: #3E566E;"></div>
+              <strong>Highlight / Hover State</strong>
+              <code>#3E566E (brand-500)</code>
+            </div>
+
+            <div class="ds-swatch-box">
+              <div class="ds-color-block" style="background: #0F1722;"></div>
+              <strong>Deep Dark Navy (Footer)</strong>
+              <code>#0F1722 (brand-900)</code>
+            </div>
+
+            <div class="ds-swatch-box">
+              <div class="ds-color-block" style="background: #D4C8B8;"></div>
+              <strong>Desert Titanium (Màu mới)</strong>
+              <code>#D4C8B8</code>
+            </div>
+
+            <div class="ds-swatch-box">
+              <div class="ds-color-block" style="background: #F1F5F9; border: 1px solid #CBD5E1;"></div>
+              <strong>Surface Light Slate</strong>
+              <code>#F1F5F9</code>
+            </div>
+
+            <div class="ds-swatch-box">
+              <div class="ds-color-block" style="background: #64748B;"></div>
+              <strong>Muted Ink Subtext</strong>
+              <code>#64748B</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Interactive Liquid-Glass Laboratory & Optical Physics -->
+        <div class="liquid-glass-card ds-section-card">
+          <span class="eyebrow-text">LIQUID-GLASS OPTICS & PHYSICS</span>
+          <h3>Phòng Thí Nghiệm Khúc Xạ Kính Lỏng (Liquid-Glass Lab)</h3>
+          <p>Tại sao bạn thấy hiệu ứng Liquid-Glass ở đây mà thiết kế thông thường không có? Hãy thử chỉnh thanh trượt độ mờ và màu phản chiếu bên dưới để xem sự khác biệt tức thì:</p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+            <!-- Control Sliders -->
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <div>
+                <label style="font-size: 13px; font-weight: 700; display: flex; justify-content: space-between;">
+                  <span>Độ Mờ Khúc Xạ (Backdrop Blur):</span>
+                  <span id="labelBlurVal">28px</span>
+                </label>
+                <input id="sliderBlur" type="range" min="4" max="50" value="28" style="width: 100%; margin-top: 6px;">
+              </div>
+
+              <div>
+                <label style="font-size: 13px; font-weight: 700; display: flex; justify-content: space-between;">
+                  <span>Độ Bão Hòa Màu (Saturation Boost):</span>
+                  <span id="labelSatVal">220%</span>
+                </label>
+                <input id="sliderSat" type="range" min="100" max="300" value="220" style="width: 100%; margin-top: 6px;">
+              </div>
+
+              <div>
+                <label style="font-size: 13px; font-weight: 700; display: flex; justify-content: space-between;">
+                  <span>Độ Sáng Lớp Đèn Nền (Ambient Orb Opacity):</span>
+                  <span id="labelOrbVal">62%</span>
+                </label>
+                <input id="sliderOrb" type="range" min="10" max="100" value="62" style="width: 100%; margin-top: 6px;">
+              </div>
+            </div>
+
+            <!-- Comparison Box (Flat Card vs Liquid-Glass Card) -->
+            <div style="display: flex; gap: 14px;">
+              <div style="flex: 1; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 16px; padding: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <div style="font-size: 11px; font-weight: 800; color: #64748B; margin-bottom: 6px;">CARD THÔNG THƯỜNG (FLAT)</div>
+                <strong style="font-size: 14px; color: #0F1722; display: block; margin-bottom: 6px;">Opaque White Box</strong>
+                <p style="font-size: 12px; color: #64748B;">Màu trắng đặc phẳng lì, không có độ sâu, không phản xạ ánh sáng môi trường xung quanh.</p>
+              </div>
+
+              <div id="demoLiquidCard" class="liquid-glass-card" style="flex: 1; padding: 18px; border-radius: 16px;">
+                <div style="font-size: 11px; font-weight: 800; color: #0071E3; margin-bottom: 6px;">LIQUID-GLASS CARD 💧</div>
+                <strong style="font-size: 14px; color: #0F1722; display: block; margin-bottom: 6px;">Refractive Glass Surface</strong>
+                <p style="font-size: 12px; color: #334155;">Ánh sáng từ quả cầu gradient chuyển động xuyên qua lớp kính, tạo viền specular phản chiếu chân thực.</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="background: rgba(36, 51, 66, 0.08); border-radius: 12px; padding: 16px; font-size: 12.5px; color: var(--ink-secondary); line-height: 1.6;">
+            <strong>Nguyên lý cốt lõi của Liquid-Glass trong dự án này:</strong><br>
+            1. <strong>Lớp đệm chuyển động (Ambient Mesh Canvas):</strong> Phải có các quả cầu màu sắc (Slate Navy `#243342`, Desert Amber `#D4C8B8`, Cyber Blue `#0071E3`) trôi dạt phía sau.<br>
+            2. <strong>Khúc xạ ánh sáng (Specular Rim Lights):</strong> Kỹ thuật viền đôi `inset 0 1.5px 2px rgba(255,255,255,0.95)` mô phỏng cạnh kính vát cong hội tụ ánh sáng kiểu Apple VisionOS.<br>
+            3. <strong>Bão hòa quang sai (Saturate 220%):</strong> Tăng cường độ tươi tắn của các pixel nền khi đi qua chất liệu kính lỏng.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
