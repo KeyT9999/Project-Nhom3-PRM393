@@ -19,6 +19,16 @@ class _ChatScreenState extends State<ChatScreen> {
   final _textController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<ChatProvider>().loadMessages();
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _textController.dispose();
     super.dispose();

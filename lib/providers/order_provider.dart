@@ -92,6 +92,13 @@ class OrderProvider extends ChangeNotifier {
     return updated;
   }
 
+  /// Đánh dấu đơn hàng đã thanh toán qua PayOS
+  Future<OrderModel?> markOrderPaidByPayos(String orderId) async {
+    final updated = await _orderRepository.markOrderPaidByPayos(orderId);
+    notifyListeners();
+    return updated;
+  }
+
   OrderModel? findOrder(String codeOrId) {
     return _orderRepository.findOrderByCodeOrId(codeOrId);
   }

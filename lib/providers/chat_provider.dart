@@ -6,9 +6,16 @@ class ChatProvider extends ChangeNotifier {
   final ChatRepository _chatRepository;
 
   ChatProvider({ChatRepository? chatRepository})
-    : _chatRepository = chatRepository ?? ChatRepository();
+    : _chatRepository = chatRepository ?? ChatRepository() {
+    loadMessages();
+  }
 
   List<ChatMessageModel> get messages => _chatRepository.messages;
+
+  Future<void> loadMessages({String chatId = 'default_support_chat'}) async {
+    await _chatRepository.loadMessages(chatId: chatId);
+    notifyListeners();
+  }
 
   Future<void> sendMessage(
     String text, {

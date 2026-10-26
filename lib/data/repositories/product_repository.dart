@@ -874,12 +874,20 @@ class ProductRepository {
 
     if (_isFirebaseReady) {
       try {
-        await FirebaseFirestore.instance
+        final prodRef = FirebaseFirestore.instance
             .collection(FirestoreCollections.products)
-            .doc(productId)
+            .doc(productId);
+        await prodRef
             .collection(FirestoreCollections.variants)
             .doc(variant.id)
             .set(variant.toJson(), SetOptions(merge: true));
+        if (pIdx >= 0) {
+          await prodRef.set({
+            'priceFromVnd': _products[pIdx].priceFromVnd,
+            'ramOptions': _products[pIdx].ramOptions,
+            'storageOptions': _products[pIdx].storageOptions,
+          }, SetOptions(merge: true));
+        }
       } catch (_) {}
     }
   }

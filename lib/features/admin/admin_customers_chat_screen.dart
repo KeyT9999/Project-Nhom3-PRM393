@@ -19,6 +19,16 @@ class _AdminCustomersChatScreenState extends State<AdminCustomersChatScreen> {
   final TextEditingController _replyCtrl = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<ChatProvider>().loadMessages();
+      }
+    });
+  }
+
+  @override
   void dispose() {
     _replyCtrl.dispose();
     super.dispose();

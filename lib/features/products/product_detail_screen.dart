@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../core/utils/currency_formatter.dart';
@@ -24,6 +25,7 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   ProductModel? _product;
+  String? _selectedVariantId;
   int _quantity = 1;
   int _selectedRating = 5;
   final _reviewController = TextEditingController();
@@ -44,8 +46,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final prov = context.read<ProductProvider>();
     final prod = await prov.repository.getProductById(widget.productId);
     if (!mounted) return;
-    setState(() => _product = prod);
     await prov.loadVariantsForProduct(widget.productId);
+    if (!mounted) return;
+    setState(() {
+      _product = prod;
+      _selectedVariantId = prov.selectedVariant?.id;
+    });
   }
 
   Future<void> _submitReview() async {
@@ -79,8 +85,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final product = _product;
     final productProvider = context.watch<ProductProvider>();
     final wishlistProvider = context.watch<WishlistProvider>();
-    final selectedVariant = productProvider.selectedVariant;
-    final variants = productProvider.currentVariants;
+    final variants = product != null
+        ? productProvider.repository.getCachedVariants(product.id)
+        : productProvider.currentVariants;
+    final selectedVariant = variants.isEmpty
+        ? null
+        : variants.firstWhere(
+            (v) => v.id == _selectedVariantId,
+            orElse: () => variants.firstWhere(
+              (v) => v.isInStock,
+              orElse: () => variants.first,
+            ),
+          );
     final accent = Theme.of(context).colorScheme.primary;
 
     if (product == null) {
@@ -94,6 +110,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       appBar: AppBar(
         title: Text(product.name),
         actions: [
+          IconButton(
+            tooltip: 'Chia sẻ sản phẩm',
+            icon: const Icon(Icons.share_outlined),
+            onPressed: () {
+              final priceText = CurrencyFormatter.formatVnd(
+                selectedVariant?.priceVnd ?? product.priceFromVnd,
+              );
+              SharePlus.instance.share(
+                ShareParams(
+                  text:
+                      '📱 ${product.name} (${selectedVariant?.label ?? 'Chính hãng VN/A'})\n'
+                      '💰 Giá ưu đãi tại SmartStore: $priceText\n'
+                      '⭐ Đánh giá: ${product.ratingAvg}/5.0 (${product.reviewCount} lượt)\n'
+                      '👉 Đặt mua ngay trên ứng dụng SmartStore!',
+                ),
+              );
+            },
+          ),
           IconButton(
             tooltip: 'So sánh cấu hình',
             icon: const Icon(Icons.compare_arrows_rounded),
@@ -221,11 +255,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       borderRadius: BorderRadius.circular(14),
                       onTap: () {
                         productProvider.selectVariant(variant);
-                        setState(
-                          () => _quantity = variant.stock > 0
+                        setState(() {
+                          _selectedVariantId = variant.id;
+                          _quantity = variant.stock > 0
                               ? _quantity.clamp(1, variant.stock)
-                              : 1,
-                        );
+                              : 1;
+                        });
                       },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 180),
@@ -504,24 +539,34 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed:
-                      (selectedVariant == null ||
-                          !selectedVariant.isInStock ||
-                          context.watch<AuthProvider>().isOfflineSimulated)
+                      (selectedVariant == null || !selectedVariant.isInStock)
                       ? null
                       : () async {
-                          await context.read<CartProvider>().addVariantToCart(
-                            product: product,
-                            variant: selectedVariant,
-                            quantity: _quantity,
-                          );
-                          if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Đã lưu $_quantity x "${product.name} (${selectedVariant.label})" vào cart.json!',
+                          try {
+                            await context
+                                .read<CartProvider>()
+                                .addVariantToCart(
+                                  product: product,
+                                  variant: selectedVariant,
+                                  quantity: _quantity,
+                                );
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Đã lưu $_quantity x "${product.name} (${selectedVariant.label})" vào giỏ hàng!',
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          } catch (e) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: AppColors.error,
+                                content: Text('$e'),
+                              ),
+                            );
+                          }
                         },
                   icon: const Icon(Icons.add_shopping_cart_rounded),
                   label: const Text('Thêm vào giỏ'),
@@ -538,12 +583,50 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       (selectedVariant == null || !selectedVariant.isInStock)
                       ? null
                       : () async {
-                          await context.read<CartProvider>().addVariantToCart(
-                            product: product,
-                            variant: selectedVariant,
-                            quantity: _quantity,
-                          );
+                          final auth = context.read<AuthProvider>();
+                          try {
+                            await context
+                                .read<CartProvider>()
+                                .addVariantToCart(
+                                  product: product,
+                                  variant: selectedVariant,
+                                  quantity: _quantity,
+                                );
+                          } catch (_) {}
                           if (!context.mounted) return;
+                          if (auth.isOfflineSimulated) {
+                            showDialog<void>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text('Đang ở chế độ Offline (F23)'),
+                                content: const Text(
+                                  'Sản phẩm đã được lưu vào giỏ hàng cục bộ (cart.json).\n\nVui lòng bật lại kết nối mạng để tiếp tục bước Thanh toán (Checkout).',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(ctx).pop(),
+                                    child: const Text('Để sau'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      auth.toggleOfflineSimulation(false);
+                                      Navigator.of(ctx).pop();
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              const CheckoutScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Bật lại mạng & Checkout',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                            return;
+                          }
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (_) => const CheckoutScreen(),

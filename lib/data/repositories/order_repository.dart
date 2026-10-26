@@ -30,15 +30,19 @@ class OrderRepository {
       Firebase.apps.isNotEmpty && !ConnectivityService.offlineSimulationEnabled;
 
   Future<void> loadOrders(String userId, {bool isAdmin = false}) async {
-    _orders.clear();
-    if (userId == 'guest') return;
     try {
       final local = await _localStorage.loadOrders(userId);
-      _orders.addAll(
-        local.map((data) => OrderModel.fromJson(data['id'].toString(), data)),
-      );
+      for (final data in local) {
+        final order = OrderModel.fromJson(data['id'].toString(), data);
+        final idx = _orders.indexWhere((o) => o.id == order.id);
+        if (idx < 0) {
+          _orders.add(order);
+        } else {
+          _orders[idx] = order;
+        }
+      }
     } catch (_) {}
-    if (_isFirebaseReady) {
+    if (_isFirebaseReady && (isAdmin || userId != 'guest')) {
       try {
         final collection = FirebaseFirestore.instance.collection(
           FirestoreCollections.orders,
@@ -55,10 +59,10 @@ class OrderRepository {
             _orders[index] = order;
           }
         }
-        _orders.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         await _saveOrders(userId);
       } catch (_) {}
     }
+    _orders.sort((a, b) => b.createdAt.compareTo(a.createdAt));
   }
 
   Future<void> _saveOrders(String userId) async {
@@ -344,6 +348,46 @@ class OrderRepository {
               'status': newStatus,
               'paymentStatus': paymentStatus,
               'restocked': restocked,
+              'statusHistory': updatedHistory,
+            });
+      } catch (_) {}
+    }
+    return updated;
+  }
+
+  /// Cập nhật trạng thái đã thanh toán qua PayOS cho đơn hàng chưa thanh toán
+  Future<OrderModel?> markOrderPaidByPayos(String orderId) async {
+    final idx = _orders.indexWhere(
+      (o) => o.id == orderId || o.orderCode == orderId,
+    );
+    if (idx < 0) return null;
+
+    final current = _orders[idx];
+    final now = DateTime.now();
+    final updatedHistory = List<Map<String, String>>.from(current.statusHistory)
+      ..add({
+        'status': current.status,
+        'title': 'Thanh toán thành công qua VietQR PayOS',
+        'time':
+            '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')} - ${now.day}/${now.month}/${now.year}',
+      });
+
+    final updated = current.copyWith(
+      paymentMethod: 'payos',
+      paymentStatus: 'paid',
+      statusHistory: updatedHistory,
+    );
+    _orders[idx] = updated;
+    await _saveOrders(current.userId);
+
+    if (_isFirebaseReady) {
+      try {
+        await FirebaseFirestore.instance
+            .collection(FirestoreCollections.orders)
+            .doc(current.id)
+            .update({
+              'paymentMethod': 'payos',
+              'paymentStatus': 'paid',
               'statusHistory': updatedHistory,
             });
       } catch (_) {}

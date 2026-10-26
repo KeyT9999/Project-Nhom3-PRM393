@@ -62,6 +62,22 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         .where((o) => o.status == 'cancelled' || o.status == 'failed_delivery')
         .length;
 
+    // Tính tỷ trọng doanh thu ước tính theo Hãng & Top 3 sản phẩm bán chạy (A02, A10)
+    final Map<String, int> brandSalesMap = {};
+    int totalBrandSales = 0;
+    for (final p in products) {
+      final sales = p.priceFromVnd * p.soldCount;
+      brandSalesMap.update(
+        p.brandId,
+        (prev) => prev + sales,
+        ifAbsent: () => sales,
+      );
+      totalBrandSales += sales;
+    }
+    final topProducts = List.of(products)
+      ..sort((a, b) => b.soldCount.compareTo(a.soldCount));
+    final top3Products = topProducts.take(3).toList();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Admin Portal – SmartStore (A01–A10)')),
       body: ListView(
@@ -124,6 +140,130 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     ),
                   ],
                 ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          // Biểu đồ tỷ trọng Doanh thu theo Hãng & Top 3 Bán chạy (Feature #3)
+          LmMaterialCard(
+            padding: const EdgeInsets.all(18),
+            borderRadius: 20,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Tỷ trọng Doanh số theo Thương hiệu (A10)',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    color: AppColors.ink,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                ...brandSalesMap.entries.map((entry) {
+                  final ratio = totalBrandSales > 0
+                      ? (entry.value / totalBrandSales).clamp(0.0, 1.0)
+                      : 0.0;
+                  final pct = (ratio * 100).toStringAsFixed(1);
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              entry.key,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 13,
+                              ),
+                            ),
+                            Text(
+                              '$pct% • ${CurrencyFormatter.formatVnd(entry.value)}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.ink3,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: LinearProgressIndicator(
+                            value: ratio,
+                            minHeight: 7,
+                            backgroundColor: palette.primarySoft,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              palette.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+                const Divider(height: 20),
+                const Text(
+                  'Top 3 Sản phẩm bán chạy nhất',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14.5,
+                    color: AppColors.ink,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ...List.generate(top3Products.length, (i) {
+                  final prod = top3Products[i];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 24,
+                          height: 24,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: palette.primarySoft,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            '#${i + 1}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 11.5,
+                              color: palette.primary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            prod.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Đã bán ${prod.soldCount}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: palette.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ],
             ),
           ),

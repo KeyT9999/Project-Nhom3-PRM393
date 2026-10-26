@@ -20,12 +20,14 @@ class WishlistProvider extends ChangeNotifier {
     final prevUser = _currentUserId;
     _currentUserId = userId;
     final ids = await _wishlistRepository.loadFavoriteProductIds(userId);
-    if (prevUser != userId || _favoriteProductIds.isEmpty) {
+    if (prevUser != userId) {
       _favoriteProductIds
         ..clear()
         ..addAll(ids);
-      notifyListeners();
+    } else {
+      _favoriteProductIds.addAll(ids);
     }
+    notifyListeners();
   }
 
   Future<void> toggleFavorite(String productId) async {
