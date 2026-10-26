@@ -65,6 +65,7 @@ class OrderModel {
 
   OrderModel copyWith({
     String? status,
+    String? paymentMethod,
     String? paymentStatus,
     bool? restocked,
     List<Map<String, String>>? statusHistory,
@@ -80,7 +81,7 @@ class OrderModel {
       discountVnd: discountVnd,
       couponCode: couponCode,
       totalVnd: totalVnd,
-      paymentMethod: paymentMethod,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
       paymentStatus: paymentStatus ?? this.paymentStatus,
       status: status ?? this.status,
       restocked: restocked ?? this.restocked,

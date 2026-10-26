@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../core/services/payos_service.dart';
 import '../../core/utils/currency_formatter.dart';
 import '../../core/widgets/lm_glass_widgets.dart';
+import '../../data/models/order_model.dart';
 import '../../providers/notification_provider.dart';
 import '../../providers/order_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/product_provider.dart';
+import '../checkout/payos_payment_screen.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final String orderId;
@@ -20,6 +24,8 @@ class OrderDetailScreen extends StatefulWidget {
 }
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
+  bool _isCreatingPayos = false;
+
   @override
   void initState() {
     super.initState();
@@ -34,13 +40,101 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     });
   }
 
+  void _shareInvoice(OrderModel order) {
+    final itemsText = order.items
+        .map(
+          (i) =>
+              '- ${i.quantity}x ${i.productName} (${i.variantLabel}): ${CurrencyFormatter.formatVnd(i.lineTotalVnd)}',
+        )
+        .join('\n');
+    final payText = order.paymentMethod == 'payos'
+        ? 'PayOS VietQR (${order.paymentStatus == 'paid' ? 'Đã thanh toán' : 'Chờ thanh toán'})'
+        : 'COD (${order.paymentStatus == 'paid' ? 'Đã thu tiền' : 'Thanh toán khi nhận hàng'})';
+
+    SharePlus.instance.share(
+      ShareParams(
+        text:
+            '🧾 HÓA ĐƠN ĐIỆN TỬ SMARTSTORE\n'
+            'Mã đơn: ${order.orderCode}\n'
+            'Trạng thái: ${order.statusLabelVi}\n'
+            'Khách nhận: ${order.shippingAddress.fullName} (${order.shippingAddress.phone})\n'
+            'Địa chỉ: ${order.shippingAddress.addressLine}\n'
+            '------------------------\n'
+            '$itemsText\n'
+            '------------------------\n'
+            'Tổng thanh toán: ${CurrencyFormatter.formatVnd(order.totalVnd)}\n'
+            'Phương thức: $payText',
+      ),
+    );
+  }
+
+  Future<void> _payOrderWithPayos(OrderModel order) async {
+    if (_isCreatingPayos) return;
+    setState(() => _isCreatingPayos = true);
+    try {
+      final payosOrderCode = DateTime.now().millisecondsSinceEpoch % 1000000000;
+      final linkData = await PayosService.createPaymentLink(
+        orderCode: payosOrderCode,
+        amount: order.totalVnd,
+        description: 'SMARTSTORE $payosOrderCode',
+        items: order.items
+            .map(
+              (e) => {
+                'name': e.productName,
+                'quantity': e.quantity,
+                'price': e.priceVnd,
+              },
+            )
+            .toList(),
+      );
+      if (!mounted) return;
+      setState(() => _isCreatingPayos = false);
+
+      final paid = await Navigator.of(context).push<bool>(
+        MaterialPageRoute(
+          builder: (_) => PayosPaymentScreen(paymentData: linkData),
+        ),
+      );
+
+      if (paid == true && mounted) {
+        await context.read<OrderProvider>().markOrderPaidByPayos(
+          order.orderCode,
+        );
+        if (!mounted) return;
+        context.read<NotificationProvider>().addNotification(
+          title: 'Đã thanh toán đơn hàng ${order.orderCode}',
+          body:
+              'Đơn hàng ${CurrencyFormatter.formatVnd(order.totalVnd)} đã được thanh toán qua PayOS VietQR.',
+          orderId: order.orderCode,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: AppColors.success,
+            content: Text(
+              'Đã thanh toán đơn hàng qua PayOS VietQR thành công!',
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isCreatingPayos = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: AppColors.error, content: Text('$e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final orderProv = context.watch<OrderProvider>();
     final auth = context.watch<AuthProvider>();
     final found = orderProv.findOrder(widget.orderId);
     final order =
-        found != null && (auth.isAdmin || found.userId == auth.activeUserId)
+        found != null &&
+            (auth.isAdmin ||
+                found.userId == auth.activeUserId ||
+                found.userId == 'guest')
         ? found
         : null;
     final accent = Theme.of(context).colorScheme.primary;
@@ -53,7 +147,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('Đơn hàng ${order.orderCode} (F15)')),
+      appBar: AppBar(
+        title: Text('Đơn hàng ${order.orderCode} (F15)'),
+        actions: [
+          IconButton(
+            tooltip: 'Chia sẻ Hóa đơn điện tử',
+            icon: const Icon(Icons.share_outlined),
+            onPressed: () => _shareInvoice(order),
+          ),
+        ],
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -283,7 +386,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
           const SizedBox(height: 18),
 
-          // 5. Nút Hủy đơn hàng (F16) nếu đơn đang ở `pending` hoặc `confirmed`
+          // 5. Nút Thanh toán qua VietQR PayOS nếu đơn chưa thanh toán (Feature #1)
+          if (order.paymentStatus != 'paid' && order.canBeCancelled) ...[
+            LmTintedButton(
+              label: 'Thanh toán ngay qua VietQR PayOS',
+              icon: Icons.qr_code_scanner_rounded,
+              isLoading: _isCreatingPayos,
+              onPressed: () => _payOrderWithPayos(order),
+            ),
+            const SizedBox(height: 10),
+          ],
+
+          // 6. Nút Hủy đơn hàng (F16) nếu đơn đang ở `pending` hoặc `confirmed`
           if (order.canBeCancelled)
             OutlinedButton.icon(
               style: OutlinedButton.styleFrom(

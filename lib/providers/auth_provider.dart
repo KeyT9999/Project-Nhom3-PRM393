@@ -14,7 +14,13 @@ class AuthProvider extends ChangeNotifier {
 
   AuthProvider({AuthRepository? authRepository})
     : _authRepository = authRepository ?? AuthRepository() {
-    loadAddresses();
+    _initSession();
+  }
+
+  Future<void> _initSession() async {
+    await _authRepository.restoreSession();
+    await loadAddresses();
+    notifyListeners();
   }
 
   UserModel? get currentUser => _authRepository.currentUser;

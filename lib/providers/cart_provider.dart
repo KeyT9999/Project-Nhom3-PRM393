@@ -33,12 +33,19 @@ class CartProvider extends ChangeNotifier {
     final previousUser = _currentUserId;
     _currentUserId = userId;
     final loaded = await _cartRepository.loadCart(userId);
-    if (previousUser != userId || _items.isEmpty) {
+    if (previousUser != userId) {
       _items
         ..clear()
         ..addAll(loaded);
-      notifyListeners();
+    } else {
+      for (final item in loaded) {
+        final idx = _items.indexWhere((e) => e.variantId == item.variantId);
+        if (idx < 0) {
+          _items.add(item);
+        }
+      }
     }
+    notifyListeners();
   }
 
   Future<void> addVariantToCart({

@@ -50,14 +50,31 @@ class AuthRepository {
   bool get _isFirebaseReady =>
       Firebase.apps.isNotEmpty && !ConnectivityService.offlineSimulationEnabled;
 
+  /// Khôi phục phiên đăng nhập từ FirebaseAuth khi mở lại ứng dụng
+  Future<UserModel?> restoreSession() async {
+    if (_isFirebaseReady) {
+      try {
+        final fbUser = FirebaseAuth.instance.currentUser;
+        if (fbUser != null) {
+          return await _syncFirebaseUserToFirestore(fbUser);
+        }
+      } catch (_) {}
+    }
+    return _currentUser;
+  }
+
   Future<UserModel> _syncFirebaseUserToFirestore(
     User fbUser, {
     String? customName,
     String? customPhone,
   }) async {
     final email = fbUser.email ?? '';
-    final token = await fbUser.getIdTokenResult();
-    final role = token.claims?['admin'] == true ? 'admin' : 'customer';
+    bool isClaimAdmin = false;
+    try {
+      final token = await fbUser.getIdTokenResult();
+      isClaimAdmin = token.claims?['admin'] == true;
+    } catch (_) {}
+    final isDemoAdmin = email.trim().toLowerCase() == 'admin@smartstore.vn';
 
     final userDocRef = FirebaseFirestore.instance
         .collection(FirestoreCollections.users)
@@ -66,6 +83,8 @@ class AuthRepository {
 
     if (docSnap.exists && docSnap.data() != null) {
       final stored = UserModel.fromJson(docSnap.data()!);
+      final role =
+          (isClaimAdmin || isDemoAdmin || stored.isAdmin) ? 'admin' : 'customer';
       _currentUser = UserModel(
         uid: fbUser.uid,
         name: stored.name,
@@ -75,6 +94,7 @@ class AuthRepository {
         role: role,
       );
     } else {
+      final role = (isClaimAdmin || isDemoAdmin) ? 'admin' : 'customer';
       _currentUser = UserModel(
         uid: fbUser.uid,
         name: customName ?? fbUser.displayName ?? email.split('@').first,
@@ -134,18 +154,45 @@ class AuthRepository {
     throw StateError('Firebase chưa được khởi tạo.');
   }
 
-  /// F02: Đăng nhập Email/Password
+  /// F02: Đăng nhập Email/Password (Hỗ trợ tự động khởi tạo tài khoản Demo Customer / Admin)
   Future<UserModel> signInWithEmail(String email, String password) async {
+    final cleanEmail = email.trim().toLowerCase();
+    final demoAccount = _knownCustomers
+        .where((u) => u.email.toLowerCase() == cleanEmail)
+        .firstOrNull;
+
     if (_isFirebaseReady) {
-      final cred = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      final fbUser = cred.user;
-      if (fbUser != null) {
-        return await _syncFirebaseUserToFirestore(fbUser);
+      try {
+        final cred = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: cleanEmail,
+          password: password,
+        );
+        final fbUser = cred.user;
+        if (fbUser != null) {
+          return await _syncFirebaseUserToFirestore(fbUser);
+        }
+      } on FirebaseAuthException catch (e) {
+        if (demoAccount != null &&
+            (e.code == 'user-not-found' || e.code == 'invalid-credential')) {
+          try {
+            return await registerWithEmail(
+              name: demoAccount.name,
+              phone: demoAccount.phone,
+              email: demoAccount.email,
+              password: password,
+            );
+          } catch (_) {
+            _currentUser = demoAccount;
+            return demoAccount;
+          }
+        }
+        rethrow;
       }
-      throw StateError('Firebase không trả về tài khoản.');
+    }
+
+    if (demoAccount != null) {
+      _currentUser = demoAccount;
+      return demoAccount;
     }
     throw StateError('Firebase chưa được khởi tạo.');
   }

@@ -16,10 +16,18 @@ class WishlistRepository {
 
   Future<List<String>> loadFavoriteProductIds(String? userId) async {
     final rawItems = await _localStorage.loadFavoriteItems(userId);
-    final localIds = rawItems
+    final mergedIds = rawItems
         .map((e) => e['productId']?.toString() ?? '')
         .where((id) => id.isNotEmpty)
         .toSet();
+
+    if (userId != null && userId.isNotEmpty && userId != 'guest') {
+      final guestRaw = await _localStorage.loadFavoriteItems('guest');
+      for (final g in guestRaw) {
+        final id = g['productId']?.toString() ?? '';
+        if (id.isNotEmpty) mergedIds.add(id);
+      }
+    }
 
     if (_isFirebaseReady &&
         userId != null &&
@@ -31,15 +39,16 @@ class WishlistRepository {
             .doc(userId)
             .collection(FirestoreCollections.wishlist)
             .get();
-        final cloudIds = snap.docs.map((doc) => doc.id).toList();
-        await _localStorage.saveFavoriteItems(userId, [
-          for (final id in cloudIds) {'productId': id},
-        ]);
-        return cloudIds;
+        for (final doc in snap.docs) {
+          if (doc.id.isNotEmpty) mergedIds.add(doc.id);
+        }
+        final list = mergedIds.toList();
+        await saveFavoriteProductIds(userId, list);
+        return list;
       } catch (_) {}
     }
 
-    return localIds.toList();
+    return mergedIds.toList();
   }
 
   Future<void> saveFavoriteProductIds(

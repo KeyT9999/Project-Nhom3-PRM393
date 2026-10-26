@@ -15,11 +15,31 @@ class CartRepository {
   bool get _isFirebaseReady =>
       Firebase.apps.isNotEmpty && !ConnectivityService.offlineSimulationEnabled;
 
-  /// S01: Đọc giỏ hàng từ Local JSON (`cart_<uid>.json`) và hợp nhất với Cloud Firestore
-  /// theo quy tắc Last-Write-Wins dựa trên `variantId` và `updatedAt` (không cộng dồn trùng lặp).
+  /// S01: Đọc giỏ hàng từ Local JSON (`cart_<uid>.json`), hợp nhất giỏ `guest` (nếu vừa đăng nhập)
+  /// và hợp nhất với Cloud Firestore theo quy tắc Last-Write-Wins dựa trên `variantId` và `updatedAt`.
   Future<List<CartItemModel>> loadCart(String? userId) async {
     final rawItems = await _localStorage.loadCartItems(userId);
     final localItems = rawItems.map(CartItemModel.fromJson).toList();
+
+    final mergedMap = <String, CartItemModel>{
+      for (final item in localItems) item.variantId: item,
+    };
+
+    // Nếu người dùng vừa đăng nhập (userId != 'guest'), hợp nhất giỏ hàng từ cart_guest.json sang
+    if (userId != null && userId.isNotEmpty && userId != 'guest') {
+      final guestRaw = await _localStorage.loadCartItems('guest');
+      if (guestRaw.isNotEmpty) {
+        for (final gJson in guestRaw) {
+          final guestItem = CartItemModel.fromJson(gJson);
+          final existing = mergedMap[guestItem.variantId];
+          if (existing == null ||
+              guestItem.updatedAt.compareTo(existing.updatedAt) >= 0) {
+            mergedMap[guestItem.variantId] = guestItem;
+          }
+        }
+        await _localStorage.clearCart('guest');
+      }
+    }
 
     if (_isFirebaseReady &&
         userId != null &&
@@ -36,16 +56,26 @@ class CartRepository {
             .map((d) => CartItemModel.fromJson(d.data()))
             .toList();
 
-        final mergedList = cloudItems;
-        await _localStorage.saveCartItems(
-          userId,
-          mergedList.map((e) => e.toJson()).toList(),
-        );
+        for (final cItem in cloudItems) {
+          final existing = mergedMap[cItem.variantId];
+          if (existing == null ||
+              cItem.updatedAt.compareTo(existing.updatedAt) > 0) {
+            mergedMap[cItem.variantId] = cItem;
+          }
+        }
+
+        final mergedList = mergedMap.values.toList();
+        await saveCart(userId, mergedList);
         return mergedList;
       } catch (_) {}
     }
 
-    return localItems;
+    final result = mergedMap.values.toList();
+    await _localStorage.saveCartItems(
+      userId,
+      result.map((e) => e.toJson()).toList(),
+    );
+    return result;
   }
 
   Future<void> saveCart(String? userId, List<CartItemModel> items) async {

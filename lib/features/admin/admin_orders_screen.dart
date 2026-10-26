@@ -70,37 +70,48 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
     String newStatus,
   ) async {
     final label = _statusMap[newStatus] ?? newStatus;
-    final updated = await context.read<OrderProvider>().adminUpdateOrderStatus(
-      orderId: order.id,
-      newStatus: newStatus,
-      note: 'Admin cập nhật trạng thái sang: $label',
-    );
-    if (!context.mounted || updated == null) return;
-    await context.read<ProductProvider>().loadProducts();
-    if (!context.mounted) return;
-
-    final notifTitle = 'Đơn hàng ${order.orderCode}: $label';
-    final notifBody =
-        'Đơn hàng ${order.orderCode} của bạn đã chuyển sang trạng thái "$label".';
-
-    context.read<NotificationProvider>().addNotification(
-      title: notifTitle,
-      body: notifBody,
-      orderId: order.id,
-    );
     try {
-      await LocalNotificationService.showOrderNotification(
-        id: DateTime.now().millisecondsSinceEpoch % 100000,
+      final updated = await context
+          .read<OrderProvider>()
+          .adminUpdateOrderStatus(
+            orderId: order.id,
+            newStatus: newStatus,
+            note: 'Admin cập nhật trạng thái sang: $label',
+          );
+      if (!context.mounted || updated == null) return;
+      await context.read<ProductProvider>().loadProducts();
+      if (!context.mounted) return;
+
+      final notifTitle = 'Đơn hàng ${order.orderCode}: $label';
+      final notifBody =
+          'Đơn hàng ${order.orderCode} của bạn đã chuyển sang trạng thái "$label".';
+
+      context.read<NotificationProvider>().addNotification(
         title: notifTitle,
         body: notifBody,
         orderId: order.id,
       );
-    } catch (_) {}
+      try {
+        await LocalNotificationService.showOrderNotification(
+          id: DateTime.now().millisecondsSinceEpoch % 100000,
+          title: notifTitle,
+          body: notifBody,
+          orderId: order.id,
+        );
+      } catch (_) {}
 
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Đã cập nhật ${order.orderCode} → $label (S05)')),
-    );
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Đã cập nhật ${order.orderCode} → $label (S05)'),
+        ),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(backgroundColor: AppColors.danger, content: Text('$e')),
+      );
+    }
   }
 
   void _openQrScannerModal(BuildContext context) {
@@ -193,6 +204,13 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
   }
 
   void _showStatusUpdateModal(BuildContext context, OrderModel order) {
+    const allowedTransitions = {
+      'pending': {'confirmed', 'cancelled'},
+      'confirmed': {'processing', 'cancelled'},
+      'processing': {'shipping', 'cancelled'},
+      'shipping': {'delivered', 'failed_delivery'},
+    };
+    final validNext = allowedTransitions[order.status] ?? <String>{};
     final statuses = [
       'pending',
       'confirmed',
@@ -233,14 +251,17 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
               runSpacing: 8,
               children: statuses.map((st) {
                 final isCurrent = order.status == st;
+                final canSelect = isCurrent || validNext.contains(st);
                 return ChoiceChip(
                   label: Text(_statusMap[st] ?? st),
                   selected: isCurrent,
-                  onSelected: (selected) {
-                    if (!selected || isCurrent) return;
-                    Navigator.pop(ctx);
-                    _updateStatus(context, order, st);
-                  },
+                  onSelected: !canSelect
+                      ? null
+                      : (selected) {
+                          if (!selected || isCurrent) return;
+                          Navigator.pop(ctx);
+                          _updateStatus(context, order, st);
+                        },
                 );
               }).toList(),
             ),
@@ -351,7 +372,7 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${order.items.length} sản phẩm • COD',
+                                      '${order.items.length} sản phẩm • ${order.paymentMethod.toUpperCase()} (${order.paymentStatus == 'paid' ? 'Đã TT' : 'Chưa TT'})',
                                       style: const TextStyle(
                                         fontSize: 12,
                                         color: AppColors.ink3,
