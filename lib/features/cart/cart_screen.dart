@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../core/utils/currency_formatter.dart';
 import '../../core/widgets/lm_glass_widgets.dart';
+import '../../core/widgets/phone_studio_illustration.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../checkout/checkout_screen.dart';
@@ -17,9 +20,14 @@ class CartScreen extends StatelessWidget {
       showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Đang ở chế độ Offline (F23)'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: const Text(
+            'Đang ở chế độ Offline',
+            style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
+          ),
           content: const Text(
-            'Giỏ hàng hoạt động hoàn toàn Offline nhờ lưu vào file cart_<uid>.json.\n\nTuy nhiên, bước Đặt hàng (Checkout) cần kết nối Internet để Server xác minh giá bán và tồn kho thực tế.',
+            'Túi hàng hoạt động hoàn toàn Offline nhờ lưu vào file cart.json.\n\nTuy nhiên, bước Đặt hàng cần kết nối Internet để hệ thống kiểm tra tồn kho và xác nhận thanh toán.',
+            style: TextStyle(fontSize: 13, height: 1.4),
           ),
           actions: [
             TextButton(
@@ -27,6 +35,13 @@ class CartScreen extends StatelessWidget {
               child: const Text('Để sau'),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.brand700,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
               onPressed: () {
                 auth.toggleOfflineSimulation(false);
                 Navigator.of(ctx).pop();
@@ -34,7 +49,7 @@ class CartScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (_) => const CheckoutScreen()),
                 );
               },
-              child: const Text('Bật lại mạng & Checkout'),
+              child: const Text('Bật mạng & Đặt hàng'),
             ),
           ],
         ),
@@ -42,8 +57,9 @@ class CartScreen extends StatelessWidget {
       return;
     }
 
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (_) => const CheckoutScreen()));
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const CheckoutScreen()),
+    );
   }
 
   @override
@@ -51,14 +67,14 @@ class CartScreen extends StatelessWidget {
     final cartProvider = context.watch<CartProvider>();
     final authProvider = context.watch<AuthProvider>();
     final items = cartProvider.items;
-    final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Giỏ hàng của bạn (F11)'),
+        title: const Text('Túi Hàng Của Bạn'),
         actions: [
           IconButton(
-            tooltip: 'Giả lập Bật/Tắt mạng để test TC07 & TC08',
+            tooltip: 'Giả lập Offline',
             icon: Icon(
               authProvider.isOfflineSimulated
                   ? Icons.wifi_off_rounded
@@ -71,184 +87,308 @@ class CartScreen extends StatelessWidget {
           ),
           if (items.isNotEmpty)
             IconButton(
-              tooltip: 'Xóa toàn bộ giỏ hàng',
-              onPressed: () => cartProvider.clearCart(),
-              icon: const Icon(Icons.delete_sweep_outlined),
+              tooltip: 'Xóa toàn bộ',
+              onPressed: () {
+                showDialog<void>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    title: const Text('Xác nhận xóa túi hàng?'),
+                    content: const Text('Toàn bộ sản phẩm sẽ được xóa khỏi giỏ.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(ctx).pop(),
+                        child: const Text('Hủy'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          cartProvider.clearCart();
+                          Navigator.of(ctx).pop();
+                        },
+                        child: const Text(
+                          'Xóa sạch',
+                          style: TextStyle(color: AppColors.error),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              icon: const Icon(Icons.delete_outline_rounded, color: AppColors.ink),
             ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-            child: LmGlassCard(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              borderRadius: 14,
-              child: Row(
-                children: [
-                  Icon(Icons.folder_zip_outlined, size: 18, color: accent),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Local File Storage: cart_${authProvider.activeUserId}.json ↔ Firestore Sync (S01)',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textSecondary,
+      body: LiquidAmbientCanvas(
+        animate: true,
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              // Offline sync banner pill in Glass
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
+                child: LiquidGlassCard(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  borderRadius: 14,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.cloud_done_rounded,
+                        size: 17,
+                        color: AppColors.brand700,
                       ),
-                    ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Đồng bộ tức thì: cart_${authProvider.activeUserId}.json ↔ Cloud',
+                          style: const TextStyle(
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.inkSecondary,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
-          Expanded(
-            child: items.isEmpty
-                ? const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(24),
-                      child: Text(
-                        'Giỏ hàng đang trống.\nHãy chọn một mẫu điện thoại và phiên bản Màu/RAM/ROM để thêm vào giỏ.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.textSecondary),
-                      ),
-                    ),
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: items.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final item = items[index];
-                      return LmMaterialCard(
-                        padding: const EdgeInsets.all(14),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 52,
-                              height: 52,
-                              decoration: BoxDecoration(
-                                color: accent.withValues(alpha: 0.08),
-                                borderRadius: BorderRadius.circular(14),
+
+              // Cart Items List or Empty State
+              Expanded(
+                child: items.isEmpty
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(28),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 84,
+                                height: 84,
+                                decoration: BoxDecoration(
+                                  color: AppColors.brand700.withValues(alpha: 0.08),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.shopping_bag_outlined,
+                                  size: 44,
+                                  color: AppColors.brand700,
+                                ),
                               ),
-                              child: Icon(
-                                Icons.smartphone_rounded,
-                                color: accent,
-                                size: 28,
+                              const SizedBox(height: 16),
+                              const Text(
+                                'Túi Hàng Đang Trống',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.ink,
+                                  letterSpacing: -0.3,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.productName,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14.5,
-                                      color: AppColors.ink,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 3),
-                                  Text(
-                                    item.variantLabel,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.textSecondary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    CurrencyFormatter.formatVnd(
-                                      item.lineTotalVnd,
-                                    ),
-                                    style: TextStyle(
-                                      color: accent,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 14.5,
-                                    ),
-                                  ),
-                                ],
+                              const SizedBox(height: 6),
+                              const Text(
+                                'Hãy chọn một phiên bản iPhone 16 hoặc phụ kiện chính hãng để bắt đầu đặt hàng.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 12.5,
+                                  color: AppColors.inkSecondary,
+                                  height: 1.4,
+                                ),
                               ),
-                            ),
-                            Row(
+                            ],
+                          ),
+                        ),
+                      )
+                    : ListView.separated(
+                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 120),
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: items.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final item = items[index];
+
+                          return LiquidGlassCard(
+                            padding: const EdgeInsets.all(14),
+                            borderRadius: 18,
+                            child: Row(
                               children: [
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.remove_circle_outline_rounded,
-                                  ),
-                                  onPressed: () => cartProvider.updateQuantity(
-                                    item.variantId,
-                                    item.quantity - 1,
-                                  ),
-                                ),
-                                Text(
-                                  '${item.quantity}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 15,
+                                SizedBox(
+                                  width: 68,
+                                  height: 74,
+                                  child: Center(
+                                    child: PhoneStudioIllustration(
+                                      brandId: 'Apple',
+                                      productName: item.productName,
+                                      colorHex: '#C5B4A5',
+                                      height: 68,
+                                    ),
                                   ),
                                 ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.add_circle_outline_rounded,
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item.productName,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 14,
+                                          color: AppColors.ink,
+                                          letterSpacing: -0.2,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        item.variantLabel,
+                                        style: const TextStyle(
+                                          fontSize: 11.5,
+                                          color: AppColors.inkMuted,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        CurrencyFormatter.formatVnd(
+                                          item.lineTotalVnd,
+                                        ),
+                                        style: const TextStyle(
+                                          color: AppColors.brand700,
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 14.5,
+                                          letterSpacing: -0.3,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  onPressed: () => cartProvider.updateQuantity(
-                                    item.variantId,
-                                    item.quantity + 1,
+                                ),
+
+                                // Quantity Stepper
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.8),
+                                    borderRadius: BorderRadius.circular(999),
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.remove, size: 14),
+                                        onPressed: () =>
+                                            cartProvider.updateQuantity(
+                                          item.variantId,
+                                          item.quantity - 1,
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 28,
+                                          minHeight: 28,
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                        ),
+                                        child: Text(
+                                          '${item.quantity}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.add, size: 14),
+                                        onPressed: () =>
+                                            cartProvider.updateQuantity(
+                                          item.variantId,
+                                          item.quantity + 1,
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 28,
+                                          minHeight: 28,
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                          );
+                        },
+                      ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
+
+      // Floating Liquid-Glass Checkout Bar
       bottomNavigationBar: items.isEmpty
           ? null
-          : SafeArea(
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: const BoxDecoration(
-                  color: AppColors.surface,
-                  border: Border(top: BorderSide(color: AppColors.border)),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          : ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.82),
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        width: 1.2,
+                      ),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF0F172A).withValues(alpha: 0.08),
+                        blurRadius: 20,
+                        offset: const Offset(0, -6),
+                      ),
+                    ],
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          'Tạm tính (${cartProvider.totalQuantity} sản phẩm):',
-                          style: const TextStyle(
-                            fontSize: 14.5,
-                            color: AppColors.textSecondary,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Tổng phụ (${cartProvider.totalQuantity} món):',
+                              style: const TextStyle(
+                                fontSize: 13.5,
+                                color: AppColors.inkMuted,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              CurrencyFormatter.formatVnd(
+                                cartProvider.subtotalVnd,
+                              ),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.brand700,
+                                letterSpacing: -0.4,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          CurrencyFormatter.formatVnd(cartProvider.subtotalVnd),
-                          style: TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.w800,
-                            color: accent,
-                          ),
+                        const SizedBox(height: 10),
+                        LiquidPillButton(
+                          label: 'Tiến Hành Đặt Hàng',
+                          icon: Icons.shopping_bag_outlined,
+                          onPressed: () => _proceedToCheckout(context),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    LmTintedButton(
-                      label: 'Tiến hành Đặt hàng (F13)',
-                      icon: Icons.shopping_bag_outlined,
-                      onPressed: () => _proceedToCheckout(context),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),

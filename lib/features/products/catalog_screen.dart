@@ -21,7 +21,7 @@ class CatalogScreen extends StatelessWidget {
 
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: AppColors.surface,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -29,7 +29,7 @@ class CatalogScreen extends StatelessWidget {
         return StatefulBuilder(
           builder: (ctx, setModalState) {
             return Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -38,11 +38,12 @@ class CatalogScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Bộ lọc nâng cao (F07)',
+                        'Bộ Lọc Sản Phẩm',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                           color: AppColors.ink,
+                          letterSpacing: -0.4,
                         ),
                       ),
                       TextButton(
@@ -50,24 +51,41 @@ class CatalogScreen extends StatelessWidget {
                           prov.applyFilters(clearAll: true);
                           Navigator.of(ctx).pop();
                         },
-                        child: const Text('Đặt lại'),
+                        child: const Text(
+                          'Đặt lại',
+                          style: TextStyle(
+                            color: AppColors.brand700,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 14),
                   const Text(
                     'Mức giá tối đa:',
-                    style: TextStyle(fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      color: AppColors.inkSecondary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
+                    runSpacing: 8,
                     children: [
                       ChoiceChip(
-                        label: const Text('Tất cả mức giá'),
+                        label: const Text('Tất cả'),
                         selected: selectedMaxPrice == null,
                         onSelected: (_) =>
                             setModalState(() => selectedMaxPrice = null),
+                      ),
+                      ChoiceChip(
+                        label: const Text('Dưới 10 triệu'),
+                        selected: selectedMaxPrice == 10000000,
+                        onSelected: (_) =>
+                            setModalState(() => selectedMaxPrice = 10000000),
                       ),
                       ChoiceChip(
                         label: const Text('Dưới 20 triệu'),
@@ -83,10 +101,14 @@ class CatalogScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 14),
                   const Text(
                     'Dung lượng RAM:',
-                    style: TextStyle(fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      color: AppColors.inkSecondary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Wrap(
@@ -100,10 +122,14 @@ class CatalogScreen extends StatelessWidget {
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 14),
                   const Text(
                     'Bộ nhớ trong (ROM):',
-                    style: TextStyle(fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13,
+                      color: AppColors.inkSecondary,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Wrap(
@@ -120,14 +146,23 @@ class CatalogScreen extends StatelessWidget {
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   SwitchListTile(
-                    title: const Text('Chỉ hiện còn hàng'),
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text(
+                      'Chỉ hiện còn hàng',
+                      style: TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     value: onlyInStock,
+                    activeThumbColor: AppColors.brand700,
                     onChanged: (value) =>
                         setModalState(() => onlyInStock = value),
                   ),
-                  LmTintedButton(
+                  const SizedBox(height: 10),
+                  LiquidPillButton(
                     label: 'Áp dụng bộ lọc',
                     icon: Icons.filter_alt_rounded,
                     onPressed: () {
@@ -153,222 +188,397 @@ class CatalogScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final prov = context.watch<ProductProvider>();
     final products = prov.products;
-    final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Danh mục & Tìm kiếm (F05–F08)'),
+        title: const Text('Dòng iPhone & Danh Mục'),
         actions: [
           IconButton(
-            tooltip: 'Bộ lọc nâng cao (F07)',
-            icon: const Icon(Icons.tune_rounded),
+            tooltip: 'Bộ lọc nâng cao',
+            icon: const Icon(Icons.tune_rounded, color: AppColors.brand700),
             onPressed: () => _showFilterBottomSheet(context),
+          ),
+          IconButton(
+            tooltip: 'Xem so sánh',
+            icon: Badge(
+              isLabelVisible: prov.comparedProductIds.isNotEmpty,
+              label: Text('${prov.comparedProductIds.length}'),
+              child: const Icon(
+                Icons.compare_arrows_rounded,
+                color: AppColors.brand700,
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const ComparePhonesScreen(),
+                ),
+              );
+            },
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-            child: TextField(
-              onChanged: prov.setSearchQuery,
-              decoration: const InputDecoration(
-                hintText: 'Tìm theo tên máy, hãng, model (F06)...',
-                prefixIcon: Icon(Icons.search_rounded),
-              ),
-            ),
-          ),
-          // Thanh sắp xếp (F08)
-          SizedBox(
-            height: 42,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                ChoiceChip(
-                  label: const Text('Bán chạy nhất'),
-                  selected: prov.sortOption == ProductSortOption.bestSelling,
-                  onSelected: (_) =>
-                      prov.setSortOption(ProductSortOption.bestSelling),
-                ),
-                const SizedBox(width: 8),
-                ChoiceChip(
-                  label: const Text('Mới nhất'),
-                  selected: prov.sortOption == ProductSortOption.newest,
-                  onSelected: (_) =>
-                      prov.setSortOption(ProductSortOption.newest),
-                ),
-                const SizedBox(width: 8),
-                ChoiceChip(
-                  label: const Text('Giá tăng dần ↑'),
-                  selected: prov.sortOption == ProductSortOption.priceAsc,
-                  onSelected: (_) =>
-                      prov.setSortOption(ProductSortOption.priceAsc),
-                ),
-                const SizedBox(width: 8),
-                ChoiceChip(
-                  label: const Text('Giá giảm dần ↓'),
-                  selected: prov.sortOption == ProductSortOption.priceDesc,
-                  onSelected: (_) =>
-                      prov.setSortOption(ProductSortOption.priceDesc),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: products.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.search_off_rounded,
-                          size: 48,
-                          color: AppColors.textFaint,
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Không tìm thấy sản phẩm phù hợp bộ lọc.',
-                          style: TextStyle(color: AppColors.textSecondary),
-                        ),
-                        TextButton(
-                          onPressed: () => prov.applyFilters(clearAll: true),
-                          child: const Text('Xóa toàn bộ bộ lọc'),
-                        ),
-                      ],
+      body: LiquidAmbientCanvas(
+        animate: true,
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              // Search Input in Glass Card
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
+                child: LiquidGlassCard(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 2,
+                  ),
+                  borderRadius: 16,
+                  child: TextField(
+                    onChanged: prov.setSearchQuery,
+                    decoration: const InputDecoration(
+                      hintText: 'Tìm theo model, tên máy hoặc phụ kiện...',
+                      hintStyle: TextStyle(
+                        color: AppColors.inkMuted,
+                        fontSize: 13,
+                      ),
+                      prefixIcon: Icon(
+                        Icons.search_rounded,
+                        color: AppColors.inkMuted,
+                        size: 20,
+                      ),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      filled: false,
+                      contentPadding: EdgeInsets.symmetric(vertical: 11),
                     ),
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: products.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final product = products[index];
-                      final isCompared = prov.comparedProductIds.contains(
-                        product.id,
-                      );
+                  ),
+                ),
+              ),
 
-                      return LmMaterialCard(
-                        padding: const EdgeInsets.all(14),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  ProductDetailScreen(productId: product.id),
-                            ),
-                          );
-                        },
-                        child: Row(
+              // Sorting Chips
+              SizedBox(
+                height: 38,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  children: [
+                    _buildSortPill(
+                      context,
+                      label: 'Bán chạy nhất',
+                      selected: prov.sortOption == ProductSortOption.bestSelling,
+                      onTap: () =>
+                          prov.setSortOption(ProductSortOption.bestSelling),
+                    ),
+                    const SizedBox(width: 8),
+                    _buildSortPill(
+                      context,
+                      label: 'Mới nhất',
+                      selected: prov.sortOption == ProductSortOption.newest,
+                      onTap: () => prov.setSortOption(ProductSortOption.newest),
+                    ),
+                    const SizedBox(width: 8),
+                    _buildSortPill(
+                      context,
+                      label: 'Giá tăng dần ↑',
+                      selected: prov.sortOption == ProductSortOption.priceAsc,
+                      onTap: () => prov.setSortOption(ProductSortOption.priceAsc),
+                    ),
+                    const SizedBox(width: 8),
+                    _buildSortPill(
+                      context,
+                      label: 'Giá giảm dần ↓',
+                      selected: prov.sortOption == ProductSortOption.priceDesc,
+                      onTap: () =>
+                          prov.setSortOption(ProductSortOption.priceDesc),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Product List
+              Expanded(
+                child: products.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            SizedBox(
-                              width: 72,
-                              child: PhoneStudioIllustration(
-                                brandId: product.brandId,
-                                categoryId: product.categoryId,
-                                productName: product.name,
-                                colorHex: product.defaultColorHex,
-                                height: 84,
+                            const Icon(
+                              Icons.search_off_rounded,
+                              size: 48,
+                              color: AppColors.inkFaint,
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'Không tìm thấy sản phẩm phù hợp bộ lọc.',
+                              style: TextStyle(
+                                color: AppColors.inkSecondary,
+                                fontSize: 13.5,
                               ),
                             ),
-                            const SizedBox(width: 14),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      LmStatusPill(
-                                        text: product.brandId,
-                                        color: accent,
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        '⭐ ${product.ratingAvg}',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    product.name,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.ink,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    product.condition,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      color: AppColors.textSecondary,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        CurrencyFormatter.formatVnd(
-                                          product.priceFromVnd,
-                                        ),
-                                        style: TextStyle(
-                                          color: accent,
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          prov.toggleCompareProduct(product.id);
-                                          ScaffoldMessenger.of(
-                                            context,
-                                          ).showSnackBar(
-                                            SnackBar(
-                                              action: SnackBarAction(
-                                                label: 'Xem so sánh',
-                                                onPressed: () {
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (_) =>
-                                                          const ComparePhonesScreen(),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                              content: Text(
-                                                'Đã cập nhật danh sách so sánh (${prov.comparedProductIds.length} máy)',
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: LmStatusPill(
-                                          text: isCompared
-                                              ? 'Đang so sánh'
-                                              : '+ So sánh',
-                                          color: isCompared
-                                              ? AppColors.success
-                                              : AppColors.textSecondary,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                            const SizedBox(height: 4),
+                            TextButton(
+                              onPressed: () => prov.applyFilters(clearAll: true),
+                              child: const Text(
+                                'Xóa toàn bộ bộ lọc',
+                                style: TextStyle(
+                                  color: AppColors.brand700,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
+                      )
+                    : ListView.separated(
+                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: products.length,
+                        separatorBuilder: (_, _) => const SizedBox(height: 12),
+                        itemBuilder: (context, index) {
+                          final product = products[index];
+                          final isCompared = prov.comparedProductIds.contains(
+                            product.id,
+                          );
+
+                          return LiquidGlassCard(
+                            padding: const EdgeInsets.all(14),
+                            borderRadius: 18,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ProductDetailScreen(productId: product.id),
+                                ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 80,
+                                  height: 84,
+                                  child: Center(
+                                    child: PhoneStudioIllustration(
+                                      brandId: product.brandId,
+                                      categoryId: product.categoryId,
+                                      productName: product.name,
+                                      colorHex: product.defaultColorHex,
+                                      imageUrl: product.thumbnailUrl.isNotEmpty
+                                          ? product.thumbnailUrl
+                                          : null,
+                                      height: 80,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 7,
+                                              vertical: 2,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.brand50,
+                                              borderRadius:
+                                                  BorderRadius.circular(999),
+                                              border: Border.all(
+                                                color: AppColors.brand200,
+                                              ),
+                                            ),
+                                            child: Text(
+                                              product.brandId,
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.brand700,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          const Icon(
+                                            Icons.star_rounded,
+                                            size: 14,
+                                            color: Color(0xFFF59E0B),
+                                          ),
+                                          const SizedBox(width: 2),
+                                          Text(
+                                            '${product.ratingAvg}',
+                                            style: const TextStyle(
+                                              fontSize: 11.5,
+                                              fontWeight: FontWeight.w700,
+                                              color: AppColors.ink,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        product.name,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w700,
+                                          color: AppColors.ink,
+                                          letterSpacing: -0.2,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        product.condition,
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          color: AppColors.inkMuted,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            CurrencyFormatter.formatVnd(
+                                              product.priceFromVnd,
+                                            ),
+                                            style: const TextStyle(
+                                              color: AppColors.brand700,
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 14.5,
+                                              letterSpacing: -0.3,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              prov.toggleCompareProduct(
+                                                product.id,
+                                              );
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  duration: const Duration(
+                                                    seconds: 2,
+                                                  ),
+                                                  action: SnackBarAction(
+                                                    label: 'Xem so sánh',
+                                                    onPressed: () {
+                                                      Navigator.of(
+                                                        context,
+                                                      ).push(
+                                                        MaterialPageRoute(
+                                                          builder: (_) =>
+                                                              const ComparePhonesScreen(),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                  content: Text(
+                                                    isCompared
+                                                        ? 'Đã bỏ ${product.name} khỏi so sánh'
+                                                        : 'Đã thêm vào danh sách so sánh!',
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: 9,
+                                                vertical: 4,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: isCompared
+                                                    ? AppColors.brand700
+                                                    : Colors.white
+                                                        .withValues(alpha: 0.8),
+                                                borderRadius:
+                                                    BorderRadius.circular(999),
+                                                border: Border.all(
+                                                  color: AppColors.brand700,
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    isCompared
+                                                        ? Icons.check_rounded
+                                                        : Icons
+                                                            .compare_arrows_rounded,
+                                                    size: 13,
+                                                    color: isCompared
+                                                        ? Colors.white
+                                                        : AppColors.brand700,
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  Text(
+                                                    isCompared
+                                                        ? 'Đã chọn'
+                                                        : 'So sánh',
+                                                    style: TextStyle(
+                                                      fontSize: 11,
+                                                      fontWeight: FontWeight.w700,
+                                                      color: isCompared
+                                                        ? Colors.white
+                                                        : AppColors.brand700,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSortPill(
+    BuildContext context, {
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.brand700 : Colors.white.withValues(alpha: 0.8),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: selected ? AppColors.brand700 : AppColors.border,
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: selected ? Colors.white : AppColors.ink,
+            fontSize: 12,
+            fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+          ),
+        ),
       ),
     );
   }

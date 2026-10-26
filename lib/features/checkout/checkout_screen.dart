@@ -275,7 +275,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final auth = context.watch<AuthProvider>();
     final orderProv = context.watch<OrderProvider>();
     final coupons = context.watch<ProductProvider>().coupons;
-    final accent = Theme.of(context).colorScheme.primary;
 
     final selectedAddress = auth.defaultAddress;
     final subtotal = cart.subtotalVnd;
@@ -286,323 +285,395 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final totalVnd = (subtotal + shippingFee - discount).clamp(0, 999999999);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Xác nhận Thanh toán (F13)')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // 1. Địa chỉ giao hàng (F18)
-          LmMaterialCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        title: const Text('Xác Nhận Đặt Hàng'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: LiquidAmbientCanvas(
+        animate: true,
+        child: SafeArea(
+          bottom: false,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+            physics: const BouncingScrollPhysics(),
+            children: [
+              // 1. Địa chỉ giao hàng (F18)
+              LiquidGlassCard(
+                borderRadius: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Địa chỉ nhận hàng (F18)',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 15.5,
-                      ),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const AddressManagementScreen(),
-                          ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.edit_location_alt_outlined,
-                        size: 18,
-                      ),
-                      label: const Text('Thay đổi'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  '${selectedAddress.fullName} • ${selectedAddress.phone}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  selectedAddress.addressLine,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 14),
-
-          // 2. Tóm tắt sản phẩm trong đơn
-          LmMaterialCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Sản phẩm đặt mua (${cart.totalQuantity})',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 15.5,
-                  ),
-                ),
-                const Divider(height: 20),
-                ...cart.items.map(
-                  (item) => Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${item.quantity}x ${item.productName}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 13.5,
-                                ),
-                              ),
-                              Text(
-                                item.variantLabel,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.textSecondary,
-                                ),
-                              ),
-                            ],
+                        const Text(
+                          'Địa Chỉ Nhận Hàng',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 15.5,
+                            color: AppColors.ink,
                           ),
                         ),
-                        Text(
-                          CurrencyFormatter.formatVnd(item.lineTotalVnd),
-                          style: const TextStyle(fontWeight: FontWeight.w700),
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const AddressManagementScreen(),
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.edit_location_alt_outlined,
+                            size: 17,
+                            color: AppColors.brand700,
+                          ),
+                          label: const Text(
+                            'Thay đổi',
+                            style: TextStyle(
+                              color: AppColors.brand700,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '${selectedAddress.fullName} • ${selectedAddress.phone}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13.5,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      selectedAddress.addressLine,
+                      style: const TextStyle(
+                        color: AppColors.inkSecondary,
+                        fontSize: 12.5,
+                        height: 1.35,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 14),
+              ),
+              const SizedBox(height: 14),
 
-          // 3. Mã giảm giá & Voucher (S04)
-          LmMaterialCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Mã giảm giá / Voucher (S04)',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15.5),
-                ),
-                const SizedBox(height: 10),
-                Row(
+              // 2. Tóm tắt sản phẩm trong đơn
+              LiquidGlassCard(
+                borderRadius: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _couponCtrl,
-                        decoration: const InputDecoration(
-                          hintText: 'Nhập mã (VD: SMART500, PRM393)...',
+                    Text(
+                      'Sản Phẩm Đặt Mua (${cart.totalQuantity})',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 15.5,
+                        color: AppColors.ink,
+                      ),
+                    ),
+                    const Divider(height: 20),
+                    ...cart.items.map(
+                      (item) => Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${item.quantity}x ${item.productName}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 13.5,
+                                      color: AppColors.ink,
+                                    ),
+                                  ),
+                                  Text(
+                                    item.variantLabel,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: AppColors.inkMuted,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              CurrencyFormatter.formatVnd(item.lineTotalVnd),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13.5,
+                                color: AppColors.brand700,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(96, 48),
-                      ),
-                      onPressed: () => _applyCoupon(_couponCtrl.text),
-                      child: const Text('Áp dụng'),
-                    ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
-                  children: coupons.map((c) {
-                    final isSelected = _appliedCoupon?.code == c.code;
-                    return ActionChip(
-                      label: Text(
-                        '${c.code} (-${CurrencyFormatter.formatVnd(c.discountVnd)})',
-                      ),
-                      backgroundColor: isSelected
-                          ? accent.withValues(alpha: 0.12)
-                          : AppColors.surface,
-                      onPressed: () => _applyCoupon(c.code),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 14),
+              ),
+              const SizedBox(height: 14),
 
-          // 4. Phương thức thanh toán (COD / PayOS VietQR) & Sinh trắc học
-          LmMaterialCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // 3. Mã giảm giá & Voucher (S04)
+              LiquidGlassCard(
+                borderRadius: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Phương thức thanh toán',
+                      'Mã Giảm Giá / Voucher',
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 15.5,
+                        color: AppColors.ink,
                       ),
                     ),
-                    IconButton(
-                      tooltip: 'Cấu hình khóa PayOS (.env)',
-                      icon: Icon(
-                        Icons.key_rounded,
-                        size: 20,
-                        color: EnvConfig.isPayosConfigured
-                            ? AppColors.success
-                            : AppColors.textSecondary,
-                      ),
-                      onPressed: _showPayosConfigDialog,
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _couponCtrl,
+                            decoration: InputDecoration(
+                              hintText: 'Nhập mã (VD: SMART500, PRM393)...',
+                              hintStyle: const TextStyle(fontSize: 12.5),
+                              filled: true,
+                              fillColor: Colors.white.withValues(alpha: 0.8),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: AppColors.border,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.brand700,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            minimumSize: const Size(90, 46),
+                          ),
+                          onPressed: () => _applyCoupon(_couponCtrl.text),
+                          child: const Text(
+                            'Áp dụng',
+                            style: TextStyle(fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 6,
+                      children: coupons.map((c) {
+                        final isSelected = _appliedCoupon?.code == c.code;
+                        return ActionChip(
+                          label: Text(
+                            '${c.code} (-${CurrencyFormatter.formatVnd(c.discountVnd)})',
+                          ),
+                          backgroundColor: isSelected
+                              ? AppColors.brand700
+                              : Colors.white.withValues(alpha: 0.8),
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.white : AppColors.ink,
+                            fontSize: 11.5,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          onPressed: () => _applyCoupon(c.code),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  onTap: () => setState(() => _paymentMethod = 'cod'),
-                  leading: Icon(
-                    _paymentMethod == 'cod'
-                        ? Icons.radio_button_checked_rounded
-                        : Icons.radio_button_off_rounded,
-                    color: _paymentMethod == 'cod'
-                        ? accent
-                        : AppColors.textSecondary,
-                  ),
-                  title: const Text(
-                    'Thanh toán khi nhận hàng (COD)',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
-                  ),
-                  subtitle: const Text(
-                    'Kiểm tra nguyên seal máy trước khi thanh toán',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  trailing: const Icon(Icons.payments_outlined),
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  onTap: () => setState(() => _paymentMethod = 'payos'),
-                  leading: Icon(
-                    _paymentMethod == 'payos'
-                        ? Icons.radio_button_checked_rounded
-                        : Icons.radio_button_off_rounded,
-                    color: _paymentMethod == 'payos'
-                        ? accent
-                        : AppColors.textSecondary,
-                  ),
-                  title: const Text(
-                    'Chuyển khoản ngân hàng VietQR (PayOS)',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
-                  ),
-                  subtitle: Text(
-                    EnvConfig.isPayosConfigured
-                        ? 'Đã nạp khóa từ .env • Tự động tạo mã VietQR & xác nhận tức thì'
-                        : 'Quét mã VietQR thật qua PayOS (Bấm biểu tượng chìa khóa hoặc điền .env)',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: EnvConfig.isPayosConfigured
-                          ? AppColors.success
-                          : AppColors.textSecondary,
-                    ),
-                  ),
-                  trailing: Icon(Icons.qr_code_2_rounded, color: accent),
-                ),
-                const Divider(height: 12),
-                SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: const Text(
-                    'Xác thực vân tay / Face ID (local_auth)',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
-                  ),
-                  subtitle: const Text(
-                    'Bảo mật bổ sung khi đặt đơn hàng điện thoại giá trị cao',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: _requireBiometric,
-                  onChanged: (v) => setState(() => _requireBiometric = v),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 14),
+              ),
+              const SizedBox(height: 14),
 
-          // 5. Chi tiết thanh toán (S03, S04)
-          LmMaterialCard(
-            child: Column(
-              children: [
-                _buildPriceRow(
-                  'Tạm tính:',
-                  CurrencyFormatter.formatVnd(subtotal),
-                ),
-                const SizedBox(height: 6),
-                _buildPriceRow(
-                  'Phí vận chuyển:',
-                  shippingFee == 0
-                      ? 'Miễn phí (0 ₫)'
-                      : CurrencyFormatter.formatVnd(shippingFee),
-                  valueColor: shippingFee == 0 ? AppColors.success : null,
-                ),
-                if (discount > 0) ...[
-                  const SizedBox(height: 6),
-                  _buildPriceRow(
-                    'Giảm giá Voucher (${_appliedCoupon?.code}):',
-                    '-${CurrencyFormatter.formatVnd(discount)}',
-                    valueColor: AppColors.success,
-                  ),
-                ],
-                const Divider(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // 4. Phương thức thanh toán (COD / PayOS VietQR) & Sinh trắc học
+              LiquidGlassCard(
+                borderRadius: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Tổng thanh toán:',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Phương Thức Thanh Toán',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 15.5,
+                            color: AppColors.ink,
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'Cấu hình khóa PayOS (.env)',
+                          icon: Icon(
+                            Icons.key_rounded,
+                            size: 20,
+                            color: EnvConfig.isPayosConfigured
+                                ? AppColors.success
+                                : AppColors.inkMuted,
+                          ),
+                          onPressed: _showPayosConfigDialog,
+                        ),
+                      ],
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      onTap: () => setState(() => _paymentMethod = 'cod'),
+                      leading: Icon(
+                        _paymentMethod == 'cod'
+                            ? Icons.radio_button_checked_rounded
+                            : Icons.radio_button_off_rounded,
+                        color: _paymentMethod == 'cod'
+                            ? AppColors.brand700
+                            : AppColors.inkMuted,
+                      ),
+                      title: const Text(
+                        'Thanh toán khi nhận hàng (COD)',
+                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+                      ),
+                      subtitle: const Text(
+                        'Kiểm tra nguyên seal máy trước khi thanh toán',
+                        style: TextStyle(fontSize: 11.5),
+                      ),
+                      trailing: const Icon(Icons.payments_outlined),
+                    ),
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      onTap: () => setState(() => _paymentMethod = 'payos'),
+                      leading: Icon(
+                        _paymentMethod == 'payos'
+                            ? Icons.radio_button_checked_rounded
+                            : Icons.radio_button_off_rounded,
+                        color: _paymentMethod == 'payos'
+                            ? AppColors.brand700
+                            : AppColors.inkMuted,
+                      ),
+                      title: const Text(
+                        'Chuyển khoản VietQR qua PayOS',
+                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+                      ),
+                      subtitle: Text(
+                        EnvConfig.isPayosConfigured
+                            ? 'Tự động tạo mã VietQR & đối soát tức thì'
+                            : 'Quét mã VietQR thanh toán thực tế',
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          color: EnvConfig.isPayosConfigured
+                              ? AppColors.success
+                              : AppColors.inkMuted,
+                        ),
+                      ),
+                      trailing: const Icon(
+                        Icons.qr_code_2_rounded,
+                        color: AppColors.brand700,
                       ),
                     ),
-                    Text(
-                      CurrencyFormatter.formatVnd(totalVnd),
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        color: accent,
+                    const Divider(height: 12),
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      activeThumbColor: AppColors.brand700,
+                      title: const Text(
+                        'Xác thực vân tay / Face ID',
+                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5),
                       ),
+                      subtitle: const Text(
+                        'Bảo mật bổ sung cho đơn hàng giá trị cao',
+                        style: TextStyle(fontSize: 11.5),
+                      ),
+                      value: _requireBiometric,
+                      onChanged: (v) => setState(() => _requireBiometric = v),
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 14),
+
+              // 5. Chi tiết thanh toán (S03, S04)
+              LiquidGlassCard(
+                borderRadius: 20,
+                child: Column(
+                  children: [
+                    _buildPriceRow(
+                      'Tạm tính:',
+                      CurrencyFormatter.formatVnd(subtotal),
+                    ),
+                    const SizedBox(height: 6),
+                    _buildPriceRow(
+                      'Phí vận chuyển:',
+                      shippingFee == 0
+                          ? 'Miễn phí (0 ₫)'
+                          : CurrencyFormatter.formatVnd(shippingFee),
+                      valueColor: shippingFee == 0 ? AppColors.success : null,
+                    ),
+                    if (discount > 0) ...[
+                      const SizedBox(height: 6),
+                      _buildPriceRow(
+                        'Giảm giá Voucher (${_appliedCoupon?.code}):',
+                        '-${CurrencyFormatter.formatVnd(discount)}',
+                        valueColor: AppColors.success,
+                      ),
+                    ],
+                    const Divider(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Tổng thanh toán:',
+                          style: TextStyle(
+                            fontSize: 15.5,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        Text(
+                          CurrencyFormatter.formatVnd(totalVnd),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.brand700,
+                            letterSpacing: -0.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              LiquidPillButton(
+                label: _paymentMethod == 'payos'
+                    ? 'Tạo Mã VietQR PayOS & Thanh Toán'
+                    : 'Xác Nhận Đặt Hàng Ngay',
+                icon: _paymentMethod == 'payos'
+                    ? Icons.qr_code_scanner_rounded
+                    : Icons.check_circle_outline_rounded,
+                isLoading: orderProv.isSubmitting || _isCreatingPayosLink,
+                onPressed: () => _submitOrder(selectedAddress, totalVnd),
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          LmTintedButton(
-            label: _paymentMethod == 'payos'
-                ? 'Tạo mã VietQR PayOS & Thanh toán'
-                : 'Xác nhận Đặt hàng ngay',
-            icon: _paymentMethod == 'payos'
-                ? Icons.qr_code_scanner_rounded
-                : Icons.check_circle_outline_rounded,
-            isLoading: orderProv.isSubmitting || _isCreatingPayosLink,
-            onPressed: () => _submitOrder(selectedAddress, totalVnd),
-          ),
-        ],
+        ),
       ),
     );
   }

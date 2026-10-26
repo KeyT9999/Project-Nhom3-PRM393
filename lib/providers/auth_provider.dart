@@ -9,7 +9,7 @@ import '../core/services/connectivity_service.dart';
 class AuthProvider extends ChangeNotifier {
   final AuthRepository _authRepository;
   List<AddressModel> _addresses = [];
-  LmThemeType _themeType = LmThemeType.blue;
+  LmThemeType _themeType = LmThemeType.titanium;
   bool _isOfflineSimulated = false;
 
   AuthProvider({AuthRepository? authRepository})

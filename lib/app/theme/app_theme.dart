@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
 class AppTheme {
   AppTheme._();
 
-  static ThemeData get lightTheme => buildTheme(AppColors.bluePalette);
+  static ThemeData get lightTheme => buildTheme(AppColors.titaniumPalette);
 
   static ThemeData buildTheme(LmPalette palette) {
+    final fontFam = GoogleFonts.plusJakartaSans().fontFamily;
+
     return ThemeData(
       useMaterial3: true,
+      fontFamily: fontFam,
       colorScheme: ColorScheme.fromSeed(
         seedColor: palette.accent,
         primary: palette.accent,
-        secondary: AppColors.ink,
+        secondary: AppColors.brand900,
         surface: AppColors.surface,
         error: AppColors.error,
       ),
       scaffoldBackgroundColor: palette.bg,
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.surface,
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
         foregroundColor: AppColors.ink,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
         titleTextStyle: TextStyle(
+          fontFamily: fontFam,
           color: AppColors.ink,
           fontSize: 18,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
           letterSpacing: -0.4,
         ),
       ),

@@ -324,6 +324,338 @@ class ProductRepository {
       defaultColorHex: '#E2E8F0',
       createdAt: DateTime(2026, 10, 5),
     ),
+    ProductModel(
+      id: 'iphone_16_pro',
+      name: 'iPhone 16 Pro Chính Hãng VN/A',
+      slug: 'iphone-16-pro',
+      brandId: 'Apple',
+      categoryId: 'smartphones',
+      description: 'Khung viền Titan cấp độ 5, màn hình 6.3 inch Super Retina XDR ProMotion 120Hz, chip A18 Pro và nút Camera Control hỗ trợ quay ProRes 4K 120fps.',
+      priceFromVnd: 28490000,
+      specs: const {
+        'Màn hình': '6.3 inch Super Retina XDR ProMotion 120Hz',
+        'Chip xử lý': 'Apple A18 Pro (6 nhân GPU)',
+        'Camera': '48MP Fusion + 48MP Ultra Wide + 12MP Tele 5x',
+        'Pin & Sạc': '3582 mAh • Sạc nhanh MagSafe 25W',
+        'Chất liệu': 'Khung Titan cấp 5 • Ceramic Shield thế hệ 2',
+      },
+      isFeatured: true,
+      soldCount: 104,
+      ratingAvg: 4.9,
+      reviewCount: 46,
+      ramOptions: const [8],
+      storageOptions: const [128, 256, 512, 1024],
+      defaultColorHex: '#C5B4A5',
+      createdAt: DateTime(2026, 10, 19),
+    ),
+    ProductModel(
+      id: 'iphone_16_plus',
+      name: 'iPhone 16 Plus Chính Hãng VN/A',
+      slug: 'iphone-16-plus',
+      brandId: 'Apple',
+      categoryId: 'smartphones',
+      description: 'Màn hình lớn 6.7 inch rực rỡ, pin trâu vượt trội đến 27 giờ phát video, trang bị chip A18 3nm và camera góc siêu rộng chụp Macro sắc nét.',
+      priceFromVnd: 22990000,
+      specs: const {
+        'Màn hình': '6.7 inch Super Retina XDR OLED',
+        'Chip xử lý': 'Apple A18 (3nm)',
+        'Camera': '48MP Fusion + 12MP Ultra Wide',
+        'Pin & Sạc': '4674 mAh • Thời lượng pin ấn tượng nhất dòng iPhone 16',
+        'Tính năng': 'Nút Điều Khiển Camera • Action Button đa năng',
+      },
+      isFeatured: true,
+      soldCount: 88,
+      ratingAvg: 4.8,
+      reviewCount: 34,
+      ramOptions: const [8],
+      storageOptions: const [128, 256, 512],
+      defaultColorHex: '#4F6DF5',
+      createdAt: DateTime(2026, 10, 17),
+    ),
+    ProductModel(
+      id: 'iphone_15',
+      name: 'iPhone 15 Chính Hãng VN/A',
+      slug: 'iphone-15',
+      brandId: 'Apple',
+      categoryId: 'smartphones',
+      description: 'Thiết kế mặt lưng kính pha màu sang trọng, Dynamic Island tiện ích, camera 48MP bắt trọn chi tiết và cổng kết nối USB-C chuẩn hóa.',
+      priceFromVnd: 16490000,
+      specs: const {
+        'Màn hình': '6.1 inch Super Retina XDR OLED với Dynamic Island',
+        'Chip xử lý': 'Apple A16 Bionic (4nm)',
+        'Camera': '48MP Main + 12MP Ultra Wide (Zoom quang 2x)',
+        'Cổng kết nối': 'USB-C đa dụng',
+        'Chống nước': 'IP68 theo tiêu chuẩn IEC 60529',
+      },
+      isFeatured: false,
+      soldCount: 142,
+      ratingAvg: 4.8,
+      reviewCount: 58,
+      ramOptions: const [6, 8],
+      storageOptions: const [128, 256],
+      defaultColorHex: '#F4A8B8',
+      createdAt: DateTime(2026, 10, 5),
+    ),
+    ProductModel(
+      id: 'samsung_s25_plus',
+      name: 'Samsung Galaxy S25+ 5G',
+      slug: 'samsung-galaxy-s25-plus',
+      brandId: 'Samsung',
+      categoryId: 'smartphones',
+      description: 'Màn hình 6.7 inch Dynamic AMOLED 2X sắc nét QHD+, vi xử lý Snapdragon 8 Elite đỉnh cao, pin 4900mAh và hệ sinh thái Galaxy AI thế hệ mới.',
+      priceFromVnd: 25990000,
+      specs: const {
+        'Màn hình': '6.7 inch Dynamic AMOLED 2X QHD+ 120Hz',
+        'Chip xử lý': 'Snapdragon 8 Elite for Galaxy (3nm)',
+        'Camera': '50MP OIS + 12MP Ultra Wide + 10MP Tele 3x',
+        'Pin & Sạc': '4900 mAh • Sạc siêu nhanh 45W',
+        'Tính năng': 'Galaxy AI tiếng Việt • Khung Armor Aluminum',
+      },
+      isFeatured: true,
+      soldCount: 71,
+      ratingAvg: 4.8,
+      reviewCount: 26,
+      ramOptions: const [12],
+      storageOptions: const [256, 512],
+      defaultColorHex: '#1E3A8A',
+      createdAt: DateTime(2026, 10, 16),
+    ),
+    ProductModel(
+      id: 'samsung_z_fold6',
+      name: 'Samsung Galaxy Z Fold6 5G',
+      slug: 'samsung-galaxy-z-fold6',
+      brandId: 'Samsung',
+      categoryId: 'smartphones',
+      description: 'Siêu phẩm màn hình gập mỏng nhẹ nhất dòng Fold, bản lề Flex Hinge kép bền bỉ, màn hình trong 7.6 inch đa nhiệm cực đỉnh cùng Galaxy AI chuyên sâu.',
+      priceFromVnd: 41990000,
+      specs: const {
+        'Màn hình chính': '7.6 inch Dynamic AMOLED 2X 120Hz gập mở',
+        'Màn hình phụ': '6.3 inch Dynamic AMOLED 2X 120Hz',
+        'Chip xử lý': 'Snapdragon 8 Gen 3 for Galaxy',
+        'Camera': '50MP OIS + 12MP Ultra Wide + 10MP Tele 3x',
+        'Độ bền': 'Kháng nước bụi IP48 • Kính Gorilla Glass Victus 2',
+      },
+      isFeatured: true,
+      soldCount: 39,
+      ratingAvg: 4.9,
+      reviewCount: 18,
+      ramOptions: const [12, 16],
+      storageOptions: const [256, 512, 1024],
+      defaultColorHex: '#64748B',
+      createdAt: DateTime(2026, 10, 14),
+    ),
+    ProductModel(
+      id: 'samsung_a55',
+      name: 'Samsung Galaxy A55 5G',
+      slug: 'samsung-galaxy-a55',
+      brandId: 'Samsung',
+      categoryId: 'smartphones',
+      description: 'Điện thoại quốc dân phân khúc dưới 10 triệu với khung viền kim loại cao cấp, màn hình 120Hz rực rỡ, chip Exynos 1480 đồ họa AMD và bảo mật Knox Vault.',
+      priceFromVnd: 8990000,
+      specs: const {
+        'Màn hình': '6.6 inch Super AMOLED FHD+ 120Hz Vision Booster',
+        'Chip xử lý': 'Exynos 1480 8 nhân (GPU Xclipse 530 AMD)',
+        'Camera': '50MP OIS Chống rung quang học + 12MP Góc rộng + 5MP Macro',
+        'Pin & Sạc': '5000 mAh • Sạc nhanh 25W',
+        'Chất liệu': 'Khung viền kim loại nguyên khối • Mặt lưng kính',
+      },
+      isFeatured: false,
+      soldCount: 165,
+      ratingAvg: 4.7,
+      reviewCount: 62,
+      ramOptions: const [8, 12],
+      storageOptions: const [128, 256],
+      defaultColorHex: '#93C5FD',
+      createdAt: DateTime(2026, 10, 11),
+    ),
+    ProductModel(
+      id: 'xiaomi_15_pro',
+      name: 'Xiaomi 15 Pro Leica Summilux 5G',
+      slug: 'xiaomi-15-pro',
+      brandId: 'Xiaomi',
+      categoryId: 'smartphones',
+      description: 'Flagship nhiếp ảnh Leica cao cấp nhất với cảm biến Light Fusion 900, ống kính tiềm vọng Leica 5x, chip Snapdragon 8 Elite và pin khủng 6100mAh.',
+      priceFromVnd: 21990000,
+      specs: const {
+        'Màn hình': '6.73 inch 2K AMOLED LTPO 120Hz 3200 nits',
+        'Chip xử lý': 'Snapdragon 8 Elite (3nm thế hệ 2)',
+        'Camera': '3 ống kính Leica 50MP (Chính + Siêu rộng + Tiềm vọng 5x)',
+        'Pin & Sạc': '6100 mAh Silicon-Carbon • Sạc nhanh 90W có dây, 50W không dây',
+        'Hệ điều hành': 'Xiaomi HyperOS 2.0 tối ưu AI',
+      },
+      isFeatured: true,
+      soldCount: 48,
+      ratingAvg: 4.8,
+      reviewCount: 20,
+      ramOptions: const [12, 16],
+      storageOptions: const [256, 512, 1024],
+      defaultColorHex: '#374151',
+      createdAt: DateTime(2026, 10, 13),
+    ),
+    ProductModel(
+      id: 'xiaomi_poco_f6_pro',
+      name: 'Xiaomi POCO F6 Pro 5G Flagship Killer',
+      slug: 'xiaomi-poco-f6-pro',
+      brandId: 'Xiaomi',
+      categoryId: 'smartphones',
+      description: 'Quái vật hiệu năng trong tầm giá với vi xử lý Snapdragon 8 Gen 2, màn hình 2K WQHD+ 4000 nits siêu sáng và sạc nhanh thần tốc HyperCharge 120W.',
+      priceFromVnd: 12990000,
+      specs: const {
+        'Màn hình': '6.67 inch WQHD+ Flow AMOLED 120Hz 4000 nits',
+        'Chip xử lý': 'Snapdragon 8 Gen 2 (4nm TSMC)',
+        'Camera': '50MP OIS Light Fusion 800 + 8MP Ultra Wide',
+        'Tản nhiệt': 'LiquidCool 4.0 buồng hơi IceLoop thế hệ mới',
+        'Pin & Sạc': '5000 mAh • Sạc siêu tốc 120W (nạp đầy 19 phút)',
+      },
+      isFeatured: false,
+      soldCount: 92,
+      ratingAvg: 4.8,
+      reviewCount: 37,
+      ramOptions: const [12, 16],
+      storageOptions: const [256, 512],
+      defaultColorHex: '#18181B',
+      createdAt: DateTime(2026, 10, 9),
+    ),
+    ProductModel(
+      id: 'xiaomi_redmi_note_14_pro',
+      name: 'Xiaomi Redmi Note 14 Pro+ 5G',
+      slug: 'xiaomi-redmi-note-14-pro-plus',
+      brandId: 'Xiaomi',
+      categoryId: 'smartphones',
+      description: 'Chuẩn mực độ bền mới với chuẩn kháng nước IP68/IP69K, camera 50MP Light Hunter 800 kèm telephoto, pin 6200mAh và sạc siêu tốc 90W.',
+      priceFromVnd: 8490000,
+      specs: const {
+        'Màn hình': '6.67 inch AMOLED 1.5K 120Hz cong đối xứng',
+        'Chip xử lý': 'Snapdragon 7s Gen 3 (4nm)',
+        'Camera': '50MP OIS + 50MP Telephoto 2.5x + 8MP Góc siêu rộng',
+        'Pin & Sạc': '6200 mAh Silicon-Carbon • Sạc 90W',
+        'Độ bền': 'Kháng nước bụi cao cấp IP68 & IP69K',
+      },
+      isFeatured: false,
+      soldCount: 138,
+      ratingAvg: 4.7,
+      reviewCount: 51,
+      ramOptions: const [8, 12],
+      storageOptions: const [128, 256, 512],
+      defaultColorHex: '#0284C7',
+      createdAt: DateTime(2026, 10, 7),
+    ),
+    ProductModel(
+      id: 'oppo_find_x8_pro',
+      name: 'OPPO Find X8 Pro Hasselblad 5G',
+      slug: 'oppo-find-x8-pro',
+      brandId: 'OPPO',
+      categoryId: 'smartphones',
+      description: 'Đỉnh cao nhiếp ảnh chân dung Hasselblad với hệ thống camera tiềm vọng kép 50MP, chip Dimensity 9400 thế hệ mới và phím Quick Button chụp ảnh tức thì.',
+      priceFromVnd: 26990000,
+      specs: const {
+        'Màn hình': '6.78 inch AMOLED 1.5K Micro-Quad Curved 120Hz',
+        'Chip xử lý': 'MediaTek Dimensity 9400 (3nm)',
+        'Camera': 'Bộ 4 camera 50MP Hasselblad (2 ống kính tiềm vọng kép 3x & 6x)',
+        'Pin & Sạc': '5910 mAh Glacier Battery • Sạc 80W SuperVOOC & 50W AirVOOC',
+        'Đặc điểm': 'Phím cảm ứng Quick Button • Kháng nước IP68/IP69',
+      },
+      isFeatured: true,
+      soldCount: 52,
+      ratingAvg: 4.9,
+      reviewCount: 24,
+      ramOptions: const [16],
+      storageOptions: const [512, 1024],
+      defaultColorHex: '#0F172A',
+      createdAt: DateTime(2026, 10, 14),
+    ),
+    ProductModel(
+      id: 'oppo_reno_13_pro',
+      name: 'OPPO Reno 13 Pro 5G Chuyên Gia Chân Dung',
+      slug: 'oppo-reno-13-pro',
+      brandId: 'OPPO',
+      categoryId: 'smartphones',
+      description: 'Thiết kế cánh bướm tinh tế, viền siêu mỏng đối xứng, camera chân dung 50MP OIS Sony IMX890 và khả năng kháng nước chuẩn IP69 có thể quay phim dưới nước.',
+      priceFromVnd: 14490000,
+      specs: const {
+        'Màn hình': '6.83 inch AMOLED 1.5K 120Hz viền cong siêu mỏng',
+        'Chip xử lý': 'MediaTek Dimensity 8350 (4nm)',
+        'Camera': '50MP Sony OIS + 50MP Chân dung Tele 3.5x + 8MP Góc rộng',
+        'Pin & Sạc': '5800 mAh • SuperVOOC 80W',
+        'Tính năng': 'Kháng nước IP68 & IP69 • Chụp ảnh dưới nước Underwater Camera',
+      },
+      isFeatured: true,
+      soldCount: 77,
+      ratingAvg: 4.8,
+      reviewCount: 29,
+      ramOptions: const [12, 16],
+      storageOptions: const [256, 512],
+      defaultColorHex: '#C084FC',
+      createdAt: DateTime(2026, 10, 8),
+    ),
+    ProductModel(
+      id: 'oppo_reno_12_f',
+      name: 'OPPO Reno 12 F 5G Đèn Halo Thông Minh',
+      slug: 'oppo-reno-12-f',
+      brandId: 'OPPO',
+      categoryId: 'smartphones',
+      description: 'Sở hữu dải đèn viền Halo Light thông minh phát sáng theo nhạc và thông báo, thiết kế chống va đập toàn diện All-Round Armour và kết nối 5G mượt mà.',
+      priceFromVnd: 7990000,
+      specs: const {
+        'Màn hình': '6.67 inch OLED 120Hz bảo vệ mắt Splash Touch',
+        'Chip xử lý': 'MediaTek Dimensity 6300 5G',
+        'Camera': '50MP Ultra-Clear + 8MP Góc rộng + 2MP Macro + Đèn Halo Light',
+        'Pin & Sạc': '5000 mAh • Sạc nhanh SuperVOOC 45W',
+        'Độ bền': 'Cấu trúc chống rơi vỡ chuẩn quân đội All-Round Armour',
+      },
+      isFeatured: false,
+      soldCount: 112,
+      ratingAvg: 4.6,
+      reviewCount: 38,
+      ramOptions: const [8],
+      storageOptions: const [128, 256],
+      defaultColorHex: '#F59E0B',
+      createdAt: DateTime(2026, 10, 6),
+    ),
+    ProductModel(
+      id: 'apple_20w_adapter',
+      name: 'Củ Sạc Nhanh Apple 20W Type-C Chính Hãng',
+      slug: 'apple-20w-adapter',
+      brandId: 'Phụ kiện',
+      categoryId: 'accessories',
+      description: 'Củ sạc nhanh chính hãng Apple công suất 20W chuẩn Power Delivery, thiết kế nhỏ gọn, kiểm soát nhiệt độ an toàn tuyệt đối cho iPhone và iPad.',
+      priceFromVnd: 490000,
+      specs: const {
+        'Công suất': '20W Chuẩn sạc nhanh Power Delivery (PD)',
+        'Cổng kết nối': 'Type-C tiêu chuẩn',
+        'Tương thích': 'iPhone 8 đến iPhone 16 Series & iPad',
+      },
+      isFeatured: false,
+      soldCount: 220,
+      ratingAvg: 4.9,
+      reviewCount: 82,
+      ramOptions: const [0],
+      storageOptions: const [0],
+      defaultColorHex: '#F8FAFC',
+      createdAt: DateTime(2026, 10, 4),
+    ),
+    ProductModel(
+      id: 'clear_case_magsafe',
+      name: 'Ốp Lưng Trong Suốt Tích Hợp MagSafe Chống Sốc',
+      slug: 'clear-case-magsafe',
+      brandId: 'Phụ kiện',
+      categoryId: 'accessories',
+      description: 'Chất liệu Bayer Polycarbonate cao cấp chống ố vàng, vòng nam châm MagSafe từ tính mạnh mẽ chuẩn Qi2, đệm khí chống sốc 4 góc bảo vệ toàn diện.',
+      priceFromVnd: 350000,
+      specs: const {
+        'Chất liệu': 'Nhựa Polycarbonate trong suốt chống tia UV',
+        'Tính năng': 'Hỗ trợ sạc MagSafe hít chặt 15W-25W',
+        'Chống sốc': 'Đạt chuẩn bảo vệ rơi tự do 2 mét',
+      },
+      isFeatured: false,
+      soldCount: 175,
+      ratingAvg: 4.8,
+      reviewCount: 64,
+      ramOptions: const [0],
+      storageOptions: const [0],
+      defaultColorHex: '#E2E8F0',
+      createdAt: DateTime(2026, 10, 3),
+    ),
   ];
 
   static final Map<String, List<VariantModel>> _variants = {
@@ -544,6 +876,384 @@ class ProductRepository {
       ),
     ],
     'payos_test_10k': [_payosTestVariant],
+    'iphone_16_pro': [
+      const VariantModel(
+        id: 'ip16p_128_natural',
+        sku: 'IP16P-128-NAT',
+        color: 'Titan Tự Nhiên',
+        colorHex: '#9A9A96',
+        ramGB: 8,
+        storageGB: 128,
+        priceVnd: 28490000,
+        stock: 8,
+      ),
+      const VariantModel(
+        id: 'ip16p_256_desert',
+        sku: 'IP16P-256-DST',
+        color: 'Titan Sa Mạc',
+        colorHex: '#C5B4A5',
+        ramGB: 8,
+        storageGB: 256,
+        priceVnd: 31490000,
+        stock: 12,
+      ),
+      const VariantModel(
+        id: 'ip16p_512_black',
+        sku: 'IP16P-512-BLK',
+        color: 'Titan Đen',
+        colorHex: '#27272A',
+        ramGB: 8,
+        storageGB: 512,
+        priceVnd: 37490000,
+        stock: 4,
+      ),
+      const VariantModel(
+        id: 'ip16p_1024_white',
+        sku: 'IP16P-1TB-WHT',
+        color: 'Titan Trắng',
+        colorHex: '#F5F5F7',
+        ramGB: 8,
+        storageGB: 1024,
+        priceVnd: 42490000,
+        stock: 0,
+      ),
+    ],
+    'iphone_16_plus': [
+      const VariantModel(
+        id: 'ip16pls_128_teal',
+        sku: 'IP16PLS-128-TEL',
+        color: 'Xanh Mòng Két',
+        colorHex: '#2DD4BF',
+        ramGB: 8,
+        storageGB: 128,
+        priceVnd: 22990000,
+        stock: 10,
+      ),
+      const VariantModel(
+        id: 'ip16pls_256_ultramarine',
+        sku: 'IP16PLS-256-ULT',
+        color: 'Xanh Lưu Ly',
+        colorHex: '#4F6DF5',
+        ramGB: 8,
+        storageGB: 256,
+        priceVnd: 25990000,
+        stock: 6,
+      ),
+      const VariantModel(
+        id: 'ip16pls_512_black',
+        sku: 'IP16PLS-512-BLK',
+        color: 'Đen (Black)',
+        colorHex: '#1C1C1E',
+        ramGB: 8,
+        storageGB: 512,
+        priceVnd: 30990000,
+        stock: 3,
+      ),
+    ],
+    'iphone_15': [
+      const VariantModel(
+        id: 'ip15_128_green',
+        sku: 'IP15-128-GRN',
+        color: 'Xanh Lá Pastel',
+        colorHex: '#A7F3D0',
+        ramGB: 6,
+        storageGB: 128,
+        priceVnd: 16490000,
+        stock: 15,
+      ),
+      const VariantModel(
+        id: 'ip15_128_pink',
+        sku: 'IP15-128-PNK',
+        color: 'Hồng Nhạt',
+        colorHex: '#F4A8B8',
+        ramGB: 6,
+        storageGB: 128,
+        priceVnd: 16490000,
+        stock: 10,
+      ),
+      const VariantModel(
+        id: 'ip15_256_black',
+        sku: 'IP15-256-BLK',
+        color: 'Đen (Black)',
+        colorHex: '#1C1C1E',
+        ramGB: 8,
+        storageGB: 256,
+        priceVnd: 19490000,
+        stock: 7,
+      ),
+    ],
+    'samsung_s25_plus': [
+      const VariantModel(
+        id: 's25p_256_gray',
+        sku: 'S25P-256-GRY',
+        color: 'Xám Titan',
+        colorHex: '#8E8E93',
+        ramGB: 12,
+        storageGB: 256,
+        priceVnd: 25990000,
+        stock: 8,
+      ),
+      const VariantModel(
+        id: 's25p_512_navy',
+        sku: 'S25P-512-NVY',
+        color: 'Xanh Navy',
+        colorHex: '#1E3A8A',
+        ramGB: 12,
+        storageGB: 512,
+        priceVnd: 28990000,
+        stock: 5,
+      ),
+    ],
+    'samsung_z_fold6': [
+      const VariantModel(
+        id: 'zfold6_256_silver',
+        sku: 'ZF6-256-SLV',
+        color: 'Xám Bạc (Silver Shadow)',
+        colorHex: '#64748B',
+        ramGB: 12,
+        storageGB: 256,
+        priceVnd: 41990000,
+        stock: 6,
+      ),
+      const VariantModel(
+        id: 'zfold6_512_navy',
+        sku: 'ZF6-512-NVY',
+        color: 'Xanh Navy',
+        colorHex: '#1E293B',
+        ramGB: 12,
+        storageGB: 512,
+        priceVnd: 45490000,
+        stock: 3,
+      ),
+      const VariantModel(
+        id: 'zfold6_1024_black',
+        sku: 'ZF6-1TB-BLK',
+        color: 'Đen Crafted',
+        colorHex: '#0F172A',
+        ramGB: 16,
+        storageGB: 1024,
+        priceVnd: 51990000,
+        stock: 0,
+      ),
+    ],
+    'samsung_a55': [
+      const VariantModel(
+        id: 'a55_128_iceblue',
+        sku: 'A55-128-BLU',
+        color: 'Xanh Iceblue',
+        colorHex: '#93C5FD',
+        ramGB: 8,
+        storageGB: 128,
+        priceVnd: 8990000,
+        stock: 25,
+      ),
+      const VariantModel(
+        id: 'a55_256_navy',
+        sku: 'A55-256-NVY',
+        color: 'Xanh Đen Navy',
+        colorHex: '#0F172A',
+        ramGB: 8,
+        storageGB: 256,
+        priceVnd: 9990000,
+        stock: 18,
+      ),
+      const VariantModel(
+        id: 'a55_256_lilac',
+        sku: 'A55-256-LIC',
+        color: 'Tím Lilac',
+        colorHex: '#C084FC',
+        ramGB: 12,
+        storageGB: 256,
+        priceVnd: 10490000,
+        stock: 12,
+      ),
+    ],
+    'xiaomi_15_pro': [
+      const VariantModel(
+        id: 'xm15p_256_gray',
+        sku: 'XM15P-256-GRY',
+        color: 'Xám Titan',
+        colorHex: '#374151',
+        ramGB: 12,
+        storageGB: 256,
+        priceVnd: 21990000,
+        stock: 8,
+      ),
+      const VariantModel(
+        id: 'xm15p_512_white',
+        sku: 'XM15P-512-WHT',
+        color: 'Trắng Sứ',
+        colorHex: '#F8FAFC',
+        ramGB: 16,
+        storageGB: 512,
+        priceVnd: 24490000,
+        stock: 5,
+      ),
+      const VariantModel(
+        id: 'xm15p_1024_green',
+        sku: 'XM15P-1TB-GRN',
+        color: 'Xanh Lục Bảo',
+        colorHex: '#065F46',
+        ramGB: 16,
+        storageGB: 1024,
+        priceVnd: 27990000,
+        stock: 2,
+      ),
+    ],
+    'xiaomi_poco_f6_pro': [
+      const VariantModel(
+        id: 'poco_256_black',
+        sku: 'POCO-256-BLK',
+        color: 'Đen Midnight',
+        colorHex: '#18181B',
+        ramGB: 12,
+        storageGB: 256,
+        priceVnd: 12990000,
+        stock: 14,
+      ),
+      const VariantModel(
+        id: 'poco_512_white',
+        sku: 'POCO-512-WHT',
+        color: 'Trắng Moonlight',
+        colorHex: '#F4F4F5',
+        ramGB: 16,
+        storageGB: 512,
+        priceVnd: 14490000,
+        stock: 8,
+      ),
+    ],
+    'xiaomi_redmi_note_14_pro': [
+      const VariantModel(
+        id: 'rdn14p_128_ocean',
+        sku: 'RDN14-128-BLU',
+        color: 'Xanh Đại Dương',
+        colorHex: '#0284C7',
+        ramGB: 8,
+        storageGB: 128,
+        priceVnd: 8490000,
+        stock: 20,
+      ),
+      const VariantModel(
+        id: 'rdn14p_256_purple',
+        sku: 'RDN14-256-PUR',
+        color: 'Tím Cát Tường',
+        colorHex: '#A855F7',
+        ramGB: 8,
+        storageGB: 256,
+        priceVnd: 9290000,
+        stock: 15,
+      ),
+      const VariantModel(
+        id: 'rdn14p_512_black',
+        sku: 'RDN14-512-BLK',
+        color: 'Đen Kim Cương',
+        colorHex: '#111827',
+        ramGB: 12,
+        storageGB: 512,
+        priceVnd: 10490000,
+        stock: 9,
+      ),
+    ],
+    'oppo_find_x8_pro': [
+      const VariantModel(
+        id: 'findx8p_512_black',
+        sku: 'FX8P-512-BLK',
+        color: 'Đen Không Gian',
+        colorHex: '#0F172A',
+        ramGB: 16,
+        storageGB: 512,
+        priceVnd: 26990000,
+        stock: 6,
+      ),
+      const VariantModel(
+        id: 'findx8p_512_white',
+        sku: 'FX8P-512-WHT',
+        color: 'Trắng Ngọc Trai',
+        colorHex: '#F1F5F9',
+        ramGB: 16,
+        storageGB: 512,
+        priceVnd: 26990000,
+        stock: 5,
+      ),
+      const VariantModel(
+        id: 'findx8p_1024_black',
+        sku: 'FX8P-1TB-BLK',
+        color: 'Đen Không Gian',
+        colorHex: '#0F172A',
+        ramGB: 16,
+        storageGB: 1024,
+        priceVnd: 30990000,
+        stock: 2,
+      ),
+    ],
+    'oppo_reno_13_pro': [
+      const VariantModel(
+        id: 'reno13p_256_purple',
+        sku: 'R13P-256-PUR',
+        color: 'Tím Cánh Bướm',
+        colorHex: '#C084FC',
+        ramGB: 12,
+        storageGB: 256,
+        priceVnd: 14490000,
+        stock: 11,
+      ),
+      const VariantModel(
+        id: 'reno13p_512_gray',
+        sku: 'R13P-512-GRY',
+        color: 'Xám Tro Tinh Tế',
+        colorHex: '#4B5563',
+        ramGB: 16,
+        storageGB: 512,
+        priceVnd: 16490000,
+        stock: 7,
+      ),
+    ],
+    'oppo_reno_12_f': [
+      const VariantModel(
+        id: 'reno12f_128_orange',
+        sku: 'R12F-128-ORG',
+        color: 'Cam Hổ Phách',
+        colorHex: '#F59E0B',
+        ramGB: 8,
+        storageGB: 128,
+        priceVnd: 7990000,
+        stock: 16,
+      ),
+      const VariantModel(
+        id: 'reno12f_256_green',
+        sku: 'R12F-256-GRN',
+        color: 'Xanh Lá Mạ',
+        colorHex: '#10B981',
+        ramGB: 8,
+        storageGB: 256,
+        priceVnd: 8790000,
+        stock: 12,
+      ),
+    ],
+    'apple_20w_adapter': [
+      const VariantModel(
+        id: 'adapter_20w_white',
+        sku: 'APL-20W-WHT',
+        color: 'Trắng Tiêu Chuẩn',
+        colorHex: '#F8FAFC',
+        ramGB: 0,
+        storageGB: 0,
+        priceVnd: 490000,
+        stock: 50,
+      ),
+    ],
+    'clear_case_magsafe': [
+      const VariantModel(
+        id: 'case_magsafe_clear',
+        sku: 'CASE-MGSF-CLR',
+        color: 'Trong Suốt (Clear)',
+        colorHex: '#E2E8F0',
+        ramGB: 0,
+        storageGB: 0,
+        priceVnd: 350000,
+        stock: 45,
+      ),
+    ],
   };
 
   static final Map<String, List<ReviewModel>> _reviews = {
@@ -579,6 +1289,11 @@ class ProductRepository {
       ),
     ],
   };
+
+  static final List<ProductModel> _initialProducts =
+      List<ProductModel>.unmodifiable(_products);
+  static final Map<String, List<VariantModel>> _initialVariants =
+      Map<String, List<VariantModel>>.unmodifiable(_variants);
 
   bool get _isFirebaseReady =>
       Firebase.apps.isNotEmpty && !ConnectivityService.offlineSimulationEnabled;
@@ -668,22 +1383,28 @@ class ProductRepository {
           result = snapshot.docs
               .map((doc) => ProductModel.fromJson(doc.id, doc.data()))
               .toList();
-          if (!result.any((p) => p.id == _payosTestProduct.id)) {
-            result.add(_payosTestProduct);
-            _variants[_payosTestProduct.id] = [_payosTestVariant];
-            try {
-              final prodRef = FirebaseFirestore.instance
-                  .collection(FirestoreCollections.products)
-                  .doc(_payosTestProduct.id);
-              await prodRef.set({
-                ..._payosTestProduct.toJson(),
-                'createdAt': FieldValue.serverTimestamp(),
-              });
-              await prodRef
-                  .collection(FirestoreCollections.variants)
-                  .doc(_payosTestVariant.id)
-                  .set(_payosTestVariant.toJson());
-            } catch (_) {}
+          // Đảm bảo toàn bộ các sản phẩm và biến thể chuẩn của hệ thống luôn có mặt đầy đủ
+          final existingIds = result.map((p) => p.id).toSet();
+          for (final initP in _initialProducts) {
+            if (!existingIds.contains(initP.id)) {
+              result.add(initP);
+              try {
+                final prodRef = FirebaseFirestore.instance
+                    .collection(FirestoreCollections.products)
+                    .doc(initP.id);
+                prodRef.set({
+                  ...initP.toJson(),
+                  'createdAt': FieldValue.serverTimestamp(),
+                });
+                final initVars = _initialVariants[initP.id] ?? [];
+                for (final v in initVars) {
+                  prodRef
+                      .collection(FirestoreCollections.variants)
+                      .doc(v.id)
+                      .set(v.toJson());
+                }
+              } catch (_) {}
+            }
           }
           _products
             ..clear()
@@ -692,12 +1413,20 @@ class ProductRepository {
             final variants = await doc.reference
                 .collection(FirestoreCollections.variants)
                 .get();
-            _variants[doc.id] = variants.docs
-                .map(
-                  (variant) =>
-                      VariantModel.fromJson(variant.id, variant.data()),
-                )
-                .toList();
+            if (variants.docs.isNotEmpty) {
+              _variants[doc.id] = variants.docs
+                  .map(
+                    (variant) =>
+                        VariantModel.fromJson(variant.id, variant.data()),
+                  )
+                  .toList();
+            }
+          }
+          for (final entry in _initialVariants.entries) {
+            if (!_variants.containsKey(entry.key) ||
+                _variants[entry.key]!.isEmpty) {
+              _variants[entry.key] = entry.value;
+            }
           }
         }
       } catch (_) {}

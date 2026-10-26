@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum LmThemeType { blue, mono, orange }
+enum LmThemeType { titanium, blue, mono, orange }
 
 class LmPalette {
   final LmThemeType type;
@@ -27,29 +27,57 @@ class LmPalette {
   Color get primarySoft => accentLightBg;
 }
 
-/// Hệ thống màu sắc trích xuất chuẩn từ `UI DESIGN/scripts/lib/lm-themes.json`
-/// và `UI DESIGN/references/project/index.html`
+/// Hệ thống màu sắc trích xuất chuẩn từ `ui_template_kit/styles.css`
+/// & tài liệu đặc tả `IphoneDesign/Test_UI.md`
 class AppColors {
   AppColors._();
 
-  // Neutral Surface & Typography Tokens (--bg, --surface, --line, --ink, --muted, --faint)
-  static const Color background = Color(0xFFF4F6FA);
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color border = Color(0xFFE3E8F0);
-  static const Color line = border;
-  static const Color ink = Color(0xFF0B1220);
-  static const Color ink2 = Color(0xFF344054);
-  static const Color ink3 = Color(0xFF667085);
-  static const Color ink4 = Color(0xFF98A2B3);
-  static const Color textPrimary = Color(0xFF0B1220);
-  static const Color textSecondary = Color(0xFF667085);
-  static const Color textFaint = Color(0xFF98A2B3);
+  // Primary Titanium Brand Palette (#243342 - Slate Navy)
+  static const Color brand50 = Color(0xFFF0F4F8);
+  static const Color brand100 = Color(0xFFD9E2EC);
+  static const Color brand200 = Color(0xFFBCCCDC);
+  static const Color brand300 = Color(0xFF9FB3C8);
+  static const Color brand400 = Color(0xFF627D98);
+  static const Color brand500 = Color(0xFF3E566E); // Active / Hover
+  static const Color brand600 = Color(0xFF2E3F52);
+  static const Color brand700 = Color(0xFF243342); // PRIMARY BRAND (Slate Navy)
+  static const Color brand800 = Color(0xFF1A2530);
+  static const Color brand900 = Color(0xFF0F1722); // Deep Dark Navy
 
-  // Default Blue Accent Tokens (--blue, --b600, --b700)
-  static const Color primary = Color(0xFF2F6BFF);
-  static const Color primaryDark = Color(0xFF1D4ED8);
-  static const Color primaryDeep = Color(0xFF1638A8);
-  static const Color secondary = Color(0xFF0B1220);
+  // iPhone 16 Pro Titanium Finishes
+  static const Color desertTitanium = Color(0xFFD4C8B8);
+  static const Color naturalTitanium = Color(0xFF9C968F);
+  static const Color whiteTitanium = Color(0xFFF5F5F7);
+  static const Color blackTitanium = Color(0xFF28282B);
+
+  // Surfaces & Ink Tokens
+  static const Color background = Color(0xFFF6F8FB);
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color surfaceLightSlate = Color(0xFFF1F5F9);
+  static const Color border = Color(0xFFE2E8F0);
+  static const Color line = border;
+  static const Color ink = Color(0xFF0F172A);
+  static const Color inkSecondary = Color(0xFF334155);
+  static const Color inkMuted = Color(0xFF64748B);
+  static const Color inkFaint = Color(0xFF94A3B8);
+  static const Color ink2 = inkSecondary;
+  static const Color ink3 = inkMuted;
+  static const Color ink4 = inkFaint;
+  static const Color textPrimary = ink;
+  static const Color textSecondary = inkMuted;
+  static const Color textFaint = inkFaint;
+
+  // Primary Brand Defaults
+  static const Color primary = brand700; // #243342
+  static const Color primaryDark = brand900; // #0F1722
+  static const Color primaryDeep = brand900;
+  static const Color primaryHighlight = brand500; // #3E566E
+  static const Color secondary = ink;
+
+  // Liquid-Glass Refraction Tokens
+  static const double glassBlur = 24.0;
+  static const Color glassBorder = Color(0xD9FFFFFF); // rgba(255, 255, 255, 0.85)
+  static const Color glassDarkBorder = Color(0x2EFFFFFF); // rgba(255, 255, 255, 0.18)
 
   // Semantic Colors
   static const Color success = Color(0xFF16A34A);
@@ -59,6 +87,27 @@ class AppColors {
   static const Color error = Color(0xFFDC2626);
   static const Color danger = error;
   static const Color errorSoft = Color(0xFFFEE2E2);
+
+  // Flagship Titanium Slate Navy Palette (#243342) - Default UI Template Kit
+  static const LmPalette titaniumPalette = LmPalette(
+    type: LmThemeType.titanium,
+    label: 'Titanium Slate Navy (#243342)',
+    ramp: [
+      brand50,
+      brand100,
+      brand200,
+      brand300,
+      brand400,
+      brand500,
+      brand700,
+      brand900,
+    ],
+    accent: brand700,
+    accentDark: brand900,
+    accentLightBg: brand50,
+    accentText: brand700,
+    bg: background,
+  );
 
   // 3 Bảng màu chuẩn từ UI DESIGN/scripts/lib/lm-themes.json
   static const LmPalette bluePalette = LmPalette(
@@ -123,6 +172,8 @@ class AppColors {
 
   static LmPalette paletteOf(LmThemeType type) {
     switch (type) {
+      case LmThemeType.titanium:
+        return titaniumPalette;
       case LmThemeType.mono:
         return monoPalette;
       case LmThemeType.orange:

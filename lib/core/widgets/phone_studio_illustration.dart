@@ -31,6 +31,20 @@ class PhoneStudioIllustration extends StatelessWidget {
         ? const Color(0xFFD0D5DD)
         : Colors.white.withValues(alpha: 0.22);
 
+    final assetPath = _resolveAssetPath();
+
+    if (imageUrl != null && imageUrl!.startsWith('assets/')) {
+      return SizedBox(
+        height: height,
+        child: Image.asset(
+          imageUrl!,
+          fit: BoxFit.contain,
+          errorBuilder: (_, _, _) =>
+              _buildStudioVector(bodyColor, frameBorderColor),
+        ),
+      );
+    }
+
     if (imageUrl != null && imageUrl!.startsWith('http')) {
       return SizedBox(
         height: height,
@@ -45,10 +59,51 @@ class PhoneStudioIllustration extends StatelessWidget {
       );
     }
 
+    if (assetPath != null) {
+      return SizedBox(
+        height: height,
+        child: Image.asset(
+          assetPath,
+          fit: BoxFit.contain,
+          errorBuilder: (_, _, _) =>
+              _buildStudioVector(bodyColor, frameBorderColor),
+        ),
+      );
+    }
+
     return SizedBox(
       height: height,
       child: _buildStudioVector(bodyColor, frameBorderColor),
     );
+  }
+
+  String? _resolveAssetPath() {
+    final lower = productName.toLowerCase();
+    if (lower.contains('16 pro max')) {
+      return 'assets/images/lineup_16_promax.jpg';
+    }
+    if (lower.contains('16 pro')) {
+      return 'assets/images/lineup_16_pro.jpg';
+    }
+    if (lower.contains('16 plus')) {
+      return 'assets/images/lineup_16_plus.jpg';
+    }
+    if (lower.contains('iphone 16')) {
+      return 'assets/images/lineup_16_standard.jpg';
+    }
+    if (lower.contains('airpods')) {
+      return 'assets/images/acc_airpods_pro.jpg';
+    }
+    if (lower.contains('ốp')) {
+      return 'assets/images/acc_clear_case.jpg';
+    }
+    if (lower.contains('magsafe') || lower.contains('sạc')) {
+      return 'assets/images/acc_magsafe_charger.jpg';
+    }
+    if (lower.contains('ví')) {
+      return 'assets/images/acc_finewoven_wallet.jpg';
+    }
+    return null;
   }
 
   Widget _buildStudioVector(Color bodyColor, Color frameBorderColor) {

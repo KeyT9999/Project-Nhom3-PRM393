@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -98,57 +100,97 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: AppColors.line)),
-        ),
-        child: NavigationBar(
-          selectedIndex: _currentIndex,
-          onDestinationSelected: (index) =>
-              setState(() => _currentIndex = index),
-          destinations: [
-            const NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home_rounded),
-              label: 'Home',
-            ),
-            const NavigationDestination(
-              icon: Icon(Icons.grid_view_outlined),
-              selectedIcon: Icon(Icons.grid_view_rounded),
-              label: 'Catalog',
-            ),
-            NavigationDestination(
-              icon: Badge(
-                isLabelVisible: cartCount > 0,
-                label: Text('$cartCount'),
-                child: const Icon(Icons.shopping_cart_outlined),
+      bottomNavigationBar: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.82),
+              border: Border(
+                top: BorderSide(
+                  color: Colors.white.withValues(alpha: 0.9),
+                  width: 1.2,
+                ),
               ),
-              selectedIcon: Badge(
-                isLabelVisible: cartCount > 0,
-                label: Text('$cartCount'),
-                child: const Icon(Icons.shopping_cart_rounded),
-              ),
-              label: 'Cart',
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF0F172A).withValues(alpha: 0.06),
+                  blurRadius: 20,
+                  offset: const Offset(0, -6),
+                ),
+              ],
             ),
-            NavigationDestination(
-              icon: Badge(
-                isLabelVisible: unreadAlerts > 0,
-                label: Text('$unreadAlerts'),
-                child: const Icon(Icons.notifications_outlined),
+            child: NavigationBarTheme(
+              data: NavigationBarThemeData(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                indicatorColor: AppColors.brand700.withValues(alpha: 0.12),
+                labelTextStyle: WidgetStateProperty.resolveWith((states) {
+                  final isSelected = states.contains(WidgetState.selected);
+                  return TextStyle(
+                    fontSize: 11,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    color: isSelected ? AppColors.brand700 : AppColors.inkMuted,
+                  );
+                }),
+                iconTheme: WidgetStateProperty.resolveWith((states) {
+                  final isSelected = states.contains(WidgetState.selected);
+                  return IconThemeData(
+                    color: isSelected ? AppColors.brand700 : AppColors.inkMuted,
+                    size: 21,
+                  );
+                }),
               ),
-              selectedIcon: Badge(
-                isLabelVisible: unreadAlerts > 0,
-                label: Text('$unreadAlerts'),
-                child: const Icon(Icons.notifications_rounded),
+              child: NavigationBar(
+                selectedIndex: _currentIndex,
+                onDestinationSelected: (index) =>
+                    setState(() => _currentIndex = index),
+                destinations: [
+                  const NavigationDestination(
+                    icon: Icon(Icons.explore_outlined),
+                    selectedIcon: Icon(Icons.explore_rounded),
+                    label: 'Khám Phá',
+                  ),
+                  const NavigationDestination(
+                    icon: Icon(Icons.phone_iphone_outlined),
+                    selectedIcon: Icon(Icons.phone_iphone_rounded),
+                    label: 'Dòng iPhone',
+                  ),
+                  NavigationDestination(
+                    icon: Badge(
+                      isLabelVisible: cartCount > 0,
+                      label: Text('$cartCount'),
+                      child: const Icon(Icons.shopping_bag_outlined),
+                    ),
+                    selectedIcon: Badge(
+                      isLabelVisible: cartCount > 0,
+                      label: Text('$cartCount'),
+                      child: const Icon(Icons.shopping_bag_rounded),
+                    ),
+                    label: 'Túi Hàng',
+                  ),
+                  NavigationDestination(
+                    icon: Badge(
+                      isLabelVisible: unreadAlerts > 0,
+                      label: Text('$unreadAlerts'),
+                      child: const Icon(Icons.notifications_outlined),
+                    ),
+                    selectedIcon: Badge(
+                      isLabelVisible: unreadAlerts > 0,
+                      label: Text('$unreadAlerts'),
+                      child: const Icon(Icons.notifications_rounded),
+                    ),
+                    label: 'Thông Báo',
+                  ),
+                  const NavigationDestination(
+                    icon: Icon(Icons.person_outline_rounded),
+                    selectedIcon: Icon(Icons.person_rounded),
+                    label: 'Apple ID',
+                  ),
+                ],
               ),
-              label: 'Alerts',
             ),
-            const NavigationDestination(
-              icon: Icon(Icons.person_outline_rounded),
-              selectedIcon: Icon(Icons.person_rounded),
-              label: 'Account',
-            ),
-          ],
+          ),
         ),
       ),
     );
