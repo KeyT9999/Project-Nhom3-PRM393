@@ -184,12 +184,14 @@ class _PayosPaymentScreenState extends State<PayosPaymentScreen> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        'Đang chờ thanh toán ($_currentStatus) • Tự động kiểm tra 3s/lần',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: accent,
+                      Flexible(
+                        child: Text(
+                          'Đang chờ thanh toán ($_currentStatus) • Tự động kiểm tra 3s/lần',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: accent,
+                          ),
                         ),
                       ),
                     ],
