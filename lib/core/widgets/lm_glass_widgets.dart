@@ -364,8 +364,9 @@ class LiquidPillButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = isDark ? AppColors.brand700 : Colors.white;
-    final fgColor = isDark ? Colors.white : AppColors.brand900;
+    final accent = Theme.of(context).colorScheme.primary;
+    final bgColor = isDark ? accent : Colors.white;
+    final fgColor = isDark ? Colors.white : accent;
     final disabled = onPressed == null || isLoading;
 
     return Opacity(
@@ -383,7 +384,7 @@ class LiquidPillButton extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: (isDark ? AppColors.brand900 : const Color(0xFF0F172A))
+              color: (isDark ? accent : const Color(0xFF0F172A))
                   .withValues(alpha: 0.18),
               blurRadius: 16,
               offset: const Offset(0, 6),
@@ -465,6 +466,7 @@ class TitaniumFinishDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = Theme.of(context).colorScheme.primary;
     return GestureDetector(
       onTap: () {
         HapticFeedback.selectionClick();
@@ -479,7 +481,7 @@ class TitaniumFinishDot extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: isSelected ? AppColors.brand700 : Colors.transparent,
+              color: isSelected ? accent : Colors.transparent,
               width: 2.2,
             ),
           ),
@@ -518,6 +520,7 @@ class StorageCapacityPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = Theme.of(context).colorScheme.primary;
     return GestureDetector(
       onTap: () {
         HapticFeedback.selectionClick();
@@ -527,16 +530,16 @@ class StorageCapacityPill extends StatelessWidget {
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.brand700 : Colors.white.withValues(alpha: 0.85),
+          color: isSelected ? accent : Colors.white.withValues(alpha: 0.85),
           borderRadius: BorderRadius.circular(999),
           border: Border.all(
-            color: isSelected ? AppColors.brand700 : AppColors.border,
+            color: isSelected ? accent : AppColors.border,
             width: 1.2,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.brand700.withValues(alpha: 0.25),
+                    color: accent.withValues(alpha: 0.25),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),

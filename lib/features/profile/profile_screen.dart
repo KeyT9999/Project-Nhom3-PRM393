@@ -178,7 +178,14 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 Wrap(
                   spacing: 8,
+                  runSpacing: 6,
                   children: [
+                    ChoiceChip(
+                      label: const Text('Titanium (#243342)'),
+                      selected: auth.themeType == LmThemeType.titanium,
+                      onSelected: (_) =>
+                          auth.setThemeType(LmThemeType.titanium),
+                    ),
                     ChoiceChip(
                       label: const Text('Blue (#2F6BFF)'),
                       selected: auth.themeType == LmThemeType.blue,

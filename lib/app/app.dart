@@ -88,6 +88,8 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
     }
     _wasOffline = auth.isOfflineSimulated;
 
+    final accent = Theme.of(context).colorScheme.primary;
+
     return Scaffold(
       body: Column(
         children: [
@@ -124,19 +126,19 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
               data: NavigationBarThemeData(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                indicatorColor: AppColors.brand700.withValues(alpha: 0.12),
+                indicatorColor: accent.withValues(alpha: 0.12),
                 labelTextStyle: WidgetStateProperty.resolveWith((states) {
                   final isSelected = states.contains(WidgetState.selected);
                   return TextStyle(
                     fontSize: 11,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    color: isSelected ? AppColors.brand700 : AppColors.inkMuted,
+                    color: isSelected ? accent : AppColors.inkMuted,
                   );
                 }),
                 iconTheme: WidgetStateProperty.resolveWith((states) {
                   final isSelected = states.contains(WidgetState.selected);
                   return IconThemeData(
-                    color: isSelected ? AppColors.brand700 : AppColors.inkMuted,
+                    color: isSelected ? accent : AppColors.inkMuted,
                     size: 21,
                   );
                 }),
@@ -152,9 +154,9 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
                     label: 'Khám Phá',
                   ),
                   const NavigationDestination(
-                    icon: Icon(Icons.phone_iphone_outlined),
-                    selectedIcon: Icon(Icons.phone_iphone_rounded),
-                    label: 'Dòng iPhone',
+                    icon: Icon(Icons.grid_view_outlined),
+                    selectedIcon: Icon(Icons.grid_view_rounded),
+                    label: 'Danh Mục',
                   ),
                   NavigationDestination(
                     icon: Badge(
@@ -167,7 +169,7 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
                       label: Text('$cartCount'),
                       child: const Icon(Icons.shopping_bag_rounded),
                     ),
-                    label: 'Túi Hàng',
+                    label: 'Giỏ Hàng',
                   ),
                   NavigationDestination(
                     icon: Badge(
@@ -185,7 +187,7 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
                   const NavigationDestination(
                     icon: Icon(Icons.person_outline_rounded),
                     selectedIcon: Icon(Icons.person_rounded),
-                    label: 'Apple ID',
+                    label: 'Tài Khoản',
                   ),
                 ],
               ),

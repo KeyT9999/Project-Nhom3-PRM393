@@ -94,14 +94,16 @@ class PhoneStudioIllustration extends StatelessWidget {
     if (lower.contains('airpods')) {
       return 'assets/images/acc_airpods_pro.jpg';
     }
+    if (lower.contains('ví') ||
+        lower.contains('finewoven') ||
+        lower.contains('wallet')) {
+      return 'assets/images/acc_finewoven_wallet.jpg';
+    }
     if (lower.contains('ốp')) {
       return 'assets/images/acc_clear_case.jpg';
     }
     if (lower.contains('magsafe') || lower.contains('sạc')) {
       return 'assets/images/acc_magsafe_charger.jpg';
-    }
-    if (lower.contains('ví')) {
-      return 'assets/images/acc_finewoven_wallet.jpg';
     }
     return null;
   }

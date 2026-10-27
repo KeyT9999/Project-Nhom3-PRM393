@@ -9,6 +9,7 @@ import '../../core/widgets/lm_glass_widgets.dart';
 import '../../core/widgets/phone_studio_illustration.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/cart_provider.dart';
+import '../../providers/product_provider.dart';
 import '../checkout/checkout_screen.dart';
 
 class CartScreen extends StatelessWidget {
@@ -66,12 +67,14 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartProvider = context.watch<CartProvider>();
     final authProvider = context.watch<AuthProvider>();
+    final productProvider = context.watch<ProductProvider>();
     final items = cartProvider.items;
+    final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Túi Hàng Của Bạn'),
+        title: const Text('Giỏ Hàng Của Bạn'),
         actions: [
           IconButton(
             tooltip: 'Giả lập Offline',
@@ -95,7 +98,7 @@ class CartScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    title: const Text('Xác nhận xóa túi hàng?'),
+                    title: const Text('Xác nhận xóa giỏ hàng?'),
                     content: const Text('Toàn bộ sản phẩm sẽ được xóa khỏi giỏ.'),
                     actions: [
                       TextButton(
@@ -134,10 +137,10 @@ class CartScreen extends StatelessWidget {
                   borderRadius: 14,
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.cloud_done_rounded,
                         size: 17,
-                        color: AppColors.brand700,
+                        color: accent,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -168,18 +171,18 @@ class CartScreen extends StatelessWidget {
                                 width: 84,
                                 height: 84,
                                 decoration: BoxDecoration(
-                                  color: AppColors.brand700.withValues(alpha: 0.08),
+                                  color: accent.withValues(alpha: 0.08),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.shopping_bag_outlined,
                                   size: 44,
-                                  color: AppColors.brand700,
+                                  color: accent,
                                 ),
                               ),
                               const SizedBox(height: 16),
                               const Text(
-                                'Túi Hàng Đang Trống',
+                                'Giỏ Hàng Đang Trống',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w800,
@@ -189,7 +192,7 @@ class CartScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 6),
                               const Text(
-                                'Hãy chọn một phiên bản iPhone 16 hoặc phụ kiện chính hãng để bắt đầu đặt hàng.',
+                                'Hãy chọn một mẫu điện thoại chính hãng hoặc phụ kiện yêu thích để bắt đầu đặt hàng.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12.5,
@@ -208,6 +211,18 @@ class CartScreen extends StatelessWidget {
                         separatorBuilder: (_, _) => const SizedBox(height: 12),
                         itemBuilder: (context, index) {
                           final item = items[index];
+                          final matchedProduct = productProvider.allProducts
+                              .where((p) => p.id == item.productId)
+                              .firstOrNull;
+                          final matchedVariant = productProvider.repository
+                              .findVariantById(item.productId, item.variantId);
+                          final maxStock = matchedVariant?.stock;
+                          final effectiveImageUrl = item.imageUrl.isNotEmpty
+                              ? item.imageUrl
+                              : (matchedProduct != null &&
+                                        matchedProduct.thumbnailUrl.isNotEmpty
+                                    ? matchedProduct.thumbnailUrl
+                                    : null);
 
                           return LiquidGlassCard(
                             padding: const EdgeInsets.all(14),
@@ -219,9 +234,17 @@ class CartScreen extends StatelessWidget {
                                   height: 74,
                                   child: Center(
                                     child: PhoneStudioIllustration(
-                                      brandId: 'Apple',
+                                      brandId:
+                                          matchedProduct?.brandId ?? 'Apple',
+                                      categoryId:
+                                          matchedProduct?.categoryId ??
+                                          'smartphones',
                                       productName: item.productName,
-                                      colorHex: '#C5B4A5',
+                                      colorHex:
+                                          matchedVariant?.colorHex ??
+                                          matchedProduct?.defaultColorHex ??
+                                          '#C5B4A5',
+                                      imageUrl: effectiveImageUrl,
                                       height: 68,
                                     ),
                                   ),
@@ -244,7 +267,9 @@ class CartScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 2),
                                       Text(
-                                        item.variantLabel,
+                                        maxStock != null
+                                            ? '${item.variantLabel} • Kho: $maxStock'
+                                            : item.variantLabel,
                                         style: const TextStyle(
                                           fontSize: 11.5,
                                           color: AppColors.inkMuted,
@@ -255,8 +280,8 @@ class CartScreen extends StatelessWidget {
                                         CurrencyFormatter.formatVnd(
                                           item.lineTotalVnd,
                                         ),
-                                        style: const TextStyle(
-                                          color: AppColors.brand700,
+                                        style: TextStyle(
+                                          color: accent,
                                           fontWeight: FontWeight.w800,
                                           fontSize: 14.5,
                                           letterSpacing: -0.3,
@@ -277,11 +302,25 @@ class CartScreen extends StatelessWidget {
                                     children: [
                                       IconButton(
                                         icon: const Icon(Icons.remove, size: 14),
-                                        onPressed: () =>
-                                            cartProvider.updateQuantity(
-                                          item.variantId,
-                                          item.quantity - 1,
-                                        ),
+                                        onPressed: () async {
+                                          try {
+                                            await cartProvider.updateQuantity(
+                                              item.variantId,
+                                              item.quantity - 1,
+                                            );
+                                          } catch (e) {
+                                            if (!context.mounted) return;
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                backgroundColor:
+                                                    AppColors.error,
+                                                content: Text('$e'),
+                                              ),
+                                            );
+                                          }
+                                        },
                                         constraints: const BoxConstraints(
                                           minWidth: 28,
                                           minHeight: 28,
@@ -301,12 +340,50 @@ class CartScreen extends StatelessWidget {
                                         ),
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.add, size: 14),
-                                        onPressed: () =>
-                                            cartProvider.updateQuantity(
-                                          item.variantId,
-                                          item.quantity + 1,
+                                        icon: Icon(
+                                          Icons.add,
+                                          size: 14,
+                                          color:
+                                              (maxStock != null &&
+                                                  item.quantity >= maxStock)
+                                              ? AppColors.inkFaint
+                                              : AppColors.ink,
                                         ),
+                                        onPressed: () async {
+                                          if (maxStock != null &&
+                                              item.quantity >= maxStock) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  'Đã đạt tối đa tồn kho hiện có ($maxStock sản phẩm).',
+                                                ),
+                                                duration: const Duration(
+                                                  seconds: 2,
+                                                ),
+                                              ),
+                                            );
+                                            return;
+                                          }
+                                          try {
+                                            await cartProvider.updateQuantity(
+                                              item.variantId,
+                                              item.quantity + 1,
+                                            );
+                                          } catch (e) {
+                                            if (!context.mounted) return;
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                backgroundColor:
+                                                    AppColors.error,
+                                                content: Text('$e'),
+                                              ),
+                                            );
+                                          }
+                                        },
                                         constraints: const BoxConstraints(
                                           minWidth: 28,
                                           minHeight: 28,
@@ -371,10 +448,10 @@ class CartScreen extends StatelessWidget {
                               CurrencyFormatter.formatVnd(
                                 cartProvider.subtotalVnd,
                               ),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w800,
-                                color: AppColors.brand700,
+                                color: accent,
                                 letterSpacing: -0.4,
                               ),
                             ),

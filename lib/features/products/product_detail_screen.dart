@@ -19,8 +19,15 @@ import 'compare_phones_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
+  final int? initialStorageGB;
+  final String? initialColorKeyword;
 
-  const ProductDetailScreen({super.key, required this.productId});
+  const ProductDetailScreen({
+    super.key,
+    required this.productId,
+    this.initialStorageGB,
+    this.initialColorKeyword,
+  });
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -31,16 +38,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? _selectedVariantId;
   int _quantity = 1;
   int _selectedRating = 5;
-  String _selectedFinishKey = 'desert';
-  String _selectedStorageKey = '256GB';
   final _reviewController = TextEditingController();
 
-  static const Map<String, String> _finishNames = {
-    'desert': 'Titan Sa Mạc (Desert Titanium)',
-    'natural': 'Titan Tự Nhiên (Natural Titanium)',
-    'white': 'Titan Trắng (White Titanium)',
-    'black': 'Titan Đen (Black Titanium)',
-  };
+  String _brandHighlightLabel(ProductModel product) {
+    if (product.categoryId == 'accessories') {
+      return '✓ Phụ Kiện Chính Hãng';
+    }
+    switch (product.brandId.toLowerCase()) {
+      case 'apple':
+        return ' Apple Intelligence';
+      case 'samsung':
+        return '✦ Galaxy AI';
+      case 'xiaomi':
+        return '⚡ HyperOS AI';
+      case 'oppo':
+        return '✦ OPPO AI';
+      default:
+        return '✓ Chính Hãng VN/A';
+    }
+  }
 
   @override
   void initState() {
@@ -61,13 +77,45 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     await prov.loadVariantsForProduct(widget.productId);
     if (!mounted) return;
 
-    // Synchronize initial variant
-    if (prov.selectedVariant != null) {
-      final v = prov.selectedVariant!;
-      if (v.storageGB > 0) {
-        _selectedStorageKey = v.storageGB >= 1024 ? '1TB' : '${v.storageGB}GB';
+    final loadedVariants = prov.currentVariants;
+    if (loadedVariants.isNotEmpty &&
+        (widget.initialStorageGB != null ||
+            widget.initialColorKeyword != null)) {
+      final kw = widget.initialColorKeyword?.toLowerCase();
+      VariantModel? matched;
+      for (final v in loadedVariants) {
+        final storageOk =
+            widget.initialStorageGB == null ||
+            v.storageGB == widget.initialStorageGB;
+        final colorOk =
+            kw == null ||
+            v.color.toLowerCase().contains(kw) ||
+            v.id.toLowerCase().contains(kw);
+        if (storageOk && colorOk) {
+          matched = v;
+          break;
+        }
+      }
+      matched ??= loadedVariants
+          .where(
+            (v) =>
+                widget.initialStorageGB != null &&
+                v.storageGB == widget.initialStorageGB,
+          )
+          .firstOrNull;
+      matched ??= loadedVariants
+          .where(
+            (v) =>
+                kw != null &&
+                (v.color.toLowerCase().contains(kw) ||
+                    v.id.toLowerCase().contains(kw)),
+          )
+          .firstOrNull;
+      if (matched != null) {
+        prov.selectVariant(matched);
       }
     }
+
     setState(() {
       _product = prod;
       _selectedVariantId = prov.selectedVariant?.id;
@@ -130,9 +178,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       );
     }
 
+    final accent = Theme.of(context).colorScheme.primary;
     final isFav = wishlistProvider.isFavorite(product.id);
     final reviews = productProvider.getReviewsForProduct(product.id);
     final currentPrice = selectedVariant?.priceVnd ?? product.priceFromVnd;
+    final isApplePhone =
+        product.brandId.toLowerCase() == 'apple' &&
+        product.categoryId == 'smartphones';
+    final unitWord = product.categoryId == 'accessories' ? 'sản phẩm' : 'máy';
+
+    // Trích xuất danh sách màu duy nhất từ các biến thể thực tế của sản phẩm
+    final Map<String, VariantModel> uniqueColorVariants = {};
+    for (final v in variants) {
+      uniqueColorVariants.putIfAbsent(v.color, () => v);
+    }
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -168,7 +227,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     IconButton(
                       tooltip: 'Chia sẻ sản phẩm',
                       icon: const Icon(Icons.share_outlined),
-                      color: AppColors.brand700,
+                      color: accent,
                       onPressed: () {
                         final priceText = CurrencyFormatter.formatVnd(
                           selectedVariant?.priceVnd ?? product.priceFromVnd,
@@ -184,24 +243,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         );
                       },
                     ),
-                    IconButton(
-                      tooltip: 'So sánh cấu hình',
-                      icon: const Icon(Icons.compare_arrows_rounded),
-                      color: AppColors.brand700,
-                      onPressed: () {
-                        productProvider.toggleCompareProduct(product.id);
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const ComparePhonesScreen(),
-                          ),
-                        );
-                      },
-                    ),
+                    if (product.categoryId == 'smartphones')
+                      IconButton(
+                        tooltip: 'So sánh cấu hình',
+                        icon: const Icon(Icons.compare_arrows_rounded),
+                        color: accent,
+                        onPressed: () {
+                          productProvider.toggleCompareProduct(product.id);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const ComparePhonesScreen(),
+                            ),
+                          );
+                        },
+                      ),
                     IconButton(
                       tooltip: 'Yêu thích (F12)',
                       icon: Icon(
                         isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                        color: isFav ? AppColors.error : AppColors.brand700,
+                        color: isFav ? AppColors.error : accent,
                       ),
                       onPressed: () => wishlistProvider.toggleFavorite(product.id),
                     ),
@@ -230,16 +290,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.brand50,
+                                  color: accent.withValues(alpha: 0.08),
                                   borderRadius: BorderRadius.circular(999),
-                                  border: Border.all(color: AppColors.brand200),
+                                  border: Border.all(
+                                    color: accent.withValues(alpha: 0.25),
+                                  ),
                                 ),
                                 child: Text(
                                   product.condition,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 11,
                                     fontWeight: FontWeight.w700,
-                                    color: AppColors.brand700,
+                                    color: accent,
                                   ),
                                 ),
                               ),
@@ -252,9 +314,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   color: const Color(0xFF0071E3).withValues(alpha: 0.12),
                                   borderRadius: BorderRadius.circular(999),
                                 ),
-                                child: const Text(
-                                  ' Apple Intelligence',
-                                  style: TextStyle(
+                                child: Text(
+                                  _brandHighlightLabel(product),
+                                  style: const TextStyle(
                                     fontSize: 10.5,
                                     fontWeight: FontWeight.w700,
                                     color: Color(0xFF0071E3),
@@ -313,7 +375,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ),
                               const SizedBox(width: 14),
                               Text(
-                                'Đã bán ${product.soldCount} máy',
+                                'Đã bán ${product.soldCount} $unitWord',
                                 style: const TextStyle(
                                   fontSize: 12,
                                   color: AppColors.inkMuted,
@@ -349,10 +411,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ),
                               Text(
                                 CurrencyFormatter.formatVnd(currentPrice),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w800,
-                                  color: AppColors.brand700,
+                                  color: accent,
                                   letterSpacing: -0.4,
                                 ),
                               ),
@@ -376,7 +438,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ),
                                 child: Text(
                                   (selectedVariant?.isInStock ?? true)
-                                      ? 'Còn hàng: ${selectedVariant?.stock ?? 45} máy'
+                                      ? 'Còn hàng: ${selectedVariant?.stock ?? 45} $unitWord'
                                       : 'Tạm hết hàng',
                                   style: TextStyle(
                                     fontSize: 11,
@@ -399,65 +461,73 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                           const Divider(height: 24),
 
-                          // Finish Selector Row
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                _finishNames[_selectedFinishKey] ?? 'Màu sắc titan',
-                                style: const TextStyle(
-                                  fontSize: 12.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.inkSecondary,
+                          // Dynamic Finish Selector Row synced directly to VariantModel
+                          if (uniqueColorVariants.isNotEmpty) ...[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    'Màu sắc: ${selectedVariant?.color ?? uniqueColorVariants.keys.first}',
+                                    style: const TextStyle(
+                                      fontSize: 12.5,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.inkSecondary,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              Row(
-                                children: [
-                                  TitaniumFinishDot(
-                                    finishKey: 'desert',
-                                    label: 'Titan Sa Mạc',
-                                    color: AppColors.desertTitanium,
-                                    isSelected: _selectedFinishKey == 'desert',
-                                    onSelected: () =>
-                                        setState(() => _selectedFinishKey = 'desert'),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  TitaniumFinishDot(
-                                    finishKey: 'natural',
-                                    label: 'Titan Tự Nhiên',
-                                    color: AppColors.naturalTitanium,
-                                    isSelected: _selectedFinishKey == 'natural',
-                                    onSelected: () =>
-                                        setState(() => _selectedFinishKey = 'natural'),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  TitaniumFinishDot(
-                                    finishKey: 'white',
-                                    label: 'Titan Trắng',
-                                    color: AppColors.whiteTitanium,
-                                    isSelected: _selectedFinishKey == 'white',
-                                    onSelected: () =>
-                                        setState(() => _selectedFinishKey = 'white'),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  TitaniumFinishDot(
-                                    finishKey: 'black',
-                                    label: 'Titan Đen',
-                                    color: AppColors.blackTitanium,
-                                    isSelected: _selectedFinishKey == 'black',
-                                    onSelected: () =>
-                                        setState(() => _selectedFinishKey = 'black'),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
+                                Wrap(
+                                  spacing: 6,
+                                  children: uniqueColorVariants.entries.map((
+                                    entry,
+                                  ) {
+                                    final colorName = entry.key;
+                                    final sampleVar = entry.value;
+                                    final isColorSelected =
+                                        selectedVariant?.color == colorName;
+                                    return TitaniumFinishDot(
+                                      finishKey: colorName,
+                                      label: colorName,
+                                      color: AppColors.fromHex(
+                                        sampleVar.colorHex,
+                                      ),
+                                      isSelected: isColorSelected,
+                                      onSelected: () {
+                                        final currentRom =
+                                            selectedVariant?.storageGB;
+                                        final target = variants.firstWhere(
+                                          (v) =>
+                                              v.color == colorName &&
+                                              v.storageGB == currentRom,
+                                          orElse: () => variants.firstWhere(
+                                            (v) =>
+                                                v.color == colorName &&
+                                                v.isInStock,
+                                            orElse: () => sampleVar,
+                                          ),
+                                        );
+                                        productProvider.selectVariant(target);
+                                        setState(() {
+                                          _selectedVariantId = target.id;
+                                          _quantity = target.stock > 0
+                                              ? _quantity.clamp(1, target.stock)
+                                              : 1;
+                                        });
+                                      },
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                          ],
 
-                          // Storage Options Pills
-                          const Text(
-                            'Dung lượng bộ nhớ:',
-                            style: TextStyle(
+                          // Variant / Storage Options Pills
+                          Text(
+                            product.categoryId == 'accessories'
+                                ? 'Phiên bản tùy chọn:'
+                                : 'Phiên bản Màu & Bộ nhớ (SKU):',
+                            style: const TextStyle(
                               fontSize: 12.5,
                               fontWeight: FontWeight.w700,
                               color: AppColors.inkSecondary,
@@ -470,11 +540,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               spacing: 8,
                               runSpacing: 8,
                               children: variants.map((variant) {
-                                final isSelected = selectedVariant?.id == variant.id;
+                                final isSelected =
+                                    selectedVariant?.id == variant.id;
                                 return GestureDetector(
                                   onTap: () {
                                     productProvider.selectVariant(variant);
                                     setState(() {
+                                      _selectedVariantId = variant.id;
                                       _quantity = variant.stock > 0
                                           ? _quantity.clamp(1, variant.stock)
                                           : 1;
@@ -488,12 +560,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     ),
                                     decoration: BoxDecoration(
                                       color: isSelected
-                                          ? AppColors.brand700
-                                          : Colors.white.withValues(alpha: 0.82),
+                                          ? accent
+                                          : Colors.white.withValues(
+                                              alpha: 0.82,
+                                            ),
                                       borderRadius: BorderRadius.circular(999),
                                       border: Border.all(
                                         color: isSelected
-                                            ? AppColors.brand700
+                                            ? accent
                                             : AppColors.border,
                                         width: 1.2,
                                       ),
@@ -511,31 +585,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   ),
                                 );
                               }).toList(),
-                            )
-                          else
-                            Row(
-                              children: [
-                                StorageCapacityPill(
-                                  capacity: '256GB',
-                                  isSelected: _selectedStorageKey == '256GB',
-                                  onSelected: () =>
-                                      setState(() => _selectedStorageKey = '256GB'),
-                                ),
-                                const SizedBox(width: 8),
-                                StorageCapacityPill(
-                                  capacity: '512GB',
-                                  isSelected: _selectedStorageKey == '512GB',
-                                  onSelected: () =>
-                                      setState(() => _selectedStorageKey = '512GB'),
-                                ),
-                                const SizedBox(width: 8),
-                                StorageCapacityPill(
-                                  capacity: '1TB',
-                                  isSelected: _selectedStorageKey == '1TB',
-                                  onSelected: () =>
-                                      setState(() => _selectedStorageKey = '1TB'),
-                                ),
-                              ],
                             ),
 
                           const SizedBox(height: 16),
@@ -605,110 +654,113 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     const SizedBox(height: 14),
 
-                    // 3. Camera Macro & Performance Split Banner (ui_template_kit Section 5)
-                    LiquidGlassCard(
-                      padding: const EdgeInsets.all(16),
-                      borderRadius: 22,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'TÍNH NĂNG ĐỘT PHÁ',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.inkMuted,
-                              letterSpacing: 1.2,
+                    // 3. Camera Macro & Performance Split Banner (chỉ hiển thị cho iPhone)
+                    if (isApplePhone) ...[
+                      LiquidGlassCard(
+                        padding: const EdgeInsets.all(16),
+                        borderRadius: 22,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'TÍNH NĂNG ĐỘT PHÁ',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.inkMuted,
+                                letterSpacing: 1.2,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          const Text(
-                            'Mọi Khoảnh Khắc Trong Từng Chi Tiết',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.ink,
-                              letterSpacing: -0.3,
+                            const SizedBox(height: 4),
+                            const Text(
+                              'Mọi Khoảnh Khắc Trong Từng Chi Tiết',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.ink,
+                                letterSpacing: -0.3,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
+                            const SizedBox(height: 10),
 
-                          // Landscape Banner Image
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(14),
-                            child: Image.asset(
-                              'assets/images/scenic_mountain_banner.jpg',
-                              height: 140,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) => Container(
+                            // Landscape Banner Image
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(14),
+                              child: Image.asset(
+                                'assets/images/scenic_mountain_banner.jpg',
                                 height: 140,
-                                color: AppColors.brand700,
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.landscape_rounded,
-                                    color: Colors.white,
-                                    size: 40,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) => Container(
+                                  height: 140,
+                                  color: accent,
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.landscape_rounded,
+                                      color: Colors.white,
+                                      size: 40,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 12),
+                            const SizedBox(height: 12),
 
-                          // Macro Lens Close-up with Performance Mini Cards
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(14),
-                                child: Image.asset(
-                                  'assets/images/camera_macro_lens.jpg',
-                                  width: 90,
-                                  height: 90,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, _, _) => Container(
+                            // Macro Lens Close-up with Performance Mini Cards
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(14),
+                                  child: Image.asset(
+                                    'assets/images/camera_macro_lens.jpg',
                                     width: 90,
                                     height: 90,
-                                    color: AppColors.brand900,
-                                    child: const Icon(
-                                      Icons.camera_alt_rounded,
-                                      color: Colors.white,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, _, _) => Container(
+                                      width: 90,
+                                      height: 90,
+                                      color: AppColors.brand900,
+                                      child: const Icon(
+                                        Icons.camera_alt_rounded,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-                              const Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Cụm Camera 48MP Fusion',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w800,
-                                        color: AppColors.ink,
+                                const SizedBox(width: 12),
+                                const Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Cụm Camera 48MP Fusion',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w800,
+                                          color: AppColors.ink,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'Cảm biến Quad-Pixel thế hệ 2, quay 4K 120fps Dolby Vision điện ảnh và zoom quang học 5x sắc nét.',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        color: AppColors.inkSecondary,
-                                        height: 1.35,
+                                      SizedBox(height: 4),
+                                      Text(
+                                        'Cảm biến Quad-Pixel thế hệ 2, quay 4K 120fps Dolby Vision điện ảnh và zoom quang học sắc nét.',
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: AppColors.inkSecondary,
+                                          height: 1.35,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 14),
+                      const SizedBox(height: 14),
+                    ],
 
                     // 4. Specification Table
                     LiquidGlassCard(
@@ -859,7 +911,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               const SizedBox(width: 8),
                               IconButton.filled(
                                 style: IconButton.styleFrom(
-                                  backgroundColor: AppColors.brand700,
+                                  backgroundColor: accent,
                                 ),
                                 onPressed: _submitReview,
                                 icon: const Icon(Icons.send_rounded, size: 18),
@@ -957,10 +1009,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                       Text(
                         CurrencyFormatter.formatVnd(currentPrice * _quantity),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.brand700,
+                          color: accent,
                           letterSpacing: -0.4,
                         ),
                       ),
@@ -968,7 +1020,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                   const SizedBox(width: 12),
 
-                  // Nút icon Giỏ hàng tròn nhỏ (44x44) chuẩn Apple Store
+                  // Nút icon Giỏ hàng tròn nhỏ (44x44) chuẩn Liquid-Glass
                   Container(
                     width: 44,
                     height: 44,
@@ -976,7 +1028,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       color: Colors.white.withValues(alpha: 0.85),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppColors.brand700.withValues(alpha: 0.25),
+                        color: accent.withValues(alpha: 0.25),
                         width: 1.2,
                       ),
                       boxShadow: [
@@ -989,10 +1041,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     child: IconButton(
                       tooltip: 'Thêm vào giỏ hàng',
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.add_shopping_cart_rounded,
                         size: 19,
-                        color: AppColors.brand700,
+                        color: accent,
                       ),
                       onPressed: (selectedVariant != null &&
                               !selectedVariant.isInStock)
@@ -1002,11 +1054,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   VariantModel(
                                     id: '${product.id}_std',
                                     sku: '${product.id.toUpperCase()}-STD',
-                                    color: _finishNames[_selectedFinishKey] ??
-                                        'Titan',
+                                    color: 'Tiêu chuẩn',
                                     colorHex: product.defaultColorHex,
-                                    ramGB: product.ramOptions.firstOrNull ?? 8,
-                                    storageGB: 256,
+                                    ramGB: product.ramOptions.firstOrNull ?? 0,
+                                    storageGB:
+                                        product.storageOptions.firstOrNull ?? 0,
                                     priceVnd: currentPrice,
                                     stock: 45,
                                   );
@@ -1040,7 +1092,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                   const SizedBox(width: 10),
 
-                  // Nút Mua Ngay viên thuốc lớn chuẩn Apple
+                  // Nút Mua Ngay viên thuốc lớn
                   Expanded(
                     child: LiquidPillButton(
                       label: (selectedVariant != null && !selectedVariant.isInStock)
@@ -1053,26 +1105,49 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ? null
                           : () async {
                               final auth = context.read<AuthProvider>();
+                              final cartProv = context.read<CartProvider>();
                               final variantToUse = selectedVariant ??
                                   VariantModel(
                                     id: '${product.id}_std',
                                     sku: '${product.id.toUpperCase()}-STD',
-                                    color: _finishNames[_selectedFinishKey] ??
-                                        'Titan',
+                                    color: 'Tiêu chuẩn',
                                     colorHex: product.defaultColorHex,
-                                    ramGB: product.ramOptions.firstOrNull ?? 8,
-                                    storageGB: 256,
+                                    ramGB: product.ramOptions.firstOrNull ?? 0,
+                                    storageGB:
+                                        product.storageOptions.firstOrNull ?? 0,
                                     priceVnd: currentPrice,
                                     stock: 45,
                                   );
 
                               try {
-                                await context.read<CartProvider>().addVariantToCart(
+                                await cartProv.addVariantToCart(
                                   product: product,
                                   variant: variantToUse,
                                   quantity: _quantity,
                                 );
-                              } catch (_) {}
+                              } catch (e) {
+                                if (!context.mounted) return;
+                                final alreadyInCart = cartProv.items.any(
+                                  (i) => i.variantId == variantToUse.id,
+                                );
+                                if (!alreadyInCart) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      backgroundColor: AppColors.error,
+                                      content: Text('$e'),
+                                    ),
+                                  );
+                                  return;
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Giỏ hàng đã có sẵn số lượng tối đa của phiên bản này (${variantToUse.stock}). Chuyển tới Thanh toán!',
+                                    ),
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
+                              }
                               if (!context.mounted) return;
                               if (auth.isOfflineSimulated) {
                                 showDialog<void>(

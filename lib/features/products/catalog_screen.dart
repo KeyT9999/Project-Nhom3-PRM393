@@ -14,6 +14,7 @@ class CatalogScreen extends StatelessWidget {
 
   void _showFilterBottomSheet(BuildContext context) {
     final prov = context.read<ProductProvider>();
+    final accent = Theme.of(context).colorScheme.primary;
     int? selectedMaxPrice = prov.maxPriceVnd;
     int? selectedRam = prov.filterRamGB;
     int? selectedStorage = prov.filterStorageGB;
@@ -51,10 +52,10 @@ class CatalogScreen extends StatelessWidget {
                           prov.applyFilters(clearAll: true);
                           Navigator.of(ctx).pop();
                         },
-                        child: const Text(
+                        child: Text(
                           'Đặt lại',
                           style: TextStyle(
-                            color: AppColors.brand700,
+                            color: accent,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -157,7 +158,7 @@ class CatalogScreen extends StatelessWidget {
                       ),
                     ),
                     value: onlyInStock,
-                    activeThumbColor: AppColors.brand700,
+                    activeThumbColor: accent,
                     onChanged: (value) =>
                         setModalState(() => onlyInStock = value),
                   ),
@@ -188,15 +189,16 @@ class CatalogScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final prov = context.watch<ProductProvider>();
     final products = prov.products;
+    final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Dòng iPhone & Danh Mục'),
+        title: const Text('Danh Mục Sản Phẩm'),
         actions: [
           IconButton(
             tooltip: 'Bộ lọc nâng cao',
-            icon: const Icon(Icons.tune_rounded, color: AppColors.brand700),
+            icon: Icon(Icons.tune_rounded, color: accent),
             onPressed: () => _showFilterBottomSheet(context),
           ),
           IconButton(
@@ -204,9 +206,9 @@ class CatalogScreen extends StatelessWidget {
             icon: Badge(
               isLabelVisible: prov.comparedProductIds.isNotEmpty,
               label: Text('${prov.comparedProductIds.length}'),
-              child: const Icon(
+              child: Icon(
                 Icons.compare_arrows_rounded,
-                color: AppColors.brand700,
+                color: accent,
               ),
             ),
             onPressed: () {
@@ -322,10 +324,10 @@ class CatalogScreen extends StatelessWidget {
                             const SizedBox(height: 4),
                             TextButton(
                               onPressed: () => prov.applyFilters(clearAll: true),
-                              child: const Text(
+                              child: Text(
                                 'Xóa toàn bộ bộ lọc',
                                 style: TextStyle(
-                                  color: AppColors.brand700,
+                                  color: accent,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -386,19 +388,23 @@ class CatalogScreen extends StatelessWidget {
                                               vertical: 2,
                                             ),
                                             decoration: BoxDecoration(
-                                              color: AppColors.brand50,
+                                              color: accent.withValues(
+                                                alpha: 0.08,
+                                              ),
                                               borderRadius:
                                                   BorderRadius.circular(999),
                                               border: Border.all(
-                                                color: AppColors.brand200,
+                                                color: accent.withValues(
+                                                  alpha: 0.22,
+                                                ),
                                               ),
                                             ),
                                             child: Text(
                                               product.brandId,
-                                              style: const TextStyle(
+                                              style: TextStyle(
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.w700,
-                                                color: AppColors.brand700,
+                                                color: accent,
                                               ),
                                             ),
                                           ),
@@ -448,8 +454,8 @@ class CatalogScreen extends StatelessWidget {
                                             CurrencyFormatter.formatVnd(
                                               product.priceFromVnd,
                                             ),
-                                            style: const TextStyle(
-                                              color: AppColors.brand700,
+                                            style: TextStyle(
+                                              color: accent,
                                               fontWeight: FontWeight.w800,
                                               fontSize: 14.5,
                                               letterSpacing: -0.3,
@@ -495,13 +501,13 @@ class CatalogScreen extends StatelessWidget {
                                               ),
                                               decoration: BoxDecoration(
                                                 color: isCompared
-                                                    ? AppColors.brand700
+                                                    ? accent
                                                     : Colors.white
                                                         .withValues(alpha: 0.8),
                                                 borderRadius:
                                                     BorderRadius.circular(999),
                                                 border: Border.all(
-                                                  color: AppColors.brand700,
+                                                  color: accent,
                                                   width: 1,
                                                 ),
                                               ),
@@ -516,7 +522,7 @@ class CatalogScreen extends StatelessWidget {
                                                     size: 13,
                                                     color: isCompared
                                                         ? Colors.white
-                                                        : AppColors.brand700,
+                                                        : accent,
                                                   ),
                                                   const SizedBox(width: 4),
                                                   Text(
@@ -528,7 +534,7 @@ class CatalogScreen extends StatelessWidget {
                                                       fontWeight: FontWeight.w700,
                                                       color: isCompared
                                                         ? Colors.white
-                                                        : AppColors.brand700,
+                                                        : accent,
                                                     ),
                                                   ),
                                                 ],
@@ -559,16 +565,17 @@ class CatalogScreen extends StatelessWidget {
     required bool selected,
     required VoidCallback onTap,
   }) {
+    final accent = Theme.of(context).colorScheme.primary;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? AppColors.brand700 : Colors.white.withValues(alpha: 0.8),
+          color: selected ? accent : Colors.white.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(999),
           border: Border.all(
-            color: selected ? AppColors.brand700 : AppColors.border,
+            color: selected ? accent : AppColors.border,
           ),
         ),
         child: Text(

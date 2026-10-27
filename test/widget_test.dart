@@ -11,18 +11,20 @@ import 'package:smartstore/providers/wishlist_provider.dart';
 
 void main() {
   testWidgets(
-    'TC01: SmartStore hiển thị Trang chủ Frosted-Glass & 5 tab điều hướng chính',
+    'TC01: SmartStore hiển thị Trang chủ Liquid-Glass & 5 tab điều hướng chính',
     (WidgetTester tester) async {
       await tester.pumpWidget(const SmartStoreApp());
       await tester.pumpAndSettle();
       await tester.tap(find.text('Khám phá ngay'));
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 600));
 
-      expect(find.text('Home'), findsOneWidget);
-      expect(find.text('Catalog'), findsOneWidget);
-      expect(find.text('Cart'), findsOneWidget);
-      expect(find.text('Alerts'), findsOneWidget);
-      expect(find.text('Account'), findsOneWidget);
+      expect(find.text('Khám Phá'), findsOneWidget);
+      expect(find.text('Danh Mục'), findsOneWidget);
+      expect(find.text('Giỏ Hàng'), findsOneWidget);
+      expect(find.text('Thông Báo'), findsOneWidget);
+      expect(find.text('Tài Khoản'), findsOneWidget);
+      expect(find.text('SmartStore'), findsOneWidget);
     },
   );
 
@@ -157,7 +159,7 @@ void main() {
     expect(restoredVariant.stock, initialStock);
   });
 
-  test('TC08, TC10: Wishlist (F12), Chuyển đổi Theme UI DESIGN (Blue/Mono/Orange), Offline Mode (F23) & Chat CSKH (F20, A09)', () async {
+  test('TC08, TC10: Wishlist (F12), Chuyển đổi Theme UI DESIGN (Titanium/Blue/Mono/Orange), So sánh máy & Chat CSKH (F20, A09)', () async {
     final wishlist = WishlistProvider();
     await wishlist.toggleFavorite('iphone_16_pro_max');
     expect(wishlist.isFavorite('iphone_16_pro_max'), isTrue);
@@ -165,8 +167,21 @@ void main() {
     final auth = AuthProvider();
     auth.setThemeType(LmThemeType.orange);
     expect(auth.palette.type, LmThemeType.orange);
+    auth.setThemeType(LmThemeType.titanium);
+    expect(auth.palette.type, LmThemeType.titanium);
     auth.toggleOfflineSimulation(true);
     expect(auth.isOfflineSimulated, isTrue);
+
+    final productProvider = ProductProvider();
+    await productProvider.loadProducts();
+    productProvider.setComparedProducts(const [
+      'iphone_16_pro_max',
+      'samsung_s25_ultra',
+      'xiaomi_15_pro',
+    ]);
+    expect(productProvider.comparedProducts.length, 3);
+    productProvider.toggleCompareProduct('oppo_find_x8_pro');
+    expect(productProvider.comparedProducts.length, 4);
 
     final chat = ChatProvider();
     final initialCount = chat.messages.length;

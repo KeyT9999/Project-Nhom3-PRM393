@@ -283,6 +283,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         : AppConstants.defaultShippingFeeVnd;
     final discount = _appliedCoupon?.discountVnd ?? 0;
     final totalVnd = (subtotal + shippingFee - discount).clamp(0, 999999999);
+    final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -326,15 +327,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ),
                             );
                           },
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.edit_location_alt_outlined,
                             size: 17,
-                            color: AppColors.brand700,
+                            color: accent,
                           ),
-                          label: const Text(
+                          label: Text(
                             'Thay đổi',
                             style: TextStyle(
-                              color: AppColors.brand700,
+                              color: accent,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -409,10 +410,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                             Text(
                               CurrencyFormatter.formatVnd(item.lineTotalVnd),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 13.5,
-                                color: AppColors.brand700,
+                                color: accent,
                               ),
                             ),
                           ],
@@ -465,7 +466,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         const SizedBox(width: 8),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.brand700,
+                            backgroundColor: accent,
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -491,7 +492,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             '${c.code} (-${CurrencyFormatter.formatVnd(c.discountVnd)})',
                           ),
                           backgroundColor: isSelected
-                              ? AppColors.brand700
+                              ? accent
                               : Colors.white.withValues(alpha: 0.8),
                           labelStyle: TextStyle(
                             color: isSelected ? Colors.white : AppColors.ink,
@@ -545,7 +546,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ? Icons.radio_button_checked_rounded
                             : Icons.radio_button_off_rounded,
                         color: _paymentMethod == 'cod'
-                            ? AppColors.brand700
+                            ? accent
                             : AppColors.inkMuted,
                       ),
                       title: const Text(
@@ -566,7 +567,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ? Icons.radio_button_checked_rounded
                             : Icons.radio_button_off_rounded,
                         color: _paymentMethod == 'payos'
-                            ? AppColors.brand700
+                            ? accent
                             : AppColors.inkMuted,
                       ),
                       title: const Text(
@@ -584,15 +585,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               : AppColors.inkMuted,
                         ),
                       ),
-                      trailing: const Icon(
+                      trailing: Icon(
                         Icons.qr_code_2_rounded,
-                        color: AppColors.brand700,
+                        color: accent,
                       ),
                     ),
                     const Divider(height: 12),
                     SwitchListTile(
                       contentPadding: EdgeInsets.zero,
-                      activeThumbColor: AppColors.brand700,
+                      activeThumbColor: accent,
                       title: const Text(
                         'Xác thực vân tay / Face ID',
                         style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5),
@@ -647,10 +648,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         Text(
                           CurrencyFormatter.formatVnd(totalVnd),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
-                            color: AppColors.brand700,
+                            color: accent,
                             letterSpacing: -0.4,
                           ),
                         ),

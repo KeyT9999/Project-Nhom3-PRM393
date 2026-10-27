@@ -1,103 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../core/utils/currency_formatter.dart';
 import '../../core/widgets/lm_glass_widgets.dart';
+import '../../core/widgets/phone_studio_illustration.dart';
+import '../../data/models/product_model.dart';
+import '../../providers/product_provider.dart';
 import 'product_detail_screen.dart';
 
 class ComparePhonesScreen extends StatelessWidget {
   const ComparePhonesScreen({super.key});
 
-  static const List<Map<String, dynamic>> _models = [
-    {
-      'id': 'iphone_16_pro_max',
-      'name': '16 Pro Max',
-      'fullName': 'iPhone 16 Pro Max',
-      'price': 'Từ 34.990.000 ₫',
-      'image': 'assets/images/lineup_16_promax.jpg',
-      'highlight': 'FLAGSHIP',
-      'specs': {
-        'Màn Hình & Tần Số Quét': '6.9" Super Retina XDR\nProMotion 120Hz Always-On',
-        'Chip Xử Lý & GPU': 'Apple A18 Pro (3nm)\nGPU 6 lõi Ray Tracing',
-        'Hệ Thống Camera': '3 Camera Pro 48MP\nFusion + Ultra Wide 48MP\n+ Telephoto 5x',
-        'Nút Điều Khiển Camera': 'Có (Cảm ứng lực & trượt)',
-        'Thời Lượng Xem Video': 'Lên đến 33 giờ\n(Kỷ lục pin tốt nhất)',
-        'Chất Liệu Khung Viền': 'Titan cấp 5 hàng không',
-        'Cổng Kết Nối & Tốc Độ': 'USB-C (USB 3 - 10Gb/s)',
-      },
-    },
-    {
-      'id': 'iphone_16_pro',
-      'name': '16 Pro',
-      'fullName': 'iPhone 16 Pro',
-      'price': 'Từ 28.990.000 ₫',
-      'image': 'assets/images/lineup_16_pro.jpg',
-      'highlight': 'PRO COMPACT',
-      'specs': {
-        'Màn Hình & Tần Số Quét': '6.3" Super Retina XDR\nProMotion 120Hz Always-On',
-        'Chip Xử Lý & GPU': 'Apple A18 Pro (3nm)\nGPU 6 lõi Ray Tracing',
-        'Hệ Thống Camera': '3 Camera Pro 48MP\nFusion + Ultra Wide 48MP\n+ Telephoto 5x',
-        'Nút Điều Khiển Camera': 'Có (Cảm ứng lực & trượt)',
-        'Thời Lượng Xem Video': 'Lên đến 27 giờ',
-        'Chất Liệu Khung Viền': 'Titan cấp 5 hàng không',
-        'Cổng Kết Nối & Tốc Độ': 'USB-C (USB 3 - 10Gb/s)',
-      },
-    },
-    {
-      'id': 'iphone_16_plus',
-      'name': '16 Plus',
-      'fullName': 'iPhone 16 Plus',
-      'price': 'Từ 25.990.000 ₫',
-      'image': 'assets/images/lineup_16_plus.jpg',
-      'highlight': 'MÀN HÌNH LỚN',
-      'specs': {
-        'Màn Hình & Tần Số Quét': '6.7" Super Retina XDR\nTần số quét chuẩn 60Hz',
-        'Chip Xử Lý & GPU': 'Apple A18 (3nm)\nGPU 5 lõi',
-        'Hệ Thống Camera': 'Camera Kép 48MP\nFusion + Ultra Wide 12MP (2x)',
-        'Nút Điều Khiển Camera': 'Có (Cảm ứng lực & trượt)',
-        'Thời Lượng Xem Video': 'Lên đến 27 giờ',
-        'Chất Liệu Khung Viền': 'Nhôm chuẩn hàng không',
-        'Cổng Kết Nối & Tốc Độ': 'USB-C (USB 2 - 480Mb/s)',
-      },
-    },
-    {
-      'id': 'iphone_16',
-      'name': 'iPhone 16',
-      'fullName': 'iPhone 16',
-      'price': 'Từ 21.990.000 ₫',
-      'image': 'assets/images/lineup_16_standard.jpg',
-      'highlight': 'TIÊU CHUẨN',
-      'specs': {
-        'Màn Hình & Tần Số Quét': '6.1" Super Retina XDR\nTần số quét chuẩn 60Hz',
-        'Chip Xử Lý & GPU': 'Apple A18 (3nm)\nGPU 5 lõi',
-        'Hệ Thống Camera': 'Camera Kép 48MP\nFusion + Ultra Wide 12MP (2x)',
-        'Nút Điều Khiển Camera': 'Có (Cảm ứng lực & trượt)',
-        'Thời Lượng Xem Video': 'Lên đến 22 giờ',
-        'Chất Liệu Khung Viền': 'Nhôm chuẩn hàng không',
-        'Cổng Kết Nối & Tốc Độ': 'USB-C (USB 2 - 480Mb/s)',
-      },
-    },
-  ];
-
-  static const List<String> _specKeys = [
-    'Màn Hình & Tần Số Quét',
-    'Chip Xử Lý & GPU',
-    'Hệ Thống Camera',
-    'Nút Điều Khiển Camera',
-    'Thời Lượng Xem Video',
-    'Chất Liệu Khung Viền',
-    'Cổng Kết Nối & Tốc Độ',
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final prov = context.watch<ProductProvider>();
+    final accent = Theme.of(context).colorScheme.primary;
+    final smartphones = prov.allProducts
+        .where((p) => p.isActive && p.categoryId == 'smartphones')
+        .toList();
+
+    final List<ProductModel> compared = prov.comparedProducts.isNotEmpty
+        ? prov.comparedProducts
+        : smartphones.take(3).toList();
+
+    // Tổng hợp động toàn bộ các trường thông số kỹ thuật từ các máy đang so sánh
+    final List<String> dynamicSpecKeys = <String>{
+      for (final p in compared) ...p.specs.keys,
+    }.toList();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('So Sánh Cấu Hình iPhone 16'),
+        title: const Text('So Sánh Cấu Hình Chi Tiết'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          TextButton.icon(
+            onPressed: () {
+              prov.setComparedProducts(const [
+                'iphone_16_pro_max',
+                'iphone_16_pro',
+                'iphone_16_plus',
+                'iphone_16',
+              ]);
+            },
+            icon: Icon(Icons.auto_awesome_rounded, size: 16, color: accent),
+            label: Text(
+              'iPhone 16 Series',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: accent,
+              ),
+            ),
+          ),
+        ],
       ),
       body: LiquidAmbientCanvas(
         animate: true,
@@ -105,10 +65,10 @@ class ComparePhonesScreen extends StatelessWidget {
           bottom: false,
           child: ListView(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
+            physics: const BouncingScrollPhysics(),
             children: [
-              // Header title group
               const Text(
-                'SO SÁNH CẤU HÌNH CHI TIẾT',
+                'SO SÁNH ĐA THƯƠNG HIỆU (TỐI ĐA 4 MÁY)',
                 style: TextStyle(
                   fontSize: 10.5,
                   fontWeight: FontWeight.w800,
@@ -118,7 +78,7 @@ class ComparePhonesScreen extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               const Text(
-                'iPhone Nào Phù Hợp Nhất Với Bạn?',
+                'Chiếc Flagship Nào Hợp Nhất Với Bạn?',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
@@ -128,17 +88,78 @@ class ComparePhonesScreen extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               const Text(
-                'Vuốt ngang để đối chiếu trực tiếp thông số 4 phiên bản thế hệ mới.',
+                'Chọn nhanh các mẫu máy bên dưới và vuốt ngang để đối chiếu trực tiếp thông số kỹ thuật.',
                 style: TextStyle(
                   fontSize: 12.5,
                   color: AppColors.inkSecondary,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
-              // Horizontal Scroll Matrix in Liquid-Glass
+              // Thanh chọn nhanh sản phẩm cần so sánh (Apple, Samsung, Xiaomi, OPPO...)
+              SizedBox(
+                height: 36,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: smartphones.length,
+                  separatorBuilder: (_, _) => const SizedBox(width: 8),
+                  itemBuilder: (context, index) {
+                    final phone = smartphones[index];
+                    final isSelected = prov.comparedProductIds.contains(
+                      phone.id,
+                    );
+                    return GestureDetector(
+                      onTap: () => prov.toggleCompareProduct(phone.id),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 180),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 7,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? accent
+                              : Colors.white.withValues(alpha: 0.84),
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(
+                            color: isSelected ? accent : AppColors.border,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              isSelected
+                                  ? Icons.check_circle_rounded
+                                  : Icons.add_circle_outline_rounded,
+                              size: 14,
+                              color: isSelected ? Colors.white : accent,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              phone.name,
+                              style: TextStyle(
+                                fontSize: 11.5,
+                                fontWeight: FontWeight.w700,
+                                color: isSelected ? Colors.white : AppColors.ink,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 14),
+
+              // Ma trận so sánh vuốt ngang Liquid-Glass
               LiquidGlassCard(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 10,
+                ),
                 borderRadius: 22,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -146,105 +167,122 @@ class ComparePhonesScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header Row: 4 Phone Cards with Real Image, Price & CTA
+                      // Hàng thẻ đầu: Ảnh Studio, Hãng, Giá & Nút Xem Máy
                       Row(
-                        children: _models.map((model) {
+                        children: List.generate(compared.length, (idx) {
+                          final model = compared[idx];
+                          final isFirst = idx == 0;
                           return Container(
-                            width: 175,
+                            width: 182,
                             margin: const EdgeInsets.symmetric(horizontal: 6),
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.8),
+                              color: Colors.white.withValues(alpha: 0.82),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: model['id'] == 'iphone_16_pro_max'
-                                    ? AppColors.brand700
-                                    : AppColors.border,
-                                width: model['id'] == 'iphone_16_pro_max'
-                                    ? 1.8
-                                    : 1.0,
+                                color: isFirst ? accent : AppColors.border,
+                                width: isFirst ? 1.8 : 1.0,
                               ),
                             ),
                             child: Column(
                               children: [
-                                // Badge
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 6,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: model['id'] == 'iphone_16_pro_max'
-                                        ? AppColors.brand700
-                                        : AppColors.brand50,
-                                    borderRadius: BorderRadius.circular(999),
-                                  ),
-                                  child: Text(
-                                    model['highlight'] as String,
-                                    style: TextStyle(
-                                      fontSize: 9.5,
-                                      fontWeight: FontWeight.w800,
-                                      color: model['id'] == 'iphone_16_pro_max'
-                                          ? Colors.white
-                                          : AppColors.brand700,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 3,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isFirst
+                                            ? accent
+                                            : accent.withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(
+                                          999,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        model.brandId.toUpperCase(),
+                                        style: TextStyle(
+                                          fontSize: 9.5,
+                                          fontWeight: FontWeight.w800,
+                                          color: isFirst
+                                              ? Colors.white
+                                              : accent,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    if (prov.comparedProductIds.length > 1)
+                                      InkWell(
+                                        borderRadius: BorderRadius.circular(99),
+                                        onTap: () =>
+                                            prov.toggleCompareProduct(model.id),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(2),
+                                          child: Icon(
+                                            Icons.close_rounded,
+                                            size: 16,
+                                            color: AppColors.inkMuted,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                 ),
                                 const SizedBox(height: 8),
-
-                                // Phone Image
                                 SizedBox(
-                                  height: 85,
-                                  child: Image.asset(
-                                    model['image'] as String,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (_, _, _) => const Icon(
-                                      Icons.phone_iphone_rounded,
-                                      size: 60,
-                                    ),
+                                  height: 86,
+                                  child: PhoneStudioIllustration(
+                                    brandId: model.brandId,
+                                    categoryId: model.categoryId,
+                                    productName: model.name,
+                                    colorHex: model.defaultColorHex,
+                                    imageUrl: model.thumbnailUrl.isNotEmpty
+                                        ? model.thumbnailUrl
+                                        : null,
+                                    height: 84,
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-
                                 Text(
-                                  model['name'] as String,
+                                  model.name,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
                                   style: const TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 13.5,
                                     fontWeight: FontWeight.w800,
                                     color: AppColors.ink,
+                                    height: 1.2,
                                   ),
                                 ),
-                                const SizedBox(height: 2),
+                                const SizedBox(height: 4),
                                 Text(
-                                  model['price'] as String,
-                                  style: const TextStyle(
+                                  'Từ ${CurrencyFormatter.formatVnd(model.priceFromVnd)}',
+                                  style: TextStyle(
                                     fontSize: 12.5,
                                     fontWeight: FontWeight.w800,
-                                    color: AppColors.brand700,
+                                    color: accent,
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-
-                                // CTA Button
                                 SizedBox(
                                   width: double.infinity,
                                   height: 32,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          model['id'] == 'iphone_16_pro_max'
-                                              ? AppColors.brand700
-                                              : Colors.white,
-                                      foregroundColor:
-                                          model['id'] == 'iphone_16_pro_max'
-                                              ? Colors.white
-                                              : AppColors.brand700,
-                                      side: const BorderSide(
-                                        color: AppColors.brand700,
-                                      ),
+                                      backgroundColor: isFirst
+                                          ? accent
+                                          : Colors.white,
+                                      foregroundColor: isFirst
+                                          ? Colors.white
+                                          : accent,
+                                      side: BorderSide(color: accent),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(999),
+                                        borderRadius: BorderRadius.circular(
+                                          999,
+                                        ),
                                       ),
                                       padding: EdgeInsets.zero,
                                       elevation: 0,
@@ -253,7 +291,7 @@ class ComparePhonesScreen extends StatelessWidget {
                                       Navigator.of(context).push(
                                         MaterialPageRoute(
                                           builder: (_) => ProductDetailScreen(
-                                            productId: model['id'] as String,
+                                            productId: model.id,
                                           ),
                                         ),
                                       );
@@ -270,144 +308,110 @@ class ComparePhonesScreen extends StatelessWidget {
                               ],
                             ),
                           );
-                        }).toList(),
+                        }),
                       ),
                       const SizedBox(height: 18),
 
-                      // Specification Matrix Rows
-                      ..._specKeys.map((key) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 14),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Parameter Section Title
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 4,
-                                ),
-                                margin: const EdgeInsets.only(bottom: 8),
-                                decoration: BoxDecoration(
-                                  color: AppColors.brand50,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  key,
-                                  style: const TextStyle(
-                                    fontSize: 11.5,
-                                    fontWeight: FontWeight.w800,
-                                    color: AppColors.brand700,
-                                  ),
-                                ),
-                              ),
+                      // Hàng cố định: Tùy chọn RAM / ROM & Đánh giá
+                      _buildComparisonSection(
+                        title: 'Tùy Chọn RAM & Bộ Nhớ ROM',
+                        accent: accent,
+                        values: compared.map((m) {
+                          final rams = m.ramOptions
+                              .where((r) => r > 0)
+                              .map((r) => '${r}GB')
+                              .join('/');
+                          final roms = m.storageOptions
+                              .where((s) => s > 0)
+                              .map((s) => s >= 1024 ? '1TB' : '${s}GB')
+                              .join(' • ');
+                          if (rams.isEmpty && roms.isEmpty) return 'Tiêu chuẩn';
+                          return 'RAM $rams\nROM $roms';
+                        }).toList(),
+                      ),
+                      _buildComparisonSection(
+                        title: 'Đánh Giá & Doanh Số',
+                        accent: accent,
+                        values: compared
+                            .map(
+                              (m) =>
+                                  '⭐ ${m.ratingAvg}/5.0 (${m.reviewCount} đánh giá)\nĐã bán ${m.soldCount} máy',
+                            )
+                            .toList(),
+                      ),
 
-                              // Value Cells for each model
-                              Row(
-                                children: _models.map((model) {
-                                  final specs =
-                                      model['specs'] as Map<String, String>;
-                                  final val = specs[key] ?? '—';
-                                  final isProMax =
-                                      model['id'] == 'iphone_16_pro_max';
-
-                                  return Container(
-                                    width: 175,
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 6,
-                                    ),
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: isProMax
-                                          ? AppColors.brand50.withValues(alpha: 0.7)
-                                          : Colors.white.withValues(alpha: 0.7),
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: isProMax
-                                            ? AppColors.brand300
-                                            : AppColors.border,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      val,
-                                      style: TextStyle(
-                                        fontSize: 11.5,
-                                        fontWeight: isProMax
-                                            ? FontWeight.w700
-                                            : FontWeight.w500,
-                                        color: AppColors.ink,
-                                        height: 1.35,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          ),
+                      // Các hàng thông số kỹ thuật động từ `specs`
+                      ...dynamicSpecKeys.map((key) {
+                        return _buildComparisonSection(
+                          title: key,
+                          accent: accent,
+                          values: compared
+                              .map((m) => m.specs[key] ?? '—')
+                              .toList(),
                         );
                       }),
                     ],
                   ),
                 ),
               ),
-
-              const SizedBox(height: 16),
-
-              // Bottom Advice Card
-              LiquidGlassDarkCard(
-                padding: const EdgeInsets.all(18),
-                borderRadius: 20,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD4C8B8),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Center(
-                        child: Text(
-                          '',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.brand900,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Chuyên gia Apple tư vấn',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                          SizedBox(height: 2),
-                          Text(
-                            'Nếu bạn cần màn hình 6.9" lớn nhất và pin 33H, hãy chọn 16 Pro Max. Nếu thích máy gọn nhẹ trong lòng bàn tay, 16 Pro là lựa chọn hoàn hảo.',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Color(0xFF94A3B8),
-                              height: 1.35,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildComparisonSection({
+    required String title,
+    required Color accent,
+    required List<String> values,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            margin: const EdgeInsets.only(bottom: 8, left: 6),
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 11.5,
+                fontWeight: FontWeight.w800,
+                color: accent,
+              ),
+            ),
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: values.map((val) {
+              return Container(
+                width: 182,
+                margin: const EdgeInsets.symmetric(horizontal: 6),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.65),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Text(
+                  val,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.ink,
+                    height: 1.35,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }

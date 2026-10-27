@@ -33,9 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   static const Map<String, int> _storagePrices = {
-    '256GB': 34990000,
-    '512GB': 40990000,
-    '1TB': 46990000,
+    '256GB': 31990000,
+    '512GB': 37990000,
+    '1TB': 42990000,
   };
 
   static const List<Map<String, dynamic>> _proFeatures = [
@@ -61,28 +61,18 @@ class _HomeScreenState extends State<HomeScreen> {
     },
   ];
 
-  static const List<Map<String, String>> _accessories = [
-    {
-      'name': 'AirPods Pro 2 (USB-C)',
-      'price': '6.190.000 ₫',
-      'image': 'assets/images/acc_airpods_pro.jpg',
-    },
-    {
-      'name': 'Ốp Trong Suốt MagSafe',
-      'price': '1.490.000 ₫',
-      'image': 'assets/images/acc_clear_case.jpg',
-    },
-    {
-      'name': 'Sạc MagSafe Nhanh 25W',
-      'price': '1.190.000 ₫',
-      'image': 'assets/images/acc_magsafe_charger.jpg',
-    },
-    {
-      'name': 'Ví MagSafe FineWoven',
-      'price': '1.690.000 ₫',
-      'image': 'assets/images/acc_finewoven_wallet.jpg',
-    },
-  ];
+  static String _finishLabel(String key) {
+    switch (key) {
+      case 'natural':
+        return 'Titan Tự Nhiên';
+      case 'white':
+        return 'Titan Trắng';
+      case 'black':
+        return 'Titan Đen';
+      default:
+        return 'Titan Sa Mạc';
+    }
+  }
 
   @override
   void dispose() {
@@ -95,7 +85,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final productProvider = context.watch<ProductProvider>();
     final wishlistProvider = context.watch<WishlistProvider>();
     final products = productProvider.products;
-    final currentPrice = _storagePrices[_selectedStorage] ?? 34990000;
+    final accent = Theme.of(context).colorScheme.primary;
+    final selectedStorageGB = _selectedStorage == '1TB'
+        ? 1024
+        : (_selectedStorage == '512GB' ? 512 : 256);
+    final heroVariants = productProvider.repository.getCachedVariants(
+      'iphone_16_pro_max',
+    );
+    final matchedHeroVariant = heroVariants
+        .where((v) => v.storageGB == selectedStorageGB)
+        .firstOrNull;
+    final currentPrice =
+        matchedHeroVariant?.priceVnd ??
+        (_storagePrices[_selectedStorage] ?? 31990000);
+    final accessoryProducts = productProvider.allProducts
+        .where((p) => p.isActive && p.categoryId == 'accessories')
+        .toList();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -116,24 +121,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: 36,
                         height: 36,
                         decoration: BoxDecoration(
-                          color: AppColors.brand700,
+                          color: accent,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.brand700.withValues(alpha: 0.25),
+                              color: accent.withValues(alpha: 0.25),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
                           ],
                         ),
                         child: const Center(
-                          child: Text(
-                            '',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
-                            ),
+                          child: Icon(
+                            Icons.smartphone_rounded,
+                            color: Colors.white,
+                            size: 19,
                           ),
                         ),
                       ),
@@ -142,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Apple Store Pro',
+                            'SmartStore',
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w800,
@@ -151,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           Text(
-                            'Chính Hãng VN/A • Slate Navy Edition',
+                            'Flagship Đa Thương Hiệu • Liquid-Glass',
                             style: TextStyle(
                               fontSize: 10.5,
                               color: AppColors.inkMuted,
@@ -170,9 +172,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           label: Text(
                             '${productProvider.comparedProductIds.length}',
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.compare_arrows_rounded,
-                            color: AppColors.brand700,
+                            color: accent,
                           ),
                         ),
                         onPressed: () {
@@ -192,9 +194,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           label: Text(
                             '${wishlistProvider.favoriteProductIds.length}',
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.favorite_border_rounded,
-                            color: AppColors.brand700,
+                            color: accent,
                           ),
                         ),
                         onPressed: () {
@@ -225,7 +227,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       controller: _searchController,
                       onChanged: productProvider.setSearchQuery,
                       decoration: InputDecoration(
-                        hintText: 'Tìm kiếm iPhone 16 Pro Max, phụ kiện...',
+                        hintText:
+                            'Tìm kiếm iPhone 16, Galaxy S25, Xiaomi, OPPO...',
                         hintStyle: const TextStyle(
                           color: AppColors.inkMuted,
                           fontSize: 13.5,
@@ -344,10 +347,31 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Image.asset(
                                     'assets/images/hero_iphone_rock.jpg',
                                     fit: BoxFit.cover,
-                                    errorBuilder: (_, _, _) => const Icon(
+                                    errorBuilder: (_, _, _) => Icon(
                                       Icons.phone_iphone_rounded,
                                       size: 100,
-                                      color: AppColors.brand700,
+                                      color: accent,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 8,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.62),
+                                    borderRadius: BorderRadius.circular(999),
+                                  ),
+                                  child: Text(
+                                    '${_finishLabel(_selectedFinish)} • $_selectedStorage',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10.5,
+                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                 ),
@@ -374,10 +398,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Text(
                                   CurrencyFormatter.formatVnd(currentPrice),
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 19,
                                     fontWeight: FontWeight.w800,
-                                    color: AppColors.brand700,
+                                    color: accent,
                                     letterSpacing: -0.4,
                                   ),
                                 ),
@@ -458,8 +482,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (_) => const ProductDetailScreen(
+                                    builder: (_) => ProductDetailScreen(
                                       productId: 'iphone_16_pro_max',
+                                      initialStorageGB: selectedStorageGB,
+                                      initialColorKeyword: _selectedFinish,
                                     ),
                                   ),
                                 );
@@ -496,13 +522,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               width: 32,
                               height: 32,
                               decoration: BoxDecoration(
-                                color: AppColors.brand700.withValues(alpha: 0.1),
+                                color: accent.withValues(alpha: 0.1),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 item['icon'] as IconData,
                                 size: 16,
-                                color: AppColors.brand700,
+                                color: accent,
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -553,10 +579,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Text(
                         '${products.length} mẫu có sẵn',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.brand700,
+                          color: accent,
                         ),
                       ),
                     ],
@@ -585,13 +611,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? AppColors.brand700
+                                ? accent
                                 : Colors.white.withValues(alpha: 0.82),
                             borderRadius: BorderRadius.circular(999),
                             border: Border.all(
-                              color: isSelected
-                                  ? AppColors.brand700
-                                  : AppColors.border,
+                              color: isSelected ? accent : AppColors.border,
                             ),
                           ),
                           child: Text(
@@ -649,16 +673,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                     vertical: 3,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.brand50,
+                                    color: accent.withValues(alpha: 0.08),
                                     borderRadius: BorderRadius.circular(999),
-                                    border: Border.all(color: AppColors.brand200),
+                                    border: Border.all(
+                                      color: accent.withValues(alpha: 0.22),
+                                    ),
                                   ),
                                   child: Text(
                                     product.brandId,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.w700,
-                                      color: AppColors.brand700,
+                                      color: accent,
                                     ),
                                   ),
                                 ),
@@ -740,8 +766,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   CurrencyFormatter.formatVnd(
                                     product.priceFromVnd,
                                   ),
-                                  style: const TextStyle(
-                                    color: AppColors.brand700,
+                                  style: TextStyle(
+                                    color: accent,
                                     fontWeight: FontWeight.w800,
                                     fontSize: 14,
                                     letterSpacing: -0.3,
@@ -751,12 +777,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: 26,
                                   height: 26,
                                   decoration: BoxDecoration(
-                                    color: AppColors.brand700,
+                                    color: accent,
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: AppColors.brand700
-                                            .withValues(alpha: 0.25),
+                                        color: accent.withValues(alpha: 0.25),
                                         blurRadius: 6,
                                         offset: const Offset(0, 2),
                                       ),
@@ -797,21 +822,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       GestureDetector(
                         onTap: () => productProvider.loadProducts(brand: 'Phụ kiện'),
-                        child: const Row(
+                        child: Row(
                           children: [
                             Text(
                               'Xem tất cả',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.brand700,
+                                color: accent,
                               ),
                             ),
-                            SizedBox(width: 2),
+                            const SizedBox(width: 2),
                             Icon(
                               Icons.chevron_right_rounded,
                               size: 16,
-                              color: AppColors.brand700,
+                              color: accent,
                             ),
                           ],
                         ),
@@ -823,24 +848,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
               SliverToBoxAdapter(
                 child: SizedBox(
-                  height: 154,
+                  height: 164,
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     scrollDirection: Axis.horizontal,
-                    itemCount: _accessories.length,
+                    itemCount: accessoryProducts.length,
                     separatorBuilder: (_, _) => const SizedBox(width: 10),
                     itemBuilder: (context, index) {
-                      final item = _accessories[index];
+                      final acc = accessoryProducts[index];
                       return SizedBox(
-                        width: 140,
+                        width: 146,
                         child: LiquidGlassCard(
                           padding: const EdgeInsets.all(10),
                           borderRadius: 18,
                           onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Đã chọn ${item['name']}'),
-                                duration: const Duration(seconds: 1),
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ProductDetailScreen(productId: acc.id),
                               ),
                             );
                           },
@@ -849,20 +874,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
                               Expanded(
                                 child: Center(
-                                  child: Image.asset(
-                                    item['image']!,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (_, _, _) => const Icon(
-                                      Icons.headphones_rounded,
-                                      size: 40,
-                                      color: AppColors.brand700,
-                                    ),
+                                  child: PhoneStudioIllustration(
+                                    brandId: acc.brandId,
+                                    categoryId: acc.categoryId,
+                                    productName: acc.name,
+                                    colorHex: acc.defaultColorHex,
+                                    imageUrl: acc.thumbnailUrl.isNotEmpty
+                                        ? acc.thumbnailUrl
+                                        : null,
+                                    height: 84,
                                   ),
                                 ),
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                item['name']!,
+                                acc.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
@@ -873,11 +899,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                item['price']!,
-                                style: const TextStyle(
+                                CurrencyFormatter.formatVnd(acc.priceFromVnd),
+                                style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w800,
-                                  color: AppColors.brand700,
+                                  color: accent,
                                 ),
                               ),
                             ],
@@ -899,9 +925,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Row(
+                        Row(
                           children: [
-                            Text(
+                            const Text(
                               '★★★★★',
                               style: TextStyle(
                                 color: Color(0xFFF59E0B),
@@ -909,12 +935,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 letterSpacing: 2,
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               'Đánh giá xác minh',
                               style: TextStyle(
                                 fontSize: 10.5,
-                                color: AppColors.brand700,
+                                color: accent,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -936,8 +962,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             Container(
                               width: 32,
                               height: 32,
-                              decoration: const BoxDecoration(
-                                color: AppColors.brand700,
+                              decoration: BoxDecoration(
+                                color: accent,
                                 shape: BoxShape.circle,
                               ),
                               child: const Center(
@@ -991,16 +1017,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         Icons.electric_bolt_rounded,
                         'Giao 2H',
                         'Toàn quốc',
+                        accent,
                       ),
                       _buildTrustBadge(
                         Icons.verified_rounded,
-                        'Apple VN/A',
+                        'Chính Hãng',
                         '1 đổi 1 12T',
+                        accent,
                       ),
                       _buildTrustBadge(
                         Icons.credit_card_rounded,
                         'Trả Góp 0%',
                         'Qua thẻ',
+                        accent,
                       ),
                     ],
                   ),
@@ -1013,7 +1042,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildTrustBadge(IconData icon, String title, String subtitle) {
+  Widget _buildTrustBadge(
+    IconData icon,
+    String title,
+    String subtitle,
+    Color accent,
+  ) {
     return Column(
       children: [
         Container(
@@ -1024,7 +1058,7 @@ class _HomeScreenState extends State<HomeScreen> {
             shape: BoxShape.circle,
             border: Border.all(color: AppColors.border),
           ),
-          child: Icon(icon, size: 18, color: AppColors.brand700),
+          child: Icon(icon, size: 18, color: accent),
         ),
         const SizedBox(height: 6),
         Text(

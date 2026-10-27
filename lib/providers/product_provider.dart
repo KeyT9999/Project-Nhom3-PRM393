@@ -198,11 +198,18 @@ class ProductProvider extends ChangeNotifier {
     if (_comparedProductIds.contains(productId)) {
       _comparedProductIds.remove(productId);
     } else {
-      if (_comparedProductIds.length >= 3) {
+      if (_comparedProductIds.length >= 4) {
         _comparedProductIds.remove(_comparedProductIds.first);
       }
       _comparedProductIds.add(productId);
     }
+    notifyListeners();
+  }
+
+  void setComparedProducts(Iterable<String> productIds) {
+    _comparedProductIds
+      ..clear()
+      ..addAll(productIds.take(4));
     notifyListeners();
   }
 
