@@ -15,7 +15,7 @@ Kiểm tra gần nhất (Claude): `flutter analyze` → No issues found. Chưa c
 - [x] ✅ State management Provider – `lib/providers/`
 
 ## B. Lệch giữa báo cáo và code (cần chốt)
-- [ ] ⚠️ B1. Báo cáo ghi giỏ hàng lưu **SQLite (sqflite), bảng Cart**; code thật lưu **file JSON cục bộ + đồng bộ Firestore** (`cart_repository.dart`, `local_file_storage_service.dart`), khóa theo `variantId`, không có `sqflite` trong `pubspec.yaml`. → **Cần người quyết định**: (a) sửa báo cáo cho khớp code, hoặc (b) thêm tầng sqflite.
+- [x] ✅ B1. Giỏ hàng đã chuyển sang **SQLite (sqflite)**, bảng `Cart` khớp báo cáo mục 3.3 (thêm `variant_id`, `variant_label`, `updated_at`), có di trú một lần từ JSON cũ. Vẫn đồng bộ Firestore khi đăng nhập. 20/20 test pass (TASK-4, TASK-5 ĐẠT). Báo cáo nên ghi thêm 3 cột mở rộng này.
 - [ ] ⚠️ B2. Báo cáo ghi "chưa tích hợp thanh toán online, dữ liệu mock" nhưng code đã có PayOS (`payos_service.dart`, `payos_payment_screen.dart`) và nhiều dữ liệu sản phẩm. → cập nhật mục 6 của báo cáo.
 - [ ] ⚠️ B3. Báo cáo ghi chat "Firebase Realtime"; code dùng Cloud Firestore. → sửa chữ trong báo cáo.
 
