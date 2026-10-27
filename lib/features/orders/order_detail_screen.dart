@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/utils/product_display.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -148,7 +149,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đơn hàng ${order.orderCode} (F15)'),
+        title: Text('Đơn hàng ${order.orderCode}'),
         actions: [
           IconButton(
             tooltip: 'Chia sẻ Hóa đơn điện tử',
@@ -271,7 +272,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${item.quantity}x ${item.productName}',
+                                '${item.quantity}x ${ProductDisplay.shortName(item.productName)}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -417,13 +418,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text(
-                      'Đã hủy đơn hàng & hoàn lại số lượng tồn kho (F16)!',
+                      'Đã hủy đơn hàng & hoàn lại số lượng tồn kho!',
                     ),
                   ),
                 );
               },
               icon: const Icon(Icons.cancel_outlined),
-              label: const Text('Hủy đơn hàng (F16)'),
+              label: const Text('Hủy đơn hàng'),
             ),
         ],
       ),

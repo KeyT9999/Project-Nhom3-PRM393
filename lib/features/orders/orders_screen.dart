@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/utils/product_display.dart';
 import 'package:provider/provider.dart';
 
 import '../../app/theme/app_colors.dart';
@@ -65,7 +66,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Lịch sử đơn hàng (F14)')),
+      appBar: AppBar(title: const Text('Lịch sử đơn hàng')),
       body: Column(
         children: [
           SizedBox(
@@ -135,7 +136,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                               (item) => Padding(
                                 padding: const EdgeInsets.only(bottom: 6),
                                 child: Text(
-                                  '• ${item.quantity}x ${item.productName} (${item.variantLabel})',
+                                  '• ${item.quantity}x ${ProductDisplay.shortName(item.productName)} (${item.variantLabel})',
                                   style: const TextStyle(
                                     fontSize: 13,
                                     color: AppColors.textSecondary,

@@ -43,7 +43,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Khôi phục mật khẩu (F03)')),
+      appBar: AppBar(title: const Text('Khôi phục mật khẩu')),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: LmMaterialCard(

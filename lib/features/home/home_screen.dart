@@ -3,8 +3,12 @@ import 'package:provider/provider.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../core/utils/currency_formatter.dart';
+import '../../core/utils/product_display.dart';
+import '../../core/utils/product_images.dart';
 import '../../core/widgets/lm_glass_widgets.dart';
-import '../../core/widgets/phone_studio_illustration.dart';
+import '../../core/widgets/product_image.dart';
+import '../../core/widgets/product_skeleton.dart';
+import '../../data/models/product_model.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/wishlist_provider.dart';
 import '../products/compare_phones_screen.dart';
@@ -19,9 +23,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String _selectedFinish = 'desert';
-  String _selectedStorage = '256GB';
   final TextEditingController _searchController = TextEditingController();
+  bool _precached = false;
 
   static const List<String> _brandFilters = [
     'Tất cả',
@@ -32,47 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'Phụ kiện',
   ];
 
-  static const Map<String, int> _storagePrices = {
-    '256GB': 31990000,
-    '512GB': 37990000,
-    '1TB': 42990000,
-  };
-
-  static const List<Map<String, dynamic>> _proFeatures = [
-    {
-      'icon': Icons.camera_alt_rounded,
-      'title': 'Camera 48MP Fusion',
-      'desc': 'Nút Camera Control cảm ứng lực',
-    },
-    {
-      'icon': Icons.smartphone_rounded,
-      'title': 'OLED 6.9" 120Hz',
-      'desc': 'Viền màn hình mỏng nhất lịch sử',
-    },
-    {
-      'icon': Icons.memory_rounded,
-      'title': 'Chip A18 Pro 3nm',
-      'desc': 'Apple Intelligence trực tiếp trên máy',
-    },
-    {
-      'icon': Icons.battery_charging_full_rounded,
-      'title': 'Pin Đến 33 Giờ',
-      'desc': 'Kỷ lục bền bỉ nhất trên iPhone',
-    },
-  ];
-
-  static String _finishLabel(String key) {
-    switch (key) {
-      case 'natural':
-        return 'Titan Tự Nhiên';
-      case 'white':
-        return 'Titan Trắng';
-      case 'black':
-        return 'Titan Đen';
-      default:
-        return 'Titan Sa Mạc';
-    }
-  }
+  static const String _bannerProductId = 'iphone_16_pro_max';
 
   @override
   void dispose() {
@@ -80,956 +43,185 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  void _openProduct(String id) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => ProductDetailScreen(productId: id)),
+    );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_precached) {
+      _precached = true;
+      _precacheHomeImages();
+    }
+  }
+
+  /// Nạp trước ảnh banner và 6 sản phẩm đầu để cuộn/vào trang không bị khựng.
+  Future<void> _precacheHomeImages() async {
+    final dpr = MediaQuery.devicePixelRatioOf(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final bucket = ProductImage.cacheBucket((width - 44) / 2, dpr);
+    final lookup = ProductImages.instance;
+    final products = context.read<ProductProvider>().products;
+    precacheImage(
+      const ResizeImage(
+        AssetImage('assets/images/hero_iphone_rock.jpg'),
+        width: 450,
+      ),
+      context,
+      onError: (_, _) {},
+    );
+    await lookup.ensureLoaded();
+    if (!mounted) return;
+    for (final p in products.take(6)) {
+      final path = lookup.main(p.id);
+      if (path == null) continue;
+      precacheImage(
+        ResizeImage(AssetImage(path), width: bucket),
+        context,
+        onError: (_, _) {},
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final productProvider = context.watch<ProductProvider>();
-    final wishlistProvider = context.watch<WishlistProvider>();
-    final products = productProvider.products;
-    final accent = Theme.of(context).colorScheme.primary;
-    final selectedStorageGB = _selectedStorage == '1TB'
-        ? 1024
-        : (_selectedStorage == '512GB' ? 512 : 256);
-    final heroVariants = productProvider.repository.getCachedVariants(
-      'iphone_16_pro_max',
-    );
-    final matchedHeroVariant = heroVariants
-        .where((v) => v.storageGB == selectedStorageGB)
-        .firstOrNull;
-    final currentPrice =
-        matchedHeroVariant?.priceVnd ??
-        (_storagePrices[_selectedStorage] ?? 31990000);
-    final accessoryProducts = productProvider.allProducts
-        .where((p) => p.isActive && p.categoryId == 'accessories')
-        .toList();
+    final productProvider = context.read<ProductProvider>();
+    final wishlistProvider = context.read<WishlistProvider>();
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: LiquidAmbientCanvas(
-        animate: true,
         child: SafeArea(
           bottom: false,
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              // 1. Sleek Floating Glass Header
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: accent,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: accent.withValues(alpha: 0.25),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.smartphone_rounded,
-                            color: Colors.white,
-                            size: 19,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'SmartStore',
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.ink,
-                              letterSpacing: -0.4,
-                            ),
-                          ),
-                          Text(
-                            'Flagship Đa Thương Hiệu • Liquid-Glass',
-                            style: TextStyle(
-                              fontSize: 10.5,
-                              color: AppColors.inkMuted,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      // Compare Button
-                      IconButton(
-                        tooltip: 'So sánh cấu hình',
-                        icon: Badge(
-                          isLabelVisible:
-                              productProvider.comparedProductIds.isNotEmpty,
-                          label: Text(
-                            '${productProvider.comparedProductIds.length}',
-                          ),
-                          child: Icon(
-                            Icons.compare_arrows_rounded,
-                            color: accent,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const ComparePhonesScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      // Wishlist Button
-                      IconButton(
-                        tooltip: 'Yêu thích',
-                        icon: Badge(
-                          isLabelVisible:
-                              wishlistProvider.favoriteProductIds.isNotEmpty,
-                          label: Text(
-                            '${wishlistProvider.favoriteProductIds.length}',
-                          ),
-                          child: Icon(
-                            Icons.favorite_border_rounded,
-                            color: accent,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const WishlistScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                child: Consumer2<ProductProvider, WishlistProvider>(
+                  builder: (_, products, wishlist, _) =>
+                      _buildHeader(products, wishlist),
                 ),
               ),
-
-
-              // 3. Search Bar in Liquid Glass
+              SliverToBoxAdapter(child: _buildSearch(productProvider)),
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                  child: LiquidGlassCard(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 2,
-                    ),
-                    borderRadius: 16,
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: productProvider.setSearchQuery,
-                      decoration: InputDecoration(
-                        hintText:
-                            'Tìm kiếm iPhone 16, Galaxy S25, Xiaomi, OPPO...',
-                        hintStyle: const TextStyle(
-                          color: AppColors.inkMuted,
-                          fontSize: 13.5,
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.search_rounded,
-                          color: AppColors.inkMuted,
-                          size: 20,
-                        ),
-                        suffixIcon: _searchController.text.isNotEmpty
-                            ? IconButton(
-                                icon: const Icon(Icons.clear_rounded, size: 18),
-                                onPressed: () {
-                                  _searchController.clear();
-                                  productProvider.setSearchQuery('');
-                                  setState(() {});
-                                },
-                              )
-                            : null,
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        filled: false,
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 11,
-                        ),
-                      ),
-                    ),
-                  ),
+                child: Selector<ProductProvider, ProductModel?>(
+                  selector: (_, p) {
+                    for (final item in p.products) {
+                      if (item.id == _bannerProductId) return item;
+                    }
+                    return null;
+                  },
+                  builder: (_, banner, _) => banner == null
+                      ? const SizedBox.shrink()
+                      : _buildBanner(banner),
                 ),
               ),
-
-              // 4. Hero Flagship Section (Streamlined for Mobile)
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                  child: LiquidGlassCard(
-                    padding: const EdgeInsets.all(18),
-                    borderRadius: 24,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'APPLE INTELLIGENCE ĐÃ SẴN SÀNG',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.inkMuted,
-                                letterSpacing: 1.2,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 3,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF0071E3).withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                              child: const Text(
-                                '💧 Liquid-Glass',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF0071E3),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 6),
-                        const Text(
-                          'iPhone 16 Pro Max',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.ink,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        const Text(
-                          'Titanium Siêu Bền. Đẳng Cấp Pro.',
-                          style: TextStyle(
-                            fontSize: 12.5,
-                            color: AppColors.inkSecondary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Center Studio Photography on Pedestal
-                        Center(
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Container(
-                                width: 220,
-                                height: 160,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(0xFF0F1722)
-                                          .withValues(alpha: 0.12),
-                                      blurRadius: 28,
-                                      offset: const Offset(0, 14),
-                                    ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.asset(
-                                    'assets/images/hero_iphone_rock.jpg',
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, _, _) => Icon(
-                                      Icons.phone_iphone_rounded,
-                                      size: 100,
-                                      color: accent,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 8,
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: 0.62),
-                                    borderRadius: BorderRadius.circular(999),
-                                  ),
-                                  child: Text(
-                                    '${_finishLabel(_selectedFinish)} • $_selectedStorage',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10.5,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-
-                        // Price and Finish Swatches
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Giá ưu đãi từ:',
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: AppColors.inkMuted,
-                                  ),
-                                ),
-                                Text(
-                                  CurrencyFormatter.formatVnd(currentPrice),
-                                  style: TextStyle(
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.w800,
-                                    color: accent,
-                                    letterSpacing: -0.4,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            // 4 Titanium Finishes
-                            Row(
-                              children: [
-                                TitaniumFinishDot(
-                                  finishKey: 'desert',
-                                  label: 'Titan Sa Mạc',
-                                  color: AppColors.desertTitanium,
-                                  isSelected: _selectedFinish == 'desert',
-                                  onSelected: () =>
-                                      setState(() => _selectedFinish = 'desert'),
-                                ),
-                                const SizedBox(width: 6),
-                                TitaniumFinishDot(
-                                  finishKey: 'natural',
-                                  label: 'Titan Tự Nhiên',
-                                  color: AppColors.naturalTitanium,
-                                  isSelected: _selectedFinish == 'natural',
-                                  onSelected: () =>
-                                      setState(() => _selectedFinish = 'natural'),
-                                ),
-                                const SizedBox(width: 6),
-                                TitaniumFinishDot(
-                                  finishKey: 'white',
-                                  label: 'Titan Trắng',
-                                  color: AppColors.whiteTitanium,
-                                  isSelected: _selectedFinish == 'white',
-                                  onSelected: () =>
-                                      setState(() => _selectedFinish = 'white'),
-                                ),
-                                const SizedBox(width: 6),
-                                TitaniumFinishDot(
-                                  finishKey: 'black',
-                                  label: 'Titan Đen',
-                                  color: AppColors.blackTitanium,
-                                  isSelected: _selectedFinish == 'black',
-                                  onSelected: () =>
-                                      setState(() => _selectedFinish = 'black'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Capacity Pills & CTA Row
-                        Row(
-                          children: [
-                            StorageCapacityPill(
-                              capacity: '256GB',
-                              isSelected: _selectedStorage == '256GB',
-                              onSelected: () =>
-                                  setState(() => _selectedStorage = '256GB'),
-                            ),
-                            const SizedBox(width: 8),
-                            StorageCapacityPill(
-                              capacity: '512GB',
-                              isSelected: _selectedStorage == '512GB',
-                              onSelected: () =>
-                                  setState(() => _selectedStorage = '512GB'),
-                            ),
-                            const SizedBox(width: 8),
-                            StorageCapacityPill(
-                              capacity: '1TB',
-                              isSelected: _selectedStorage == '1TB',
-                              onSelected: () =>
-                                  setState(() => _selectedStorage = '1TB'),
-                            ),
-                            const Spacer(),
-                            LiquidPillButton(
-                              label: 'Mua Ngay',
-                              icon: Icons.bolt_rounded,
-                              height: 40,
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => ProductDetailScreen(
-                                      productId: 'iphone_16_pro_max',
-                                      initialStorageGB: selectedStorageGB,
-                                      initialColorKeyword: _selectedFinish,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              // 5. 4 Pro Feature Chips (Compact Horizontal Scroll per user choice)
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 64,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _proFeatures.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 10),
-                    itemBuilder: (context, index) {
-                      final item = _proFeatures[index];
-                      return LiquidGlassCard(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
-                        ),
-                        borderRadius: 16,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: accent.withValues(alpha: 0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                item['icon'] as IconData,
-                                size: 16,
-                                color: accent,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  item['title'] as String,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.ink,
-                                  ),
-                                ),
-                                Text(
-                                  item['desc'] as String,
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                    color: AppColors.inkMuted,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-
-              // 6. Category & Brand Filter Row
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 18, 16, 8),
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Dòng Sản Phẩm',
+                        'Sản phẩm',
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
                           color: AppColors.ink,
-                          letterSpacing: -0.3,
                         ),
                       ),
-                      Text(
-                        '${products.length} mẫu có sẵn',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: accent,
+                      Selector<ProductProvider, int>(
+                        selector: (_, p) => p.products.length,
+                        builder: (_, count, _) => Text(
+                          '$count sản phẩm',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: AppColors.inkMuted,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-
               SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 38,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _brandFilters.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 8),
-                    itemBuilder: (context, index) {
-                      final brand = _brandFilters[index];
-                      final isSelected = productProvider.selectedBrand == brand;
-                      return GestureDetector(
-                        onTap: () => productProvider.loadProducts(brand: brand),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 180),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? accent
-                                : Colors.white.withValues(alpha: 0.82),
-                            borderRadius: BorderRadius.circular(999),
-                            border: Border.all(
-                              color: isSelected ? accent : AppColors.border,
-                            ),
-                          ),
-                          child: Text(
-                            brand,
-                            style: TextStyle(
-                              color: isSelected ? Colors.white : AppColors.ink,
-                              fontSize: 12,
-                              fontWeight: isSelected
-                                  ? FontWeight.w700
-                                  : FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                child: Selector<ProductProvider, String>(
+                  selector: (_, p) => p.selectedBrand,
+                  builder: (_, _, _) => _buildBrandFilters(productProvider),
                 ),
               ),
-
-              // 7. Lineup Product Grid (Real Photography & Liquid-Glass Cards)
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: 0.68,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final product = products[index];
-                      final isFav = wishlistProvider.isFavorite(product.id);
-
-                      return LiquidGlassCard(
-                        padding: const EdgeInsets.all(12),
-                        borderRadius: 18,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  ProductDetailScreen(productId: product.id),
-                            ),
-                          );
-                        },
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 7,
-                                    vertical: 3,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: accent.withValues(alpha: 0.08),
-                                    borderRadius: BorderRadius.circular(999),
-                                    border: Border.all(
-                                      color: accent.withValues(alpha: 0.22),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    product.brandId,
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w700,
-                                      color: accent,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () => wishlistProvider.toggleFavorite(
-                                    product.id,
-                                  ),
-                                  child: Icon(
-                                    isFav
-                                        ? Icons.favorite_rounded
-                                        : Icons.favorite_border_rounded,
-                                    size: 18,
-                                    color: isFav
-                                        ? AppColors.error
-                                        : AppColors.inkMuted,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
-                                child: Center(
-                                  child: PhoneStudioIllustration(
-                                    brandId: product.brandId,
-                                    categoryId: product.categoryId,
-                                    productName: product.name,
-                                    colorHex: product.defaultColorHex,
-                                    imageUrl: product.thumbnailUrl,
-                                    height: 105,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              product.name,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 13,
-                                color: AppColors.ink,
-                                letterSpacing: -0.2,
-                                height: 1.2,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.star_rounded,
-                                  size: 14,
-                                  color: Color(0xFFF59E0B),
-                                ),
-                                const SizedBox(width: 3),
-                                Text(
-                                  '${product.ratingAvg}',
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.inkSecondary,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  'Đã bán ${product.soldCount}',
-                                  style: const TextStyle(
-                                    fontSize: 10.5,
-                                    color: AppColors.inkFaint,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 6),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  CurrencyFormatter.formatVnd(
-                                    product.priceFromVnd,
-                                  ),
-                                  style: TextStyle(
-                                    color: accent,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 14,
-                                    letterSpacing: -0.3,
-                                  ),
-                                ),
-                                Container(
-                                  width: 26,
-                                  height: 26,
-                                  decoration: BoxDecoration(
-                                    color: accent,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: accent.withValues(alpha: 0.25),
-                                        blurRadius: 6,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: Colors.white,
-                                    size: 11,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    childCount: products.length,
-                  ),
-                ),
-              ),
-
-              // 8. Official Accessories Ecosystem (Horizontal Scroll per user request)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Hệ Sinh Thái Phụ Kiện',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.ink,
-                          letterSpacing: -0.3,
-                        ),
+              Consumer2<ProductProvider, WishlistProvider>(
+                builder: (context, prov, wishlist, _) {
+                  final products = prov.products;
+                  if (prov.isLoading && products.isEmpty) {
+                    return SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+                      sliver: SliverGrid.builder(
+                        gridDelegate: _gridDelegate,
+                        itemCount: 6,
+                        itemBuilder: (_, _) =>
+                            const ProductSkeleton(grid: true),
                       ),
-                      GestureDetector(
-                        onTap: () => productProvider.loadProducts(brand: 'Phụ kiện'),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Xem tất cả',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                color: accent,
-                              ),
-                            ),
-                            const SizedBox(width: 2),
-                            Icon(
-                              Icons.chevron_right_rounded,
-                              size: 16,
-                              color: accent,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 164,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: accessoryProducts.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 10),
-                    itemBuilder: (context, index) {
-                      final acc = accessoryProducts[index];
-                      return SizedBox(
-                        width: 146,
-                        child: LiquidGlassCard(
-                          padding: const EdgeInsets.all(10),
-                          borderRadius: 18,
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    ProductDetailScreen(productId: acc.id),
-                              ),
-                            );
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Center(
-                                  child: PhoneStudioIllustration(
-                                    brandId: acc.brandId,
-                                    categoryId: acc.categoryId,
-                                    productName: acc.name,
-                                    colorHex: acc.defaultColorHex,
-                                    imageUrl: acc.thumbnailUrl.isNotEmpty
-                                        ? acc.thumbnailUrl
-                                        : null,
-                                    height: 84,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                acc.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 11.5,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.ink,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                CurrencyFormatter.formatVnd(acc.priceFromVnd),
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w800,
-                                  color: accent,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-
-              // 9. Verified Customer Testimonial (Liquid-Glass Card)
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 18, 16, 12),
-                  child: LiquidGlassCard(
-                    padding: const EdgeInsets.all(16),
-                    borderRadius: 20,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              '★★★★★',
-                              style: TextStyle(
-                                color: Color(0xFFF59E0B),
-                                fontSize: 16,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                            const Spacer(),
-                            Text(
-                              'Đánh giá xác minh',
-                              style: TextStyle(
-                                fontSize: 10.5,
-                                color: accent,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          '"Khung viền Titan Sa Mạc cầm nhẹ và đầm tay bất ngờ. Nút Camera Control mới mở camera tức thì, quay video 4K 120fps đẹp như phim rạp. Thật sự xứng đáng với đẳng cấp Pro Max!"',
-                          style: TextStyle(
-                            fontSize: 12,
-                            height: 1.45,
-                            fontStyle: FontStyle.italic,
-                            color: AppColors.inkSecondary,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Container(
-                              width: 32,
-                              height: 32,
-                              decoration: BoxDecoration(
-                                color: accent,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  'HL',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Hoàng Long',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.ink,
-                                  ),
-                                ),
-                                Text(
-                                  'Chủ sở hữu iPhone 16 Pro Max 512GB',
-                                  style: TextStyle(
-                                    fontSize: 10.5,
-                                    color: AppColors.inkMuted,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+                    );
+                  }
+                  return SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 12),
+                    sliver: SliverGrid.builder(
+                      gridDelegate: _gridDelegate,
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        return _ProductCard(
+                          key: ValueKey(product.id),
+                          product: product,
+                          isFavorite: wishlist.isFavorite(product.id),
+                          onTap: () => _openProduct(product.id),
+                          onToggleFavorite: () =>
+                              wishlistProvider.toggleFavorite(product.id),
+                        );
+                      },
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-
-              // 10. Trust Badges Row
+              Consumer<ProductProvider>(
+                builder: (context, prov, _) {
+                  final accessories = prov.products
+                      .where(
+                        (p) => p.categoryId.toLowerCase().contains('accessor'),
+                      )
+                      .toList();
+                  if (accessories.isEmpty) {
+                    return const SliverToBoxAdapter(child: SizedBox.shrink());
+                  }
+                  return SliverMainAxisGroup(
+                    slivers: [
+                      _accessoriesTitle(prov),
+                      SliverToBoxAdapter(child: _accessoriesList(accessories)),
+                    ],
+                  );
+                },
+              ),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 28),
+                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildTrustBadge(
-                        Icons.electric_bolt_rounded,
-                        'Giao 2H',
-                        'Toàn quốc',
-                        accent,
+                      _buildServiceItem(
+                        Icons.local_shipping_outlined,
+                        'Giao hàng nhanh',
                       ),
-                      _buildTrustBadge(
-                        Icons.verified_rounded,
-                        'Chính Hãng',
-                        '1 đổi 1 12T',
-                        accent,
+                      _buildServiceItem(
+                        Icons.verified_outlined,
+                        'Hàng chính hãng',
                       ),
-                      _buildTrustBadge(
-                        Icons.credit_card_rounded,
-                        'Trả Góp 0%',
-                        'Qua thẻ',
-                        accent,
+                      _buildServiceItem(
+                        Icons.autorenew_rounded,
+                        'Đổi trả 30 ngày',
                       ),
                     ],
                   ),
@@ -1042,41 +234,408 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildTrustBadge(
-    IconData icon,
-    String title,
-    String subtitle,
-    Color accent,
-  ) {
+  static const _gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 2,
+    mainAxisSpacing: 12,
+    crossAxisSpacing: 12,
+    childAspectRatio: 0.66,
+  );
+
+  Widget _accessoriesTitle(ProductProvider productProvider) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Phụ kiện',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: AppColors.ink,
+              ),
+            ),
+            GestureDetector(
+              onTap: () => productProvider.loadProducts(brand: 'Phụ kiện'),
+              child: const Text(
+                'Xem tất cả',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _accessoriesList(List<ProductModel> accessories) {
+    return SizedBox(
+      height: 190,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        scrollDirection: Axis.horizontal,
+        itemCount: accessories.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 10),
+        itemBuilder: (context, index) {
+          final item = accessories[index];
+          return SizedBox(
+            width: 140,
+            child: LiquidGlassCard(
+              padding: const EdgeInsets.all(10),
+              onTap: () => _openProduct(item.id),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: RepaintBoundary(
+                        child: ProductImage(
+                          productId: item.id,
+                          fallbackUrl: item.thumbnailUrl,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    ProductDisplay.shortName(item.name),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 13, color: AppColors.ink),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    CurrencyFormatter.formatVnd(item.priceFromVnd),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildHeader(ProductProvider products, WishlistProvider wishlist) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 8, 4),
+      child: Row(
+        children: [
+          const Text(
+            'SmartStore',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              color: AppColors.ink,
+            ),
+          ),
+          const Spacer(),
+          IconButton(
+            tooltip: 'So sánh cấu hình',
+            icon: Badge(
+              isLabelVisible: products.comparedProductIds.isNotEmpty,
+              label: Text('${products.comparedProductIds.length}'),
+              child: const Icon(Icons.compare_arrows_rounded, color: AppColors.ink),
+            ),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ComparePhonesScreen()),
+            ),
+          ),
+          IconButton(
+            tooltip: 'Yêu thích',
+            icon: Badge(
+              isLabelVisible: wishlist.favoriteProductIds.isNotEmpty,
+              label: Text('${wishlist.favoriteProductIds.length}'),
+              child: const Icon(Icons.favorite_border_rounded, color: AppColors.ink),
+            ),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const WishlistScreen()),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearch(ProductProvider productProvider) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      child: LiquidGlassCard(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        borderRadius: 10,
+        child: TextField(
+          controller: _searchController,
+          onChanged: productProvider.setSearchQuery,
+          decoration: InputDecoration(
+            hintText: 'Tìm điện thoại, phụ kiện...',
+            hintStyle: const TextStyle(color: AppColors.inkMuted, fontSize: 14),
+            prefixIcon: const Icon(
+              Icons.search_rounded,
+              color: AppColors.inkMuted,
+              size: 20,
+            ),
+            suffixIcon: _searchController.text.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear_rounded, size: 18),
+                    onPressed: () {
+                      _searchController.clear();
+                      productProvider.setSearchQuery('');
+                      setState(() {});
+                    },
+                  )
+                : null,
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            filled: false,
+            contentPadding: const EdgeInsets.symmetric(vertical: 11),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBanner(ProductModel product) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+      child: GestureDetector(
+        onTap: () => _openProduct(product.id),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            color: AppColors.brand800,
+            height: 170,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          ProductDisplay.shortName(product.name),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Từ ${CurrencyFormatter.formatVnd(product.priceFromVnd)}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.white70,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Text(
+                            'Xem chi tiết',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.ink,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 150,
+                  height: 170,
+                  child: Image.asset(
+                    'assets/images/hero_iphone_rock.jpg',
+                    fit: BoxFit.cover,
+                    cacheWidth: 450,
+                    errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBrandFilters(ProductProvider productProvider) {
+    return SizedBox(
+      height: 36,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        scrollDirection: Axis.horizontal,
+        itemCount: _brandFilters.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final brand = _brandFilters[index];
+          final isSelected = productProvider.selectedBrand == brand;
+          return GestureDetector(
+            onTap: () => productProvider.loadProducts(brand: brand),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.primary : AppColors.surface,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: isSelected ? AppColors.primary : AppColors.border,
+                ),
+              ),
+              child: Text(
+                brand,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : AppColors.ink,
+                  fontSize: 13,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildServiceItem(IconData icon, String title) {
     return Column(
       children: [
-        Container(
-          width: 38,
-          height: 38,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.8),
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Icon(icon, size: 18, color: accent),
-        ),
+        Icon(icon, size: 22, color: AppColors.inkSecondary),
         const SizedBox(height: 6),
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 11.5,
-            fontWeight: FontWeight.w700,
-            color: AppColors.ink,
-          ),
-        ),
-        Text(
-          subtitle,
-          style: const TextStyle(
-            fontSize: 9.5,
-            color: AppColors.inkMuted,
-          ),
+          style: const TextStyle(fontSize: 12, color: AppColors.inkMuted),
         ),
       ],
+    );
+  }
+}
+
+class _ProductCard extends StatelessWidget {
+  final ProductModel product;
+  final bool isFavorite;
+  final VoidCallback onTap;
+  final VoidCallback onToggleFavorite;
+
+  const _ProductCard({
+    super.key,
+    required this.product,
+    required this.isFavorite,
+    required this.onTap,
+    required this.onToggleFavorite,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LiquidGlassCard(
+      padding: EdgeInsets.zero,
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(11)),
+                    child: RepaintBoundary(
+                      child: ProductImage(
+                        productId: product.id,
+                        fallbackUrl: product.thumbnailUrl,
+                        aspectRatio: null,
+                        padding: const EdgeInsets.all(10),
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 2,
+                  top: 2,
+                  child: IconButton(
+                    visualDensity: VisualDensity.compact,
+                    tooltip: 'Yêu thích',
+                    onPressed: onToggleFavorite,
+                    icon: Icon(
+                      isFavorite
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      size: 20,
+                      color: isFavorite ? AppColors.error : AppColors.inkMuted,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  ProductDisplay.shortName(product.name),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: AppColors.ink,
+                    height: 1.25,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.star_rounded,
+                        size: 14, color: Color(0xFFF59E0B)),
+                    const SizedBox(width: 2),
+                    Text(
+                      '${product.ratingAvg} · Đã bán ${product.soldCount}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.inkMuted,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  CurrencyFormatter.formatVnd(product.priceFromVnd),
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

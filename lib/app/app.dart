@@ -17,6 +17,7 @@ import '../providers/order_provider.dart';
 import '../providers/product_provider.dart';
 import '../providers/wishlist_provider.dart';
 import 'routes/app_router.dart';
+import '../core/widgets/count_bump.dart';
 import 'theme/app_colors.dart';
 import 'theme/app_theme.dart';
 
@@ -88,8 +89,6 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
     }
     _wasOffline = auth.isOfflineSimulated;
 
-    final accent = Theme.of(context).colorScheme.primary;
-
     return Scaffold(
       body: Column(
         children: [
@@ -104,41 +103,31 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
       ),
       bottomNavigationBar: ClipRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.82),
-              border: Border(
-                top: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.9),
-                  width: 1.2,
-                ),
+              color: Colors.white.withValues(alpha: 0.92),
+              border: const Border(
+                top: BorderSide(color: AppColors.border, width: 1),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF0F172A).withValues(alpha: 0.06),
-                  blurRadius: 20,
-                  offset: const Offset(0, -6),
-                ),
-              ],
             ),
             child: NavigationBarTheme(
               data: NavigationBarThemeData(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                indicatorColor: accent.withValues(alpha: 0.12),
+                indicatorColor: AppColors.brand700.withValues(alpha: 0.12),
                 labelTextStyle: WidgetStateProperty.resolveWith((states) {
                   final isSelected = states.contains(WidgetState.selected);
                   return TextStyle(
                     fontSize: 11,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                    color: isSelected ? accent : AppColors.inkMuted,
+                    color: isSelected ? AppColors.brand700 : AppColors.inkMuted,
                   );
                 }),
                 iconTheme: WidgetStateProperty.resolveWith((states) {
                   final isSelected = states.contains(WidgetState.selected);
                   return IconThemeData(
-                    color: isSelected ? accent : AppColors.inkMuted,
+                    color: isSelected ? AppColors.brand700 : AppColors.inkMuted,
                     size: 21,
                   );
                 }),
@@ -154,22 +143,28 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
                     label: 'Khám Phá',
                   ),
                   const NavigationDestination(
-                    icon: Icon(Icons.grid_view_outlined),
-                    selectedIcon: Icon(Icons.grid_view_rounded),
-                    label: 'Danh Mục',
+                    icon: Icon(Icons.phone_iphone_outlined),
+                    selectedIcon: Icon(Icons.phone_iphone_rounded),
+                    label: 'Dòng iPhone',
                   ),
                   NavigationDestination(
-                    icon: Badge(
-                      isLabelVisible: cartCount > 0,
-                      label: Text('$cartCount'),
-                      child: const Icon(Icons.shopping_bag_outlined),
+                    icon: CountBump(
+                      count: cartCount,
+                      child: Badge(
+                        isLabelVisible: cartCount > 0,
+                        label: Text('$cartCount'),
+                        child: const Icon(Icons.shopping_bag_outlined),
+                      ),
                     ),
-                    selectedIcon: Badge(
-                      isLabelVisible: cartCount > 0,
-                      label: Text('$cartCount'),
-                      child: const Icon(Icons.shopping_bag_rounded),
+                    selectedIcon: CountBump(
+                      count: cartCount,
+                      child: Badge(
+                        isLabelVisible: cartCount > 0,
+                        label: Text('$cartCount'),
+                        child: const Icon(Icons.shopping_bag_rounded),
+                      ),
                     ),
-                    label: 'Giỏ Hàng',
+                    label: 'Túi Hàng',
                   ),
                   NavigationDestination(
                     icon: Badge(
@@ -187,7 +182,7 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
                   const NavigationDestination(
                     icon: Icon(Icons.person_outline_rounded),
                     selectedIcon: Icon(Icons.person_rounded),
-                    label: 'Tài Khoản',
+                    label: 'Apple ID',
                   ),
                 ],
               ),

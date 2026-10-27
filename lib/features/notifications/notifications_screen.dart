@@ -27,7 +27,7 @@ class NotificationsScreen extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text(
-          'Đã bắn thông báo Android qua flutter_local_notifications (F19)!',
+          'Đã gửi thông báo thử.',
         ),
       ),
     );
@@ -41,7 +41,7 @@ class NotificationsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Thông báo & Ưu đãi (F19)'),
+        title: const Text('Thông báo & Ưu đãi'),
         actions: [
           IconButton(
             tooltip: 'Bắn thử Local Notification trên Android',

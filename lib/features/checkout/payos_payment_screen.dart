@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -86,9 +87,8 @@ class _PayosPaymentScreenState extends State<PayosPaymentScreen> {
 
   void _copyText(String label, String text) {
     Clipboard.setData(ClipboardData(text: text));
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('Đã sao chép $label: $text')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Đã sao chép $label: $text')));
   }
 
   Future<void> _openCheckoutUrl() async {

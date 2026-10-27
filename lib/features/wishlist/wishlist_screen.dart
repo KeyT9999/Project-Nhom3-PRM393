@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/utils/currency_formatter.dart';
 import '../../core/widgets/lm_glass_widgets.dart';
-import '../../core/widgets/phone_studio_illustration.dart';
+import '../../core/widgets/product_image.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/wishlist_provider.dart';
 import '../products/product_detail_screen.dart';
@@ -22,7 +22,7 @@ class WishlistScreen extends StatelessWidget {
     final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Danh sách yêu thích (F12)')),
+      appBar: AppBar(title: const Text('Danh sách yêu thích')),
       body: favoriteProducts.isEmpty
           ? const Center(
               child: Padding(
@@ -54,12 +54,10 @@ class WishlistScreen extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: 64,
-                        child: PhoneStudioIllustration(
-                          brandId: product.brandId,
-                          categoryId: product.categoryId,
-                          productName: product.name,
-                          colorHex: product.defaultColorHex,
-                          height: 76,
+                        child: ProductImage(
+                          productId: product.id,
+                          fallbackUrl: product.thumbnailUrl,
+                          padding: const EdgeInsets.all(2),
                         ),
                       ),
                       const SizedBox(width: 14),

@@ -150,13 +150,13 @@ function applyFinishToPhone(finishKey) {
     heroImg.style.transform = 'scale(0.96)';
     setTimeout(() => {
       if (finishKey === 'desert') {
-        heroImg.src = '../assets/images/hero_iphone_rock.jpg';
+        heroImg.src = 'images/hero_iphone_rock.jpg';
       } else if (finishKey === 'natural') {
-        heroImg.src = '../assets/images/lineup_16_pro.jpg';
+        heroImg.src = 'images/lineup_16_pro.jpg';
       } else if (finishKey === 'white') {
-        heroImg.src = '../assets/images/lineup_16_promax.jpg';
+        heroImg.src = 'images/lineup_16_promax.jpg';
       } else if (finishKey === 'black') {
-        heroImg.src = '../assets/images/footer_phone_dark.jpg';
+        heroImg.src = 'images/footer_phone_dark.jpg';
       }
       heroImg.style.opacity = '1';
       heroImg.style.transform = 'scale(1)';

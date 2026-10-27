@@ -51,7 +51,7 @@ class AppColors {
   static const Color blackTitanium = Color(0xFF28282B);
 
   // Surfaces & Ink Tokens
-  static const Color background = Color(0xFFF6F8FB);
+  static const Color background = Color(0xFFF5F5F7);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color surfaceLightSlate = Color(0xFFF1F5F9);
   static const Color border = Color(0xFFE2E8F0);

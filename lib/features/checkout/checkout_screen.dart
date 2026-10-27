@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:local_auth/local_auth.dart';
+
+import '../../core/utils/product_display.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../app/theme/app_colors.dart';
@@ -30,8 +32,10 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final _couponCtrl = TextEditingController();
   CouponModel? _appliedCoupon;
-  bool _requireBiometric = false;
   String _paymentMethod = 'cod'; // 'cod' | 'payos'
+
+  /// Chế độ thử nghiệm: mã VietQR PayOS luôn thu 10.000₫, tổng đơn không đổi.
+  static const int _payosTestAmountVnd = 10000;
   bool _isCreatingPayosLink = false;
   late String _requestId;
 
@@ -69,21 +73,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Future<bool> _verifyBiometricIfNeeded() async {
-    if (!_requireBiometric) return true;
-    try {
-      final auth = LocalAuthentication();
-      final canCheck = await auth.canCheckBiometrics;
-      if (!canCheck) return false;
-      return await auth.authenticate(
-        localizedReason:
-            'Xác thực sinh trắc học để xác nhận đặt đơn hàng SmartStore',
-      );
-    } catch (_) {
-      return false;
-    }
-  }
-
   Future<bool> _showPayosConfigDialog() async {
     await EnvConfig.load(forceReload: true);
     if (!mounted) return false;
@@ -105,7 +94,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             children: [
               const Text(
                 'Bạn có thể điền trực tiếp vào file .env ở thư mục gốc dự án hoặc dán nhanh tại đây:',
-                style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+                style: TextStyle(
+                  fontSize: 12.5,
+                  color: AppColors.textSecondary,
+                ),
               ),
               const SizedBox(height: 12),
               TextField(
@@ -172,9 +164,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       return;
     }
 
-    final bioPassed = await _verifyBiometricIfNeeded();
-    if (!bioPassed || !mounted) return;
-
     String paymentStatus = 'unpaid';
 
     if (_paymentMethod == 'payos') {
@@ -188,19 +177,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       try {
         final payosOrderCode =
             DateTime.now().millisecondsSinceEpoch % 1000000000;
+        final payosChargeAmount =
+            totalVnd > 0 ? totalVnd : _payosTestAmountVnd;
         final linkData = await PayosService.createPaymentLink(
           orderCode: payosOrderCode,
-          amount: totalVnd,
+          amount: payosChargeAmount,
           description: 'SMARTSTORE $payosOrderCode',
-          items: cart.items
-              .map(
-                (e) => {
-                  'name': e.productName,
-                  'quantity': e.quantity,
-                  'price': e.priceVnd,
-                },
-              )
-              .toList(),
+          items: [
+            {
+              'name': 'Don hang SmartStore $payosOrderCode',
+              'quantity': 1,
+              'price': payosChargeAmount,
+            }
+          ],
         );
         if (!mounted) return;
         setState(() => _isCreatingPayosLink = false);
@@ -241,7 +230,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       notifProv.addNotification(
         title: 'Đặt hàng thành công ${order.orderCode}',
         body: _paymentMethod == 'payos'
-            ? 'Đơn hàng ${CurrencyFormatter.formatVnd(order.totalVnd)} đã thanh toán qua PayOS.'
+            ? 'Đơn hàng ${CurrencyFormatter.formatVnd(order.totalVnd)} đã thanh toán thành công qua PayOS VietQR.'
             : 'Đơn hàng ${CurrencyFormatter.formatVnd(order.totalVnd)} đang chờ xác nhận.',
         orderId: order.id,
       );
@@ -251,7 +240,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           id: order.hashCode & 0x7fffffff,
           title: 'Đặt hàng thành công! (${order.orderCode})',
           body: _paymentMethod == 'payos'
-              ? 'Đã thanh toán ${CurrencyFormatter.formatVnd(order.totalVnd)} qua PayOS VietQR.'
+              ? 'Đã thanh toán thành công ${CurrencyFormatter.formatVnd(order.totalVnd)} qua PayOS VietQR.'
               : 'Đơn hàng trị giá ${CurrencyFormatter.formatVnd(order.totalVnd)} đang chờ SmartStore xác nhận.',
           orderId: order.id,
         );
@@ -283,7 +272,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         : AppConstants.defaultShippingFeeVnd;
     final discount = _appliedCoupon?.discountVnd ?? 0;
     final totalVnd = (subtotal + shippingFee - discount).clamp(0, 999999999);
-    final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -327,15 +315,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ),
                             );
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.edit_location_alt_outlined,
                             size: 17,
-                            color: accent,
+                            color: AppColors.brand700,
                           ),
-                          label: Text(
+                          label: const Text(
                             'Thay đổi',
                             style: TextStyle(
-                              color: accent,
+                              color: AppColors.brand700,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -391,7 +379,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${item.quantity}x ${item.productName}',
+                                    '${item.quantity}x ${ProductDisplay.shortName(item.productName)}',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 13.5,
@@ -410,10 +398,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                             Text(
                               CurrencyFormatter.formatVnd(item.lineTotalVnd),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 13.5,
-                                color: accent,
+                                color: AppColors.brand700,
                               ),
                             ),
                           ],
@@ -466,7 +454,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         const SizedBox(width: 8),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: accent,
+                            backgroundColor: AppColors.brand700,
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -492,7 +480,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             '${c.code} (-${CurrencyFormatter.formatVnd(c.discountVnd)})',
                           ),
                           backgroundColor: isSelected
-                              ? accent
+                              ? AppColors.brand700
                               : Colors.white.withValues(alpha: 0.8),
                           labelStyle: TextStyle(
                             color: isSelected ? Colors.white : AppColors.ink,
@@ -546,12 +534,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ? Icons.radio_button_checked_rounded
                             : Icons.radio_button_off_rounded,
                         color: _paymentMethod == 'cod'
-                            ? accent
+                            ? AppColors.brand700
                             : AppColors.inkMuted,
                       ),
                       title: const Text(
                         'Thanh toán khi nhận hàng (COD)',
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13.5,
+                        ),
                       ),
                       subtitle: const Text(
                         'Kiểm tra nguyên seal máy trước khi thanh toán',
@@ -567,17 +558,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ? Icons.radio_button_checked_rounded
                             : Icons.radio_button_off_rounded,
                         color: _paymentMethod == 'payos'
-                            ? accent
+                            ? AppColors.brand700
                             : AppColors.inkMuted,
                       ),
                       title: const Text(
                         'Chuyển khoản VietQR qua PayOS',
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13.5,
+                        ),
                       ),
                       subtitle: Text(
                         EnvConfig.isPayosConfigured
-                            ? 'Tự động tạo mã VietQR & đối soát tức thì'
-                            : 'Quét mã VietQR thanh toán thực tế',
+                            ? 'Chuyển khoản VietQR tức thì qua ngân hàng'
+                            : 'Cần cấu hình khóa PayOS (.env)',
                         style: TextStyle(
                           fontSize: 11.5,
                           color: EnvConfig.isPayosConfigured
@@ -585,25 +579,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               : AppColors.inkMuted,
                         ),
                       ),
-                      trailing: Icon(
+                      trailing: const Icon(
                         Icons.qr_code_2_rounded,
-                        color: accent,
+                        color: AppColors.brand700,
                       ),
-                    ),
-                    const Divider(height: 12),
-                    SwitchListTile(
-                      contentPadding: EdgeInsets.zero,
-                      activeThumbColor: accent,
-                      title: const Text(
-                        'Xác thực vân tay / Face ID',
-                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5),
-                      ),
-                      subtitle: const Text(
-                        'Bảo mật bổ sung cho đơn hàng giá trị cao',
-                        style: TextStyle(fontSize: 11.5),
-                      ),
-                      value: _requireBiometric,
-                      onChanged: (v) => setState(() => _requireBiometric = v),
                     ),
                   ],
                 ),
@@ -648,10 +627,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         ),
                         Text(
                           CurrencyFormatter.formatVnd(totalVnd),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
-                            color: accent,
+                            color: AppColors.brand700,
                             letterSpacing: -0.4,
                           ),
                         ),

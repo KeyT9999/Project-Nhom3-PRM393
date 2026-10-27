@@ -178,6 +178,10 @@ class ProductProvider extends ChangeNotifier {
     _currentVariants = await _productRepository.getVariantsByProductId(
       productId,
     );
+    _currentVariants.sort((a, b) {
+      final byPrice = a.priceVnd.compareTo(b.priceVnd);
+      return byPrice != 0 ? byPrice : a.storageGB.compareTo(b.storageGB);
+    });
     if (_currentVariants.isNotEmpty) {
       _selectedVariant = _currentVariants.firstWhere(
         (v) => v.isInStock,
@@ -198,18 +202,11 @@ class ProductProvider extends ChangeNotifier {
     if (_comparedProductIds.contains(productId)) {
       _comparedProductIds.remove(productId);
     } else {
-      if (_comparedProductIds.length >= 4) {
+      if (_comparedProductIds.length >= 3) {
         _comparedProductIds.remove(_comparedProductIds.first);
       }
       _comparedProductIds.add(productId);
     }
-    notifyListeners();
-  }
-
-  void setComparedProducts(Iterable<String> productIds) {
-    _comparedProductIds
-      ..clear()
-      ..addAll(productIds.take(4));
     notifyListeners();
   }
 

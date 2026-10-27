@@ -3,31 +3,40 @@ import 'package:firebase_core/firebase_core.dart';
 
 import '../../core/services/connectivity_service.dart';
 import '../../core/constants/firestore_collections.dart';
+import '../local/cart_database.dart';
 import '../local/local_file_storage_service.dart';
 import '../models/cart_item_model.dart';
 
 class CartRepository {
   final LocalFileStorageService _localStorage;
+  final CartDatabase _cartDatabase;
 
-  CartRepository({LocalFileStorageService? localStorage})
-    : _localStorage = localStorage ?? LocalFileStorageService();
+  CartRepository({
+    LocalFileStorageService? localStorage,
+    CartDatabase? cartDatabase,
+  })  : _localStorage = localStorage ?? LocalFileStorageService(),
+        _cartDatabase = cartDatabase ??
+            CartDatabase(fileStorage: localStorage);
+
+  LocalFileStorageService get localStorage => _localStorage;
+  CartDatabase get cartDatabase => _cartDatabase;
 
   bool get _isFirebaseReady =>
       Firebase.apps.isNotEmpty && !ConnectivityService.offlineSimulationEnabled;
 
-  /// S01: Đọc giỏ hàng từ Local JSON (`cart_<uid>.json`), hợp nhất giỏ `guest` (nếu vừa đăng nhập)
+  /// S01: Đọc giỏ hàng từ SQLite (SmartStore.db), hợp nhất giỏ `guest` (nếu vừa đăng nhập)
   /// và hợp nhất với Cloud Firestore theo quy tắc Last-Write-Wins dựa trên `variantId` và `updatedAt`.
   Future<List<CartItemModel>> loadCart(String? userId) async {
-    final rawItems = await _localStorage.loadCartItems(userId);
+    final rawItems = await _cartDatabase.loadCartItems(userId);
     final localItems = rawItems.map(CartItemModel.fromJson).toList();
 
     final mergedMap = <String, CartItemModel>{
       for (final item in localItems) item.variantId: item,
     };
 
-    // Nếu người dùng vừa đăng nhập (userId != 'guest'), hợp nhất giỏ hàng từ cart_guest.json sang
+    // Nếu người dùng vừa đăng nhập (userId != 'guest'), hợp nhất giỏ hàng từ giỏ guest sang
     if (userId != null && userId.isNotEmpty && userId != 'guest') {
-      final guestRaw = await _localStorage.loadCartItems('guest');
+      final guestRaw = await _cartDatabase.loadCartItems('guest');
       if (guestRaw.isNotEmpty) {
         for (final gJson in guestRaw) {
           final guestItem = CartItemModel.fromJson(gJson);
@@ -37,7 +46,7 @@ class CartRepository {
             mergedMap[guestItem.variantId] = guestItem;
           }
         }
-        await _localStorage.clearCart('guest');
+        await _cartDatabase.clearCart('guest');
       }
     }
 
@@ -71,7 +80,7 @@ class CartRepository {
     }
 
     final result = mergedMap.values.toList();
-    await _localStorage.saveCartItems(
+    await _cartDatabase.saveCartItems(
       userId,
       result.map((e) => e.toJson()).toList(),
     );
@@ -80,8 +89,8 @@ class CartRepository {
 
   Future<void> saveCart(String? userId, List<CartItemModel> items) async {
     final jsonList = items.map((e) => e.toJson()).toList();
-    // 1. Lưu ngay vào file cart_<uid>.json trên thiết bị Android
-    await _localStorage.saveCartItems(userId, jsonList);
+    // 1. Lưu ngay vào SQLite (smartstore.db) trên thiết bị Android
+    await _cartDatabase.saveCartItems(userId, jsonList);
 
     // 2. Đồng bộ lên Cloud Firestore nếu người dùng đã đăng nhập
     if (_isFirebaseReady &&
@@ -108,7 +117,7 @@ class CartRepository {
   }
 
   Future<void> clearCart(String? userId) async {
-    await _localStorage.clearCart(userId);
+    await _cartDatabase.clearCart(userId);
     if (_isFirebaseReady &&
         userId != null &&
         userId.isNotEmpty &&
@@ -128,3 +137,4 @@ class CartRepository {
     }
   }
 }
+

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/utils/currency_formatter.dart';
 import '../../core/widgets/lm_glass_widgets.dart';
-import '../../core/widgets/phone_studio_illustration.dart';
+import '../../core/widgets/product_image.dart';
 import '../../data/models/product_model.dart';
 import '../../data/models/variant_model.dart';
 import '../../providers/auth_provider.dart';
@@ -54,8 +54,8 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
               children: [
                 Text(
                   existing == null
-                      ? 'Thêm sản phẩm mới (A03)'
-                      : 'Cập nhật sản phẩm (A03)',
+                      ? 'Thêm sản phẩm mới'
+                      : 'Cập nhật sản phẩm',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
@@ -229,7 +229,7 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Quản lý biến thể SKU & Tồn kho (A04)',
+                              'Quản lý biến thể SKU & Tồn kho',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
@@ -473,7 +473,7 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sản phẩm & Biến thể SKU (A03, A04)'),
+        title: const Text('Sản phẩm & Biến thể SKU'),
         actions: [
           IconButton(
             onPressed: () => _showProductDialog(context),
@@ -495,13 +495,10 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
               children: [
                 SizedBox(
                   width: 68,
-                  child: PhoneStudioIllustration(
-                    brandId: p.brandId,
-                    categoryId: p.categoryId,
-                    productName: p.name,
-                    colorHex: p.defaultColorHex,
-                    imageUrl: p.thumbnailUrl,
-                    height: 68,
+                  child: ProductImage(
+                    productId: p.id,
+                    fallbackUrl: p.thumbnailUrl,
+                    padding: const EdgeInsets.all(2),
                   ),
                 ),
                 const SizedBox(width: 14),
@@ -543,7 +540,7 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
                 Column(
                   children: [
                     IconButton(
-                      tooltip: 'Quản lý SKU & Kho (A04)',
+                      tooltip: 'Quản lý SKU & Kho',
                       icon: Icon(
                         Icons.inventory_2_outlined,
                         color: palette.primary,
@@ -551,7 +548,7 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
                       onPressed: () => _showVariantsSheet(context, p),
                     ),
                     IconButton(
-                      tooltip: 'Chỉnh sửa (A03)',
+                      tooltip: 'Chỉnh sửa',
                       icon: const Icon(Icons.edit_outlined, size: 20),
                       onPressed: () => _showProductDialog(context, existing: p),
                     ),

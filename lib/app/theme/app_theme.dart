@@ -22,8 +22,17 @@ class AppTheme {
         error: AppColors.error,
       ),
       scaffoldBackgroundColor: palette.bg,
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: _SlideFadeTransitions(),
+          TargetPlatform.iOS: _SlideFadeTransitions(),
+          TargetPlatform.windows: _SlideFadeTransitions(),
+          TargetPlatform.macOS: _SlideFadeTransitions(),
+          TargetPlatform.linux: _SlideFadeTransitions(),
+        },
+      ),
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.surface,
         foregroundColor: AppColors.ink,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
@@ -31,7 +40,7 @@ class AppTheme {
         titleTextStyle: TextStyle(
           fontFamily: fontFam,
           color: AppColors.ink,
-          fontSize: 18,
+          fontSize: 20,
           fontWeight: FontWeight.w800,
           letterSpacing: -0.4,
         ),
@@ -42,7 +51,7 @@ class AppTheme {
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(12),
           side: const BorderSide(color: AppColors.border, width: 1),
         ),
       ),
@@ -59,15 +68,15 @@ class AppTheme {
           fontSize: 14,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: AppColors.border),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: palette.accent, width: 1.8),
         ),
       ),
@@ -85,7 +94,7 @@ class AppTheme {
           fontSize: 13,
           fontWeight: FontWeight.w700,
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -99,7 +108,7 @@ class AppTheme {
             letterSpacing: -0.2,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
       ),
@@ -115,13 +124,43 @@ class AppTheme {
             letterSpacing: -0.2,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.border,
         thickness: 1,
+      ),
+    );
+  }
+}
+
+/// Chuyển trang thống nhất cho mọi nền tảng: trượt nhẹ + mờ dần, 280 ms.
+class _SlideFadeTransitions extends PageTransitionsBuilder {
+  const _SlideFadeTransitions();
+
+  @override
+  Duration get transitionDuration => const Duration(milliseconds: 280);
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    final curved =
+        CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
+    return FadeTransition(
+      opacity: curved,
+      child: SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0.06, 0),
+          end: Offset.zero,
+        ).animate(curved),
+        child: child,
       ),
     );
   }

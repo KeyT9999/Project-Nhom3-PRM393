@@ -1,180 +1,35 @@
-import 'dart:math' as math;
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../app/theme/app_colors.dart';
 
 // ============================================================================
-// 1. AMBIENT LIQUID MESH GRADIENT CANVAS
-// Moving colored light orbs (Slate Navy #243342, Desert Amber #D4C8B8, Cyber Blue #0071E3)
-// that shine through translucent glass cards.
+// Bộ widget nền tảng của giao diện. Tên lớp giữ nguyên để không phải sửa nơi
+// gọi, nhưng kiểu dáng đã đơn giản hóa: nền tĩnh, thẻ trắng viền mảnh 1px,
+// không blur, không gradient, không đổ bóng.
 // ============================================================================
-class LiquidAmbientCanvas extends StatefulWidget {
+
+/// Nền màn hình tĩnh. [animate] được giữ để tương thích, không còn tác dụng.
+class LiquidAmbientCanvas extends StatelessWidget {
   final Widget? child;
   final bool animate;
 
   const LiquidAmbientCanvas({
     super.key,
     this.child,
-    this.animate = true,
+    this.animate = false,
   });
 
   @override
-  State<LiquidAmbientCanvas> createState() => _LiquidAmbientCanvasState();
-}
-
-class _LiquidAmbientCanvasState extends State<LiquidAmbientCanvas>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 16),
-    );
-    if (widget.animate) {
-      _controller.repeat(reverse: true);
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Container(color: AppColors.background),
-        ),
-        Positioned.fill(
-          child: widget.animate
-              ? AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, _) {
-                    return CustomPaint(
-                      painter: _LiquidOrbPainter(progress: _controller.value),
-                    );
-                  },
-                )
-              : CustomPaint(
-                  painter: _LiquidOrbPainter(progress: 0.5),
-                ),
-        ),
-        if (widget.child != null) widget.child!,
-      ],
+    return ColoredBox(
+      color: AppColors.background,
+      child: SizedBox.expand(child: child),
     );
   }
 }
 
-class _LiquidOrbPainter extends CustomPainter {
-  final double progress;
-
-  _LiquidOrbPainter({required this.progress});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final t = progress * 2 * math.pi;
-
-    // Orb 1: Slate Navy (#243342) - Top Left
-    final paint1 = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          const Color(0xFF243342).withValues(alpha: 0.40),
-          const Color(0xFF3E566E).withValues(alpha: 0.22),
-          Colors.transparent,
-        ],
-        stops: const [0.0, 0.55, 1.0],
-      ).createShader(
-        Rect.fromCircle(
-          center: Offset(
-            size.width * 0.15 + math.sin(t) * 35,
-            size.height * 0.08 + math.cos(t) * 25,
-          ),
-          radius: size.width * 0.65,
-        ),
-      );
-    canvas.drawCircle(
-      Offset(
-        size.width * 0.15 + math.sin(t) * 35,
-        size.height * 0.08 + math.cos(t) * 25,
-      ),
-      size.width * 0.65,
-      paint1,
-    );
-
-    // Orb 2: Desert Titanium Amber (#D4C8B8) - Top Right
-    final paint2 = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          const Color(0xFFD4C8B8).withValues(alpha: 0.48),
-          const Color(0xFFE2A866).withValues(alpha: 0.22),
-          Colors.transparent,
-        ],
-        stops: const [0.0, 0.50, 1.0],
-      ).createShader(
-        Rect.fromCircle(
-          center: Offset(
-            size.width * 0.85 - math.cos(t) * 30,
-            size.height * 0.25 + math.sin(t) * 35,
-          ),
-          radius: size.width * 0.55,
-        ),
-      );
-    canvas.drawCircle(
-      Offset(
-        size.width * 0.85 - math.cos(t) * 30,
-        size.height * 0.25 + math.sin(t) * 35,
-      ),
-      size.width * 0.55,
-      paint2,
-    );
-
-    // Orb 3: Cyber Refraction Blue (#0071E3) - Bottom Center
-    final paint3 = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          const Color(0xFF0071E3).withValues(alpha: 0.25),
-          const Color(0xFF60A5FA).withValues(alpha: 0.14),
-          Colors.transparent,
-        ],
-        stops: const [0.0, 0.60, 1.0],
-      ).createShader(
-        Rect.fromCircle(
-          center: Offset(
-            size.width * 0.35 + math.cos(t) * 40,
-            size.height * 0.75 - math.sin(t) * 30,
-          ),
-          radius: size.width * 0.60,
-        ),
-      );
-    canvas.drawCircle(
-      Offset(
-        size.width * 0.35 + math.cos(t) * 40,
-        size.height * 0.75 - math.sin(t) * 30,
-      ),
-      size.width * 0.60,
-      paint3,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant _LiquidOrbPainter oldDelegate) {
-    return oldDelegate.progress != progress;
-  }
-}
-
-// ============================================================================
-// 2. LIQUID-GLASS CARD (LIGHT / REFRACTIVE)
-// Faithful reproduction of .liquid-glass-card from ui_template_kit
-// ============================================================================
+/// Thẻ trắng viền 1px. [blurSigma] giữ để tương thích, không còn dùng.
 class LiquidGlassCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -190,8 +45,8 @@ class LiquidGlassCard extends StatelessWidget {
     required this.child,
     this.padding = const EdgeInsets.all(16),
     this.margin,
-    this.borderRadius = 20,
-    this.blurSigma = 24,
+    this.borderRadius = 12,
+    this.blurSigma = 0,
     this.onTap,
     this.isSelected = false,
     this.borderColor,
@@ -199,74 +54,35 @@ class LiquidGlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveBorderColor = borderColor ??
-        (isSelected
-            ? AppColors.brand700
-            : Colors.white.withValues(alpha: 0.88));
-
-    final cardContent = Container(
+    final radius = BorderRadius.circular(borderRadius > 14 ? 12 : borderRadius);
+    final card = Container(
       margin: margin,
+      padding: padding,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF0F172A).withValues(alpha: 0.08),
-            blurRadius: 26,
-            offset: const Offset(0, 10),
-          ),
-          BoxShadow(
-            color: Colors.white.withValues(alpha: 0.75),
-            blurRadius: 1,
-            spreadRadius: 0,
-            offset: const Offset(0, -1),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
-          child: Container(
-            padding: padding,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(borderRadius),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.white.withValues(alpha: 0.78),
-                  const Color(0xFFF0F4F8).withValues(alpha: 0.44),
-                ],
-              ),
-              border: Border.all(
-                color: effectiveBorderColor,
-                width: isSelected ? 2.0 : 1.3,
-              ),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: child,
-            ),
-          ),
+        color: AppColors.surface,
+        borderRadius: radius,
+        border: Border.all(
+          color: borderColor ??
+              (isSelected ? AppColors.primary : AppColors.border),
+          width: isSelected ? 1.5 : 1,
         ),
       ),
+      child: Material(color: Colors.transparent, child: child),
     );
 
-    if (onTap == null) return cardContent;
+    if (onTap == null) return card;
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
-        HapticFeedback.lightImpact();
+        HapticFeedback.selectionClick();
         onTap!();
       },
-      child: cardContent,
+      child: card,
     );
   }
 }
 
-// ============================================================================
-// 3. LIQUID-GLASS DARK CARD (PREMIUM TITANIUM DEEP SECTION)
-// Faithful reproduction of .liquid-glass-dark from ui_template_kit
-// ============================================================================
+/// Khối nền đậm (một màu, không gradient).
 class LiquidGlassDarkCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -279,7 +95,7 @@ class LiquidGlassDarkCard extends StatelessWidget {
     required this.child,
     this.padding = const EdgeInsets.all(20),
     this.margin,
-    this.borderRadius = 24,
+    this.borderRadius = 12,
     this.onTap,
   });
 
@@ -287,50 +103,19 @@ class LiquidGlassDarkCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final box = Container(
       margin: margin,
+      padding: padding,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(borderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF0F1722).withValues(alpha: 0.45),
-            blurRadius: 32,
-            offset: const Offset(0, 14),
-          ),
-        ],
+        color: AppColors.brand800,
+        borderRadius: BorderRadius.circular(borderRadius > 14 ? 12 : borderRadius),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(borderRadius),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
-          child: Container(
-            padding: padding,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(borderRadius),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.brand700.withValues(alpha: 0.90),
-                  AppColors.brand900.withValues(alpha: 0.96),
-                ],
-              ),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.18),
-                width: 1.4,
-              ),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: child,
-            ),
-          ),
-        ),
-      ),
+      child: Material(color: Colors.transparent, child: child),
     );
 
     if (onTap == null) return box;
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
-        HapticFeedback.lightImpact();
+        HapticFeedback.selectionClick();
         onTap!();
       },
       child: box,
@@ -364,9 +149,8 @@ class LiquidPillButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = Theme.of(context).colorScheme.primary;
-    final bgColor = isDark ? accent : Colors.white;
-    final fgColor = isDark ? Colors.white : accent;
+    final bgColor = isDark ? AppColors.brand700 : Colors.white;
+    final fgColor = isDark ? Colors.white : AppColors.brand900;
     final disabled = onPressed == null || isLoading;
 
     return Opacity(
@@ -376,25 +160,13 @@ class LiquidPillButton extends StatelessWidget {
         width: width,
         decoration: BoxDecoration(
           color: bgColor,
-          borderRadius: BorderRadius.circular(999),
-          border: Border.all(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.15)
-                : AppColors.border,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: (isDark ? accent : const Color(0xFF0F172A))
-                  .withValues(alpha: 0.18),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(10),
+          border: isDark ? null : Border.all(color: AppColors.border),
         ),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            borderRadius: BorderRadius.circular(999),
+            borderRadius: BorderRadius.circular(10),
             onTap: disabled
                 ? null
                 : () {
@@ -466,7 +238,6 @@ class TitaniumFinishDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = Theme.of(context).colorScheme.primary;
     return GestureDetector(
       onTap: () {
         HapticFeedback.selectionClick();
@@ -481,7 +252,7 @@ class TitaniumFinishDot extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: isSelected ? accent : Colors.transparent,
+              color: isSelected ? AppColors.brand700 : Colors.transparent,
               width: 2.2,
             ),
           ),
@@ -520,7 +291,6 @@ class StorageCapacityPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent = Theme.of(context).colorScheme.primary;
     return GestureDetector(
       onTap: () {
         HapticFeedback.selectionClick();
@@ -530,21 +300,12 @@ class StorageCapacityPill extends StatelessWidget {
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? accent : Colors.white.withValues(alpha: 0.85),
-          borderRadius: BorderRadius.circular(999),
+          color: isSelected ? AppColors.brand700 : Colors.white.withValues(alpha: 0.85),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? accent : AppColors.border,
-            width: 1.2,
+            color: isSelected ? AppColors.brand700 : AppColors.border,
+            width: 1,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: accent.withValues(alpha: 0.25),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : null,
         ),
         child: Text(
           capacity,
@@ -587,18 +348,7 @@ class DynamicIslandPill extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: const Color(0xFF0F1722).withValues(alpha: 0.95),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.15),
-            width: 1.2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.35),
-              blurRadius: 24,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
@@ -677,8 +427,8 @@ class LmGlassCard extends StatelessWidget {
     super.key,
     required this.child,
     this.padding = const EdgeInsets.all(14),
-    this.borderRadius = 20,
-    this.blurSigma = 20,
+    this.borderRadius = 12,
+    this.blurSigma = 0,
   });
 
   @override
@@ -706,7 +456,7 @@ class LmMaterialCard extends StatelessWidget {
     required this.child,
     this.padding = const EdgeInsets.all(16),
     this.margin,
-    this.borderRadius = 18,
+    this.borderRadius = 12,
     this.onTap,
     this.selected = false,
     this.selectionColor,
@@ -771,9 +521,8 @@ class LmStatusPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.11),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: color.withValues(alpha: 0.25)),
+        color: color.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

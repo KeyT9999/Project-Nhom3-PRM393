@@ -80,15 +80,15 @@ class ProductRepository {
   static final List<CouponModel> _coupons = [
     const CouponModel(
       code: 'SMART500',
-      description: 'Giảm 500.000₫ cho đơn từ 15.000.000₫',
+      description: 'Giảm 500.000₫ cho đơn từ 10.000₫',
       discountVnd: 500000,
-      minOrderVnd: 15000000,
+      minOrderVnd: 10000,
     ),
     const CouponModel(
       code: 'PRM393',
       description: 'Giảm 200.000₫ kỷ niệm môn PRM393',
       discountVnd: 200000,
-      minOrderVnd: 1000000,
+      minOrderVnd: 10000,
     ),
     const CouponModel(
       code: 'FREESHIP',
@@ -98,40 +98,6 @@ class ProductRepository {
     ),
   ];
 
-  static final ProductModel _payosTestProduct = ProductModel(
-    id: 'payos_test_10k',
-    name: 'Miếng Dán Cường Lực SmartStore (Test PayOS 10.000₫)',
-    slug: 'mieng-dan-cuong-luc-test-payos-10k',
-    brandId: 'Phụ kiện',
-    categoryId: 'accessories',
-    description:
-        'Sản phẩm mệnh giá 10.000₫ (Miễn phí vận chuyển) dùng để kiểm thử thanh toán chuyển khoản thực tế VietQR qua cổng PayOS.',
-    priceFromVnd: 10000,
-    specs: const {
-      'Loại sản phẩm': 'Phụ kiện bảo vệ màn hình • Test PayOS',
-      'Mệnh giá': '10.000₫ (Free Ship)',
-      'Thanh toán': 'Hỗ trợ VietQR PayOS & COD',
-    },
-    isFeatured: true,
-    soldCount: 250,
-    ratingAvg: 5.0,
-    reviewCount: 42,
-    ramOptions: const [0],
-    storageOptions: const [0],
-    defaultColorHex: '#10B981',
-    createdAt: DateTime(2026, 10, 26),
-  );
-
-  static const VariantModel _payosTestVariant = VariantModel(
-    id: 'payos_10k_std',
-    sku: 'PAYOS-TEST-10K',
-    color: 'Trong Suốt (Tiêu chuẩn)',
-    colorHex: '#10B981',
-    ramGB: 0,
-    storageGB: 0,
-    priceVnd: 10000,
-    stock: 99,
-  );
 
   static final List<ProductModel> _products = [
     ProductModel(
@@ -140,8 +106,8 @@ class ProductRepository {
       slug: 'iphone-16-pro-max',
       brandId: 'Apple',
       categoryId: 'smartphones',
-      description: 'Tuyệt tác khung viền Titan cấp độ 5, màn hình 6.9 inch Super Retina XDR lớn nhất lịch sử, chip A18 Pro tiến trình 3nm thế hệ 2 và nút Điều khiển Camera chuyên nghiệp.',
-      priceFromVnd: 31990000,
+      description: 'Màn hình 6.9 inch Super Retina XDR 120Hz, chip A18 Pro, khung Titan, camera 48MP kèm tele 5x.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.9 inch Super Retina XDR ProMotion 120Hz',
         'Chip xử lý': 'Apple A18 Pro (6 nhân GPU)',
@@ -158,15 +124,14 @@ class ProductRepository {
       defaultColorHex: '#C5B4A5',
       createdAt: DateTime(2026, 10, 20),
     ),
-    _payosTestProduct,
     ProductModel(
       id: 'iphone_16',
       name: 'iPhone 16 Chính Hãng VN/A',
       slug: 'iphone-16',
       brandId: 'Apple',
       categoryId: 'smartphones',
-      description: 'Điện thoại Apple iPhone 16 với chip A18 mạnh mẽ vượt trội, cụm Camera Fusion 48MP chụp cận cảnh Macro sắc nét, nút Tác Vụ (Action Button) và thời lượng pin ấn tượng.',
-      priceFromVnd: 18990000,
+      description: 'Màn hình 6.1 inch Super Retina XDR OLED, chip A18, camera Fusion 48MP, kháng nước IP68.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.1 inch Super Retina XDR OLED',
         'Chip xử lý': 'Apple A18 (3nm)',
@@ -189,8 +154,8 @@ class ProductRepository {
       slug: 'samsung-galaxy-s25-ultra',
       brandId: 'Samsung',
       categoryId: 'smartphones',
-      description: 'Đỉnh cao quyền năng Galaxy AI đi kèm bút S-Pen tích hợp, khung viền Titanium bo cong công thái học và hệ thống Quad Telephoto 200MP.',
-      priceFromVnd: 29990000,
+      description: 'Màn hình 6.8 inch Dynamic AMOLED 2X 120Hz, chip Snapdragon 8 Elite, camera chính 200MP, pin 5000 mAh, có bút S-Pen.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.8 inch Dynamic AMOLED 2X QHD+ 120Hz',
         'Chip xử lý': 'Snapdragon 8 Elite for Galaxy',
@@ -213,8 +178,8 @@ class ProductRepository {
       slug: 'samsung-galaxy-s25',
       brandId: 'Samsung',
       categoryId: 'smartphones',
-      description: 'Thiết kế nhỏ gọn đẳng cấp, màn hình viền siêu mỏng 120Hz kết hợp vi xử lý Snapdragon 8 Elite mạnh mẽ và bộ công cụ Galaxy AI tiếng Việt.',
-      priceFromVnd: 20990000,
+      description: 'Màn hình 6.2 inch Dynamic AMOLED 2X 120Hz, chip Snapdragon 8 Elite, camera chính 50MP, pin 4000 mAh, kháng nước IP68.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.2 inch Dynamic AMOLED 2X FHD+ 120Hz',
         'Chip xử lý': 'Snapdragon 8 Elite for Galaxy',
@@ -237,8 +202,8 @@ class ProductRepository {
       slug: 'xiaomi-15',
       brandId: 'Xiaomi',
       categoryId: 'smartphones',
-      description: 'Hiệu năng dẫn đầu kết hợp hệ thống ống kính quang học Leica Summilux thế hệ mới, cảm biến Light Fusion 900 và pin Silicon-Carbon 5240mAh.',
-      priceFromVnd: 17490000,
+      description: 'Màn hình 6.36 inch AMOLED 120Hz, chip Snapdragon 8 Elite, bộ ba camera Leica 50MP, pin 5240 mAh, sạc 90W.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.36 inch CrystalRes LTPO AMOLED 120Hz',
         'Chip xử lý': 'Snapdragon 8 Elite (3nm)',
@@ -261,8 +226,8 @@ class ProductRepository {
       slug: 'oppo-find-x8',
       brandId: 'OPPO',
       categoryId: 'smartphones',
-      description: 'Camera tiềm vọng kép Hasselblad chân dung chuyên nghiệp, thiết kế mỏng nhẹ 7.85mm cùng viên pin Silicon-Carbon 5630mAh.',
-      priceFromVnd: 19990000,
+      description: 'Màn hình 6.59 inch AMOLED 120Hz, chip Dimensity 9400, ba camera 50MP Hasselblad, pin 5630 mAh, kháng nước IP68 và IP69.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.59 inch AMOLED 1.5K 120Hz 4500 nits',
         'Chip xử lý': 'MediaTek Dimensity 9400 (3nm)',
@@ -285,8 +250,8 @@ class ProductRepository {
       slug: 'airpods-pro-2-usbc',
       brandId: 'Phụ kiện',
       categoryId: 'accessories',
-      description: 'Chống ồn chủ động (ANC) gấp 2 lần, âm thanh thích ứng Adaptive Audio, chip Apple H2 và hộp sạc MagSafe cổng USB-C tích hợp loa tìm kiếm.',
-      priceFromVnd: 5690000,
+      description: 'Tai nghe chống ồn chủ động, chip H2, hộp sạc USB-C hỗ trợ MagSafe, nghe liên tục 6 giờ.',
+      priceFromVnd: 10000,
       specs: const {
         'Chip âm thanh': 'Apple H2 + Chip U1 trong hộp sạc',
         'Công nghệ': 'Chống ồn ANC • Xuyên âm • Spatial Audio',
@@ -308,8 +273,8 @@ class ProductRepository {
       slug: 'apple-magsafe-25w',
       brandId: 'Phụ kiện',
       categoryId: 'accessories',
-      description: 'Sạc không dây từ tính chuẩn Qi2 công suất 25W thế hệ mới dành cho iPhone 16 Series, nạp 50% pin chỉ trong 30 phút.',
-      priceFromVnd: 1190000,
+      description: 'Sạc không dây MagSafe 25W (Qi2), cáp dài 1 m đầu USB-C, dùng cho iPhone 12 đến iPhone 16 và AirPods.',
+      priceFromVnd: 10000,
       specs: const {
         'Công suất': 'Sạc nhanh không dây MagSafe 25W (Qi2)',
         'Chiều dài cáp': 'Dây bện dù dài 1 mét (Đầu cắm USB-C)',
@@ -330,8 +295,8 @@ class ProductRepository {
       slug: 'iphone-16-pro',
       brandId: 'Apple',
       categoryId: 'smartphones',
-      description: 'Khung viền Titan cấp độ 5, màn hình 6.3 inch Super Retina XDR ProMotion 120Hz, chip A18 Pro và nút Camera Control hỗ trợ quay ProRes 4K 120fps.',
-      priceFromVnd: 28490000,
+      description: 'Màn hình 6.3 inch Super Retina XDR 120Hz, chip A18 Pro, khung Titan, camera 48MP kèm tele 5x.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.3 inch Super Retina XDR ProMotion 120Hz',
         'Chip xử lý': 'Apple A18 Pro (6 nhân GPU)',
@@ -354,8 +319,8 @@ class ProductRepository {
       slug: 'iphone-16-plus',
       brandId: 'Apple',
       categoryId: 'smartphones',
-      description: 'Màn hình lớn 6.7 inch rực rỡ, pin trâu vượt trội đến 27 giờ phát video, trang bị chip A18 3nm và camera góc siêu rộng chụp Macro sắc nét.',
-      priceFromVnd: 22990000,
+      description: 'Màn hình 6.7 inch Super Retina XDR OLED, chip A18, camera Fusion 48MP, có nút Camera Control và Action Button.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.7 inch Super Retina XDR OLED',
         'Chip xử lý': 'Apple A18 (3nm)',
@@ -378,8 +343,8 @@ class ProductRepository {
       slug: 'iphone-15',
       brandId: 'Apple',
       categoryId: 'smartphones',
-      description: 'Thiết kế mặt lưng kính pha màu sang trọng, Dynamic Island tiện ích, camera 48MP bắt trọn chi tiết và cổng kết nối USB-C chuẩn hóa.',
-      priceFromVnd: 16490000,
+      description: 'Màn hình 6.1 inch OLED có Dynamic Island, chip A16 Bionic, camera chính 48MP, cổng USB-C, kháng nước IP68.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.1 inch Super Retina XDR OLED với Dynamic Island',
         'Chip xử lý': 'Apple A16 Bionic (4nm)',
@@ -402,8 +367,8 @@ class ProductRepository {
       slug: 'samsung-galaxy-s25-plus',
       brandId: 'Samsung',
       categoryId: 'smartphones',
-      description: 'Màn hình 6.7 inch Dynamic AMOLED 2X sắc nét QHD+, vi xử lý Snapdragon 8 Elite đỉnh cao, pin 4900mAh và hệ sinh thái Galaxy AI thế hệ mới.',
-      priceFromVnd: 25990000,
+      description: 'Màn hình 6.7 inch Dynamic AMOLED 2X QHD+ 120Hz, chip Snapdragon 8 Elite, pin 4900 mAh, sạc 45W.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.7 inch Dynamic AMOLED 2X QHD+ 120Hz',
         'Chip xử lý': 'Snapdragon 8 Elite for Galaxy (3nm)',
@@ -426,8 +391,8 @@ class ProductRepository {
       slug: 'samsung-galaxy-z-fold6',
       brandId: 'Samsung',
       categoryId: 'smartphones',
-      description: 'Siêu phẩm màn hình gập mỏng nhẹ nhất dòng Fold, bản lề Flex Hinge kép bền bỉ, màn hình trong 7.6 inch đa nhiệm cực đỉnh cùng Galaxy AI chuyên sâu.',
-      priceFromVnd: 41990000,
+      description: 'Điện thoại gập với màn hình trong 7.6 inch và màn hình ngoài 6.3 inch, chip Snapdragon 8 Gen 3, kháng nước IP48.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình chính': '7.6 inch Dynamic AMOLED 2X 120Hz gập mở',
         'Màn hình phụ': '6.3 inch Dynamic AMOLED 2X 120Hz',
@@ -450,8 +415,8 @@ class ProductRepository {
       slug: 'samsung-galaxy-a55',
       brandId: 'Samsung',
       categoryId: 'smartphones',
-      description: 'Điện thoại quốc dân phân khúc dưới 10 triệu với khung viền kim loại cao cấp, màn hình 120Hz rực rỡ, chip Exynos 1480 đồ họa AMD và bảo mật Knox Vault.',
-      priceFromVnd: 8990000,
+      description: 'Màn hình 6.6 inch Super AMOLED 120Hz, chip Exynos 1480, camera chính 50MP, pin 5000 mAh, khung kim loại.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.6 inch Super AMOLED FHD+ 120Hz Vision Booster',
         'Chip xử lý': 'Exynos 1480 8 nhân (GPU Xclipse 530 AMD)',
@@ -469,37 +434,13 @@ class ProductRepository {
       createdAt: DateTime(2026, 10, 11),
     ),
     ProductModel(
-      id: 'xiaomi_15_pro',
-      name: 'Xiaomi 15 Pro Leica Summilux 5G',
-      slug: 'xiaomi-15-pro',
-      brandId: 'Xiaomi',
-      categoryId: 'smartphones',
-      description: 'Flagship nhiếp ảnh Leica cao cấp nhất với cảm biến Light Fusion 900, ống kính tiềm vọng Leica 5x, chip Snapdragon 8 Elite và pin khủng 6100mAh.',
-      priceFromVnd: 21990000,
-      specs: const {
-        'Màn hình': '6.73 inch 2K AMOLED LTPO 120Hz 3200 nits',
-        'Chip xử lý': 'Snapdragon 8 Elite (3nm thế hệ 2)',
-        'Camera': '3 ống kính Leica 50MP (Chính + Siêu rộng + Tiềm vọng 5x)',
-        'Pin & Sạc': '6100 mAh Silicon-Carbon • Sạc nhanh 90W có dây, 50W không dây',
-        'Hệ điều hành': 'Xiaomi HyperOS 2.0 tối ưu AI',
-      },
-      isFeatured: true,
-      soldCount: 48,
-      ratingAvg: 4.8,
-      reviewCount: 20,
-      ramOptions: const [12, 16],
-      storageOptions: const [256, 512, 1024],
-      defaultColorHex: '#374151',
-      createdAt: DateTime(2026, 10, 13),
-    ),
-    ProductModel(
       id: 'xiaomi_poco_f6_pro',
       name: 'Xiaomi POCO F6 Pro 5G Flagship Killer',
       slug: 'xiaomi-poco-f6-pro',
       brandId: 'Xiaomi',
       categoryId: 'smartphones',
-      description: 'Quái vật hiệu năng trong tầm giá với vi xử lý Snapdragon 8 Gen 2, màn hình 2K WQHD+ 4000 nits siêu sáng và sạc nhanh thần tốc HyperCharge 120W.',
-      priceFromVnd: 12990000,
+      description: 'Màn hình 6.67 inch WQHD+ AMOLED 120Hz, chip Snapdragon 8 Gen 2, camera chính 50MP, pin 5000 mAh, sạc 120W.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.67 inch WQHD+ Flow AMOLED 120Hz 4000 nits',
         'Chip xử lý': 'Snapdragon 8 Gen 2 (4nm TSMC)',
@@ -522,8 +463,8 @@ class ProductRepository {
       slug: 'xiaomi-redmi-note-14-pro-plus',
       brandId: 'Xiaomi',
       categoryId: 'smartphones',
-      description: 'Chuẩn mực độ bền mới với chuẩn kháng nước IP68/IP69K, camera 50MP Light Hunter 800 kèm telephoto, pin 6200mAh và sạc siêu tốc 90W.',
-      priceFromVnd: 8490000,
+      description: 'Màn hình 6.67 inch AMOLED 1.5K 120Hz, chip Snapdragon 7s Gen 3, camera chính 50MP, pin 6200 mAh, kháng nước IP68.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.67 inch AMOLED 1.5K 120Hz cong đối xứng',
         'Chip xử lý': 'Snapdragon 7s Gen 3 (4nm)',
@@ -546,8 +487,8 @@ class ProductRepository {
       slug: 'oppo-find-x8-pro',
       brandId: 'OPPO',
       categoryId: 'smartphones',
-      description: 'Đỉnh cao nhiếp ảnh chân dung Hasselblad với hệ thống camera tiềm vọng kép 50MP, chip Dimensity 9400 thế hệ mới và phím Quick Button chụp ảnh tức thì.',
-      priceFromVnd: 26990000,
+      description: 'Màn hình 6.78 inch AMOLED 120Hz, chip Dimensity 9400, bốn camera 50MP Hasselblad, pin 5910 mAh, kháng nước IP68 và IP69.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.78 inch AMOLED 1.5K Micro-Quad Curved 120Hz',
         'Chip xử lý': 'MediaTek Dimensity 9400 (3nm)',
@@ -570,8 +511,8 @@ class ProductRepository {
       slug: 'oppo-reno-13-pro',
       brandId: 'OPPO',
       categoryId: 'smartphones',
-      description: 'Thiết kế cánh bướm tinh tế, viền siêu mỏng đối xứng, camera chân dung 50MP OIS Sony IMX890 và khả năng kháng nước chuẩn IP69 có thể quay phim dưới nước.',
-      priceFromVnd: 14490000,
+      description: 'Màn hình 6.83 inch AMOLED 120Hz, chip Dimensity 8350, camera chính 50MP, pin 5800 mAh, sạc 80W, kháng nước IP68 và IP69.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.83 inch AMOLED 1.5K 120Hz viền cong siêu mỏng',
         'Chip xử lý': 'MediaTek Dimensity 8350 (4nm)',
@@ -594,8 +535,8 @@ class ProductRepository {
       slug: 'oppo-reno-12-f',
       brandId: 'OPPO',
       categoryId: 'smartphones',
-      description: 'Sở hữu dải đèn viền Halo Light thông minh phát sáng theo nhạc và thông báo, thiết kế chống va đập toàn diện All-Round Armour và kết nối 5G mượt mà.',
-      priceFromVnd: 7990000,
+      description: 'Màn hình 6.67 inch OLED 120Hz, chip Dimensity 6300, camera chính 50MP, pin 5000 mAh, sạc 45W.',
+      priceFromVnd: 10000,
       specs: const {
         'Màn hình': '6.67 inch OLED 120Hz bảo vệ mắt Splash Touch',
         'Chip xử lý': 'MediaTek Dimensity 6300 5G',
@@ -618,8 +559,8 @@ class ProductRepository {
       slug: 'apple-20w-adapter',
       brandId: 'Phụ kiện',
       categoryId: 'accessories',
-      description: 'Củ sạc nhanh chính hãng Apple công suất 20W chuẩn Power Delivery, thiết kế nhỏ gọn, kiểm soát nhiệt độ an toàn tuyệt đối cho iPhone và iPad.',
-      priceFromVnd: 490000,
+      description: 'Củ sạc 20W chuẩn Power Delivery, cổng USB-C, dùng cho iPhone 8 đến iPhone 16 và iPad.',
+      priceFromVnd: 10000,
       specs: const {
         'Công suất': '20W Chuẩn sạc nhanh Power Delivery (PD)',
         'Cổng kết nối': 'Type-C tiêu chuẩn',
@@ -640,9 +581,8 @@ class ProductRepository {
       slug: 'clear-case-magsafe',
       brandId: 'Phụ kiện',
       categoryId: 'accessories',
-      description: 'Chất liệu Bayer Polycarbonate cao cấp chống ố vàng, vòng nam châm MagSafe từ tính mạnh mẽ chuẩn Qi2, đệm khí chống sốc 4 góc bảo vệ toàn diện.',
-      priceFromVnd: 350000,
-      thumbnailUrl: 'assets/images/acc_clear_case.jpg',
+      description: 'Ốp lưng nhựa Polycarbonate trong suốt, hỗ trợ sạc MagSafe, chịu rơi từ độ cao 2 m.',
+      priceFromVnd: 10000,
       specs: const {
         'Chất liệu': 'Nhựa Polycarbonate trong suốt chống tia UV',
         'Tính năng': 'Hỗ trợ sạc MagSafe hít chặt 15W-25W',
@@ -657,29 +597,6 @@ class ProductRepository {
       defaultColorHex: '#E2E8F0',
       createdAt: DateTime(2026, 10, 3),
     ),
-    ProductModel(
-      id: 'finewoven_wallet_magsafe',
-      name: 'Ví Vải Tinh Dệt MagSafe FineWoven (Hỗ Trợ Find My)',
-      slug: 'finewoven-wallet-magsafe',
-      brandId: 'Phụ kiện',
-      categoryId: 'accessories',
-      description: 'Ví MagSafe chất liệu vải tinh dệt FineWoven thân thiện môi trường, tích hợp chip định vị Apple Find My báo vị trí khi tháo rời khỏi mặt lưng iPhone.',
-      priceFromVnd: 1690000,
-      thumbnailUrl: 'assets/images/acc_finewoven_wallet.jpg',
-      specs: const {
-        'Chất liệu': 'Vải Microtwill FineWoven bền bỉ',
-        'Tính năng thông minh': 'Hỗ trợ định vị Apple Find My',
-        'Sức chứa': 'Tối đa 3 thẻ ngân hàng chống khử từ',
-      },
-      isFeatured: true,
-      soldCount: 92,
-      ratingAvg: 4.8,
-      reviewCount: 38,
-      ramOptions: const [0],
-      storageOptions: const [0],
-      defaultColorHex: '#3E566E',
-      createdAt: DateTime(2026, 10, 5),
-    ),
   ];
 
   static final Map<String, List<VariantModel>> _variants = {
@@ -691,7 +608,7 @@ class ProductRepository {
         colorHex: '#C5B4A5',
         ramGB: 8,
         storageGB: 256,
-        priceVnd: 31990000,
+        priceVnd: 10000,
         stock: 15,
       ),
       const VariantModel(
@@ -701,18 +618,8 @@ class ProductRepository {
         colorHex: '#9A9A96',
         ramGB: 8,
         storageGB: 256,
-        priceVnd: 31990000,
+        priceVnd: 10000,
         stock: 9,
-      ),
-      const VariantModel(
-        id: 'ip16pm_256_white',
-        sku: 'IP16PM-256-WHT',
-        color: 'Titan Trắng',
-        colorHex: '#F5F5F7',
-        ramGB: 8,
-        storageGB: 256,
-        priceVnd: 31990000,
-        stock: 8,
       ),
       const VariantModel(
         id: 'ip16pm_512_desert',
@@ -721,7 +628,7 @@ class ProductRepository {
         colorHex: '#C5B4A5',
         ramGB: 8,
         storageGB: 512,
-        priceVnd: 37990000,
+        priceVnd: 10000,
         stock: 6,
       ),
       const VariantModel(
@@ -731,7 +638,7 @@ class ProductRepository {
         colorHex: '#27272A',
         ramGB: 8,
         storageGB: 1024,
-        priceVnd: 42990000,
+        priceVnd: 10000,
         stock: 3,
       ),
     ],
@@ -743,7 +650,7 @@ class ProductRepository {
         colorHex: '#1C1C1E',
         ramGB: 8,
         storageGB: 128,
-        priceVnd: 18990000,
+        priceVnd: 10000,
         stock: 12,
       ),
       const VariantModel(
@@ -753,7 +660,7 @@ class ProductRepository {
         colorHex: '#1C1C1E',
         ramGB: 8,
         storageGB: 256,
-        priceVnd: 21990000,
+        priceVnd: 10000,
         stock: 7,
       ),
       const VariantModel(
@@ -763,7 +670,7 @@ class ProductRepository {
         colorHex: '#F4A8B8',
         ramGB: 8,
         storageGB: 128,
-        priceVnd: 19290000,
+        priceVnd: 10000,
         stock: 5,
       ),
       const VariantModel(
@@ -773,7 +680,7 @@ class ProductRepository {
         colorHex: '#4F6DF5',
         ramGB: 8,
         storageGB: 256,
-        priceVnd: 22290000,
+        priceVnd: 10000,
         stock: 8,
       ),
       const VariantModel(
@@ -783,7 +690,7 @@ class ProductRepository {
         colorHex: '#4F6DF5',
         ramGB: 8,
         storageGB: 512,
-        priceVnd: 26990000,
+        priceVnd: 10000,
         stock: 0,
       ),
     ],
@@ -795,7 +702,7 @@ class ProductRepository {
         colorHex: '#8E8E93',
         ramGB: 12,
         storageGB: 256,
-        priceVnd: 29990000,
+        priceVnd: 10000,
         stock: 11,
       ),
       const VariantModel(
@@ -805,7 +712,7 @@ class ProductRepository {
         colorHex: '#1E293B',
         ramGB: 12,
         storageGB: 512,
-        priceVnd: 33490000,
+        priceVnd: 10000,
         stock: 6,
       ),
       const VariantModel(
@@ -815,7 +722,7 @@ class ProductRepository {
         colorHex: '#3B82F6',
         ramGB: 16,
         storageGB: 1024,
-        priceVnd: 38990000,
+        priceVnd: 10000,
         stock: 4,
       ),
     ],
@@ -827,7 +734,7 @@ class ProductRepository {
         colorHex: '#C0C5CE',
         ramGB: 12,
         storageGB: 256,
-        priceVnd: 20990000,
+        priceVnd: 10000,
         stock: 10,
       ),
       const VariantModel(
@@ -837,7 +744,7 @@ class ProductRepository {
         colorHex: '#1E3A8A',
         ramGB: 12,
         storageGB: 512,
-        priceVnd: 23990000,
+        priceVnd: 10000,
         stock: 4,
       ),
     ],
@@ -849,7 +756,7 @@ class ProductRepository {
         colorHex: '#1F2937',
         ramGB: 12,
         storageGB: 256,
-        priceVnd: 17490000,
+        priceVnd: 10000,
         stock: 9,
       ),
       const VariantModel(
@@ -859,7 +766,7 @@ class ProductRepository {
         colorHex: '#10B981',
         ramGB: 16,
         storageGB: 512,
-        priceVnd: 19990000,
+        priceVnd: 10000,
         stock: 5,
       ),
     ],
@@ -871,7 +778,7 @@ class ProductRepository {
         colorHex: '#475569',
         ramGB: 12,
         storageGB: 256,
-        priceVnd: 19990000,
+        priceVnd: 10000,
         stock: 8,
       ),
       const VariantModel(
@@ -881,7 +788,7 @@ class ProductRepository {
         colorHex: '#F9A8D4',
         ramGB: 16,
         storageGB: 512,
-        priceVnd: 22490000,
+        priceVnd: 10000,
         stock: 6,
       ),
     ],
@@ -893,7 +800,7 @@ class ProductRepository {
         colorHex: '#F8FAFC',
         ramGB: 0,
         storageGB: 0,
-        priceVnd: 5690000,
+        priceVnd: 10000,
         stock: 20,
       ),
     ],
@@ -905,11 +812,10 @@ class ProductRepository {
         colorHex: '#E2E8F0',
         ramGB: 0,
         storageGB: 0,
-        priceVnd: 1190000,
+        priceVnd: 10000,
         stock: 25,
       ),
     ],
-    'payos_test_10k': [_payosTestVariant],
     'iphone_16_pro': [
       const VariantModel(
         id: 'ip16p_128_natural',
@@ -918,7 +824,7 @@ class ProductRepository {
         colorHex: '#9A9A96',
         ramGB: 8,
         storageGB: 128,
-        priceVnd: 28490000,
+        priceVnd: 10000,
         stock: 8,
       ),
       const VariantModel(
@@ -928,7 +834,7 @@ class ProductRepository {
         colorHex: '#C5B4A5',
         ramGB: 8,
         storageGB: 256,
-        priceVnd: 31490000,
+        priceVnd: 10000,
         stock: 12,
       ),
       const VariantModel(
@@ -938,7 +844,7 @@ class ProductRepository {
         colorHex: '#27272A',
         ramGB: 8,
         storageGB: 512,
-        priceVnd: 37490000,
+        priceVnd: 10000,
         stock: 4,
       ),
       const VariantModel(
@@ -948,7 +854,7 @@ class ProductRepository {
         colorHex: '#F5F5F7',
         ramGB: 8,
         storageGB: 1024,
-        priceVnd: 42490000,
+        priceVnd: 10000,
         stock: 0,
       ),
     ],
@@ -960,7 +866,7 @@ class ProductRepository {
         colorHex: '#2DD4BF',
         ramGB: 8,
         storageGB: 128,
-        priceVnd: 22990000,
+        priceVnd: 10000,
         stock: 10,
       ),
       const VariantModel(
@@ -970,7 +876,7 @@ class ProductRepository {
         colorHex: '#4F6DF5',
         ramGB: 8,
         storageGB: 256,
-        priceVnd: 25990000,
+        priceVnd: 10000,
         stock: 6,
       ),
       const VariantModel(
@@ -980,7 +886,7 @@ class ProductRepository {
         colorHex: '#1C1C1E',
         ramGB: 8,
         storageGB: 512,
-        priceVnd: 30990000,
+        priceVnd: 10000,
         stock: 3,
       ),
     ],
@@ -992,7 +898,7 @@ class ProductRepository {
         colorHex: '#A7F3D0',
         ramGB: 6,
         storageGB: 128,
-        priceVnd: 16490000,
+        priceVnd: 10000,
         stock: 15,
       ),
       const VariantModel(
@@ -1002,7 +908,7 @@ class ProductRepository {
         colorHex: '#F4A8B8',
         ramGB: 6,
         storageGB: 128,
-        priceVnd: 16490000,
+        priceVnd: 10000,
         stock: 10,
       ),
       const VariantModel(
@@ -1012,7 +918,7 @@ class ProductRepository {
         colorHex: '#1C1C1E',
         ramGB: 8,
         storageGB: 256,
-        priceVnd: 19490000,
+        priceVnd: 10000,
         stock: 7,
       ),
     ],
@@ -1024,7 +930,7 @@ class ProductRepository {
         colorHex: '#8E8E93',
         ramGB: 12,
         storageGB: 256,
-        priceVnd: 25990000,
+        priceVnd: 10000,
         stock: 8,
       ),
       const VariantModel(
@@ -1034,7 +940,7 @@ class ProductRepository {
         colorHex: '#1E3A8A',
         ramGB: 12,
         storageGB: 512,
-        priceVnd: 28990000,
+        priceVnd: 10000,
         stock: 5,
       ),
     ],
@@ -1046,7 +952,7 @@ class ProductRepository {
         colorHex: '#64748B',
         ramGB: 12,
         storageGB: 256,
-        priceVnd: 41990000,
+        priceVnd: 10000,
         stock: 6,
       ),
       const VariantModel(
@@ -1056,7 +962,7 @@ class ProductRepository {
         colorHex: '#1E293B',
         ramGB: 12,
         storageGB: 512,
-        priceVnd: 45490000,
+        priceVnd: 10000,
         stock: 3,
       ),
       const VariantModel(
@@ -1066,7 +972,7 @@ class ProductRepository {
         colorHex: '#0F172A',
         ramGB: 16,
         storageGB: 1024,
-        priceVnd: 51990000,
+        priceVnd: 10000,
         stock: 0,
       ),
     ],
@@ -1078,7 +984,7 @@ class ProductRepository {
         colorHex: '#93C5FD',
         ramGB: 8,
         storageGB: 128,
-        priceVnd: 8990000,
+        priceVnd: 10000,
         stock: 25,
       ),
       const VariantModel(
@@ -1088,7 +994,7 @@ class ProductRepository {
         colorHex: '#0F172A',
         ramGB: 8,
         storageGB: 256,
-        priceVnd: 9990000,
+        priceVnd: 10000,
         stock: 18,
       ),
       const VariantModel(
@@ -1098,40 +1004,8 @@ class ProductRepository {
         colorHex: '#C084FC',
         ramGB: 12,
         storageGB: 256,
-        priceVnd: 10490000,
+        priceVnd: 10000,
         stock: 12,
-      ),
-    ],
-    'xiaomi_15_pro': [
-      const VariantModel(
-        id: 'xm15p_256_gray',
-        sku: 'XM15P-256-GRY',
-        color: 'Xám Titan',
-        colorHex: '#374151',
-        ramGB: 12,
-        storageGB: 256,
-        priceVnd: 21990000,
-        stock: 8,
-      ),
-      const VariantModel(
-        id: 'xm15p_512_white',
-        sku: 'XM15P-512-WHT',
-        color: 'Trắng Sứ',
-        colorHex: '#F8FAFC',
-        ramGB: 16,
-        storageGB: 512,
-        priceVnd: 24490000,
-        stock: 5,
-      ),
-      const VariantModel(
-        id: 'xm15p_1024_green',
-        sku: 'XM15P-1TB-GRN',
-        color: 'Xanh Lục Bảo',
-        colorHex: '#065F46',
-        ramGB: 16,
-        storageGB: 1024,
-        priceVnd: 27990000,
-        stock: 2,
       ),
     ],
     'xiaomi_poco_f6_pro': [
@@ -1142,7 +1016,7 @@ class ProductRepository {
         colorHex: '#18181B',
         ramGB: 12,
         storageGB: 256,
-        priceVnd: 12990000,
+        priceVnd: 10000,
         stock: 14,
       ),
       const VariantModel(
@@ -1152,7 +1026,7 @@ class ProductRepository {
         colorHex: '#F4F4F5',
         ramGB: 16,
         storageGB: 512,
-        priceVnd: 14490000,
+        priceVnd: 10000,
         stock: 8,
       ),
     ],
@@ -1164,7 +1038,7 @@ class ProductRepository {
         colorHex: '#0284C7',
         ramGB: 8,
         storageGB: 128,
-        priceVnd: 8490000,
+        priceVnd: 10000,
         stock: 20,
       ),
       const VariantModel(
@@ -1174,7 +1048,7 @@ class ProductRepository {
         colorHex: '#A855F7',
         ramGB: 8,
         storageGB: 256,
-        priceVnd: 9290000,
+        priceVnd: 10000,
         stock: 15,
       ),
       const VariantModel(
@@ -1184,7 +1058,7 @@ class ProductRepository {
         colorHex: '#111827',
         ramGB: 12,
         storageGB: 512,
-        priceVnd: 10490000,
+        priceVnd: 10000,
         stock: 9,
       ),
     ],
@@ -1196,7 +1070,7 @@ class ProductRepository {
         colorHex: '#0F172A',
         ramGB: 16,
         storageGB: 512,
-        priceVnd: 26990000,
+        priceVnd: 10000,
         stock: 6,
       ),
       const VariantModel(
@@ -1206,7 +1080,7 @@ class ProductRepository {
         colorHex: '#F1F5F9',
         ramGB: 16,
         storageGB: 512,
-        priceVnd: 26990000,
+        priceVnd: 10000,
         stock: 5,
       ),
       const VariantModel(
@@ -1216,7 +1090,7 @@ class ProductRepository {
         colorHex: '#0F172A',
         ramGB: 16,
         storageGB: 1024,
-        priceVnd: 30990000,
+        priceVnd: 10000,
         stock: 2,
       ),
     ],
@@ -1228,7 +1102,7 @@ class ProductRepository {
         colorHex: '#C084FC',
         ramGB: 12,
         storageGB: 256,
-        priceVnd: 14490000,
+        priceVnd: 10000,
         stock: 11,
       ),
       const VariantModel(
@@ -1238,7 +1112,7 @@ class ProductRepository {
         colorHex: '#4B5563',
         ramGB: 16,
         storageGB: 512,
-        priceVnd: 16490000,
+        priceVnd: 10000,
         stock: 7,
       ),
     ],
@@ -1250,7 +1124,7 @@ class ProductRepository {
         colorHex: '#F59E0B',
         ramGB: 8,
         storageGB: 128,
-        priceVnd: 7990000,
+        priceVnd: 10000,
         stock: 16,
       ),
       const VariantModel(
@@ -1260,7 +1134,7 @@ class ProductRepository {
         colorHex: '#10B981',
         ramGB: 8,
         storageGB: 256,
-        priceVnd: 8790000,
+        priceVnd: 10000,
         stock: 12,
       ),
     ],
@@ -1272,7 +1146,7 @@ class ProductRepository {
         colorHex: '#F8FAFC',
         ramGB: 0,
         storageGB: 0,
-        priceVnd: 490000,
+        priceVnd: 10000,
         stock: 50,
       ),
     ],
@@ -1284,30 +1158,8 @@ class ProductRepository {
         colorHex: '#E2E8F0',
         ramGB: 0,
         storageGB: 0,
-        priceVnd: 350000,
+        priceVnd: 10000,
         stock: 45,
-      ),
-    ],
-    'finewoven_wallet_magsafe': [
-      const VariantModel(
-        id: 'wallet_finewoven_navy',
-        sku: 'WLT-FNWV-NVY',
-        color: 'Xanh Đêm (Pacific Blue)',
-        colorHex: '#243342',
-        ramGB: 0,
-        storageGB: 0,
-        priceVnd: 1690000,
-        stock: 20,
-      ),
-      const VariantModel(
-        id: 'wallet_finewoven_taupe',
-        sku: 'WLT-FNWV-TPE',
-        color: 'Nâu Sa Mạc (Taupe)',
-        colorHex: '#C5B4A5',
-        ramGB: 0,
-        storageGB: 0,
-        priceVnd: 1690000,
-        stock: 14,
       ),
     ],
   };
@@ -1344,6 +1196,11 @@ class ProductRepository {
         createdAt: DateTime(2026, 10, 21),
       ),
     ],
+  };
+
+  static const Set<String> _removedProductIds = {
+    'payos_test_10k',
+    'xiaomi_15_pro',
   };
 
   static final List<ProductModel> _initialProducts =
@@ -1402,6 +1259,7 @@ class ProductRepository {
     }
 
     for (final product in _products) {
+      if (_removedProductIds.contains(product.id)) continue;
       final prodRef = db
           .collection(FirestoreCollections.products)
           .doc(product.id);
@@ -1426,7 +1284,8 @@ class ProductRepository {
     String? brandFilter,
     bool includeInactive = false,
   }) async {
-    List<ProductModel> result = List<ProductModel>.from(_products);
+    List<ProductModel> result = List<ProductModel>.from(_products)
+      ..removeWhere((p) => _removedProductIds.contains(p.id));
 
     if (_isFirebaseReady) {
       try {
@@ -1436,13 +1295,30 @@ class ProductRepository {
         if (snapshot.docs.isEmpty) {
           await seedDemoDataToFirestore();
         } else {
+          // Xóa triệt để các sản phẩm không có ảnh khỏi Firestore
+          for (final doc in snapshot.docs) {
+            if (_removedProductIds.contains(doc.id)) {
+              doc.reference.delete().catchError((_) {});
+            }
+          }
+
+          // Cập nhật giá 10.000₫ lên Cloud Firestore cho tất cả sản phẩm
+          for (final doc in snapshot.docs) {
+            if (!_removedProductIds.contains(doc.id) && doc.data()['priceFromVnd'] != 10000) {
+              doc.reference.update({'priceFromVnd': 10000}).catchError((_) {});
+            }
+          }
+
           result = snapshot.docs
-              .map((doc) => ProductModel.fromJson(doc.id, doc.data()))
+              .where((doc) => !_removedProductIds.contains(doc.id))
+              .map((doc) => ProductModel.fromJson(doc.id, doc.data()).copyWith(priceFromVnd: 10000))
               .toList();
+
           // Đảm bảo toàn bộ các sản phẩm và biến thể chuẩn của hệ thống luôn có mặt đầy đủ
           final existingIds = result.map((p) => p.id).toSet();
           for (final initP in _initialProducts) {
-            if (!existingIds.contains(initP.id)) {
+            if (!_removedProductIds.contains(initP.id) &&
+                !existingIds.contains(initP.id)) {
               result.add(initP);
               try {
                 final prodRef = FirebaseFirestore.instance
@@ -1466,6 +1342,7 @@ class ProductRepository {
             ..clear()
             ..addAll(result);
           for (final doc in snapshot.docs) {
+            if (_removedProductIds.contains(doc.id)) continue;
             final variants = await doc.reference
                 .collection(FirestoreCollections.variants)
                 .get();
@@ -1473,12 +1350,18 @@ class ProductRepository {
               _variants[doc.id] = variants.docs
                   .map(
                     (variant) =>
-                        VariantModel.fromJson(variant.id, variant.data()),
+                        VariantModel.fromJson(variant.id, variant.data()).copyWith(priceVnd: 10000),
                   )
                   .toList();
+              for (final vDoc in variants.docs) {
+                if (vDoc.data()['priceVnd'] != 10000) {
+                  vDoc.reference.update({'priceVnd': 10000}).catchError((_) {});
+                }
+              }
             }
           }
           for (final entry in _initialVariants.entries) {
+            if (_removedProductIds.contains(entry.key)) continue;
             if (!_variants.containsKey(entry.key) ||
                 _variants[entry.key]!.isEmpty) {
               _variants[entry.key] = entry.value;
@@ -1491,8 +1374,17 @@ class ProductRepository {
       if (cached.isNotEmpty) {
         result = cached
             .map((data) => ProductModel.fromJson(data['id'].toString(), data))
+            .where((p) => !_removedProductIds.contains(p.id))
             .toList();
       }
+    }
+
+    result.removeWhere((p) => _removedProductIds.contains(p.id));
+    result = result.map((p) => p.copyWith(priceFromVnd: 10000)).toList();
+    for (final key in _variants.keys.toList()) {
+      _variants[key] = _variants[key]!
+          .map((v) => v.copyWith(priceVnd: 10000))
+          .toList();
     }
 
     // Lưu cache danh mục xuống catalog_cache.json phục vụ F23 Offline Mode
@@ -1530,11 +1422,11 @@ class ProductRepository {
   VariantModel? findVariantById(String productId, String variantId) {
     final list = _variants[productId] ?? [];
     for (final v in list) {
-      if (v.id == variantId) return v;
+      if (v.id == variantId) return v.copyWith(priceVnd: 10000);
     }
     for (final entry in _variants.entries) {
       for (final v in entry.value) {
-        if (v.id == variantId) return v;
+        if (v.id == variantId) return v.copyWith(priceVnd: 10000);
       }
     }
     return null;

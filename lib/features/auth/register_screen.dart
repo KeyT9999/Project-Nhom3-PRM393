@@ -60,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Đăng ký tài khoản thành công! Đã gửi email xác thực (F01).',
+            'Đăng ký tài khoản thành công! Đã gửi email xác thực.',
           ),
         ),
       );
@@ -77,7 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Đăng ký tài khoản mới (F01)')),
+      appBar: AppBar(title: const Text('Đăng ký tài khoản mới')),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [

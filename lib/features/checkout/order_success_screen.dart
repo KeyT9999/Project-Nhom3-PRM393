@@ -90,7 +90,7 @@ class OrderSuccessScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 22),
                   LmTintedButton(
-                    label: 'Xem chi tiết & Tiến trình đơn (F15)',
+                    label: 'Xem chi tiết & Tiến trình đơn',
                     icon: Icons.receipt_long_rounded,
                     onPressed: () {
                       Navigator.of(context).pushReplacement(

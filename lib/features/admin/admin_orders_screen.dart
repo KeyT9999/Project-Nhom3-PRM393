@@ -103,7 +103,7 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Đã cập nhật ${order.orderCode} → $label (S05)'),
+          content: Text('Đã cập nhật ${order.orderCode} → $label'),
         ),
       );
     } catch (e) {
@@ -135,7 +135,7 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Quét mã QR Vận đơn / Nhập mã đơn (A06)',
+              'Quét mã QR Vận đơn / Nhập mã đơn',
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w800,
@@ -280,7 +280,7 @@ class _AdminOrdersScreenState extends State<AdminOrdersScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quản lý & Duyệt Đơn hàng (A06)'),
+        title: const Text('Quản lý & Duyệt Đơn hàng'),
         actions: [
           IconButton(
             tooltip: 'Quét QR vận đơn',
