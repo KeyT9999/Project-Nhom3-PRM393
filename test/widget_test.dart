@@ -16,13 +16,15 @@ void main() {
       await tester.pumpWidget(const SmartStoreApp());
       await tester.pumpAndSettle();
       await tester.tap(find.text('Khám phá ngay'));
-      await tester.pumpAndSettle();
+      // HomeScreen có LiquidAmbientCanvas lặp vô hạn nên không dùng pumpAndSettle.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
 
-      expect(find.text('Home'), findsOneWidget);
-      expect(find.text('Catalog'), findsOneWidget);
-      expect(find.text('Cart'), findsOneWidget);
-      expect(find.text('Alerts'), findsOneWidget);
-      expect(find.text('Account'), findsOneWidget);
+      expect(find.text('Khám Phá'), findsOneWidget);
+      expect(find.text('Dòng iPhone'), findsOneWidget);
+      expect(find.text('Túi Hàng'), findsOneWidget);
+      expect(find.text('Thông Báo'), findsOneWidget);
+      expect(find.text('Apple ID'), findsOneWidget);
     },
   );
 

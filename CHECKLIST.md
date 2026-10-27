@@ -22,7 +22,7 @@ Kiểm tra gần nhất (Claude): `flutter analyze` → No issues found. Chưa c
 ## C. Testing (mục 4.2)
 - [x] ✅ C1. Unit test tổng tiền giỏ hàng – `test/cart_provider_test.dart`, 5/5 pass (Claude đã chạy lại, TASK-1 ĐẠT)
 - [x] ✅ C2. Widget test nút thêm vào giỏ trên Product Detail (nút hiện là IconButton, tooltip "Thêm vào giỏ hàng") – `test/product_detail_add_to_cart_test.dart` pass (TASK-2 ĐẠT)
-- [ ] ⚠️ C3. `flutter test` toàn bộ: 8 pass, 1 fail. `widget_test.dart` TC01 ("Trang chủ Frosted-Glass & 5 tab") fail từ trước khi Anti làm việc (file này không bị đổi). Cần chẩn đoán (TASK-3).
+- [x] ✅ C3. `flutter test` toàn bộ: 10/10 pass, `flutter analyze` sạch. TC01 từng fail do 2 lỗi trong test: pumpAndSettle bị animation lặp vô hạn, và nhãn tab cũ (Home/Catalog...) không còn khớp UI mới (TASK-3, Claude đã sửa).
 
 ## D. Triển khai (mục 4.3)
 - [ ] ❌ D1. `flutter build apk --release` thành công + chụp màn hình + giữ file APK (cần cấu hình `.env`/keystore, **người làm**)
