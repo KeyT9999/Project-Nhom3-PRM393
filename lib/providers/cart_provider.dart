@@ -33,15 +33,25 @@ class CartProvider extends ChangeNotifier {
     final previousUser = _currentUserId;
     _currentUserId = userId;
     final loaded = await _cartRepository.loadCart(userId);
+    final synced = loaded.map((item) {
+      final v =
+          _productRepository.findVariantById(item.productId, item.variantId);
+      if (v != null && v.priceVnd != item.priceVnd) {
+        return item.copyWith(priceVnd: v.priceVnd);
+      }
+      return item;
+    }).toList();
     if (previousUser != userId) {
       _items
         ..clear()
-        ..addAll(loaded);
+        ..addAll(synced);
     } else {
-      for (final item in loaded) {
+      for (final item in synced) {
         final idx = _items.indexWhere((e) => e.variantId == item.variantId);
         if (idx < 0) {
           _items.add(item);
+        } else {
+          _items[idx] = item;
         }
       }
     }
