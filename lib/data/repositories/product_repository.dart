@@ -111,7 +111,7 @@ class ProductRepository {
       'Mệnh giá': '10.000₫ (Free Ship)',
       'Thanh toán': 'Hỗ trợ VietQR PayOS & COD',
     },
-    isFeatured: true,
+    isFeatured: false,
     soldCount: 250,
     ratingAvg: 5.0,
     reviewCount: 42,

@@ -35,4 +35,4 @@ Kiểm tra lại 27/10/2026 (Claude): `flutter analyze` → No issues found; `fl
 - [ ] ⚠️ F2. Cấu hình `release` trong `android/app/build.gradle` đang ký bằng khóa debug; cần keystore thật nếu nộp APK release (liên quan D1). Hiện chỉ có `app-debug.apk`.
 - [x] ✅ F3. Mục 4.2 trong `Sample_Project_updated_v2.docx` đã thêm Database Test (10 test), Image Test (4 test) và kết quả 24 test đạt.
 - [ ] ⚠️ F4. Giao diện đã đổi lớn (ảnh sản phẩm thật, phong cách phẳng): ảnh chụp màn hình trong báo cáo (mục 5) nên chụp lại.
-- [ ] ⚠️ F5. Còn tồn: `payos_test_10k` hiện trong danh sách cửa hàng, `xiaomi_15_pro` chưa có ảnh (hiện khung xám), màn đăng nhập khác phong cách phần còn lại.
+- [x] ✅ F5. Đã sửa: tên máy gọn ở checkout/đơn hàng, bỏ nhãn "FIREBASE AUTH" và câu "Kỷ lục pin tốt nhất", `payos_test_10k` không còn là sản phẩm nổi bật (vẫn mua được để thử PayOS). Còn lại: `xiaomi_15_pro` chưa có ảnh (hiện khung xám); không tìm thấy màn đăng nhập kiểu tiếng Anh trong `lib/` nên có thể là bản build cũ.

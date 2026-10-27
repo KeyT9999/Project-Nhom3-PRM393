@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/utils/product_display.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
@@ -271,7 +272,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${item.quantity}x ${item.productName}',
+                                '${item.quantity}x ${ProductDisplay.shortName(item.productName)}',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w700,
                                 ),

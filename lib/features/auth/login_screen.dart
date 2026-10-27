@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     children: [
                       LmStatusPill(
-                        text: 'FIREBASE AUTH',
+                        text: 'TÀI KHOẢN',
                         color: accent,
                         icon: Icons.verified_user_outlined,
                       ),

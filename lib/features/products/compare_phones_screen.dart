@@ -20,7 +20,7 @@ class ComparePhonesScreen extends StatelessWidget {
         'Chip Xử Lý & GPU': 'Apple A18 Pro (3nm)\nGPU 6 lõi Ray Tracing',
         'Hệ Thống Camera': '3 Camera Pro 48MP\nFusion + Ultra Wide 48MP\n+ Telephoto 5x',
         'Nút Điều Khiển Camera': 'Có (Cảm ứng lực & trượt)',
-        'Thời Lượng Xem Video': 'Lên đến 33 giờ\n(Kỷ lục pin tốt nhất)',
+        'Thời Lượng Xem Video': 'Lên đến 33 giờ',
         'Chất Liệu Khung Viền': 'Titan cấp 5 hàng không',
         'Cổng Kết Nối & Tốc Độ': 'USB-C (USB 3 - 10Gb/s)',
       },

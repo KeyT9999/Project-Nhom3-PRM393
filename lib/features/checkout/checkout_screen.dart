@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/utils/product_display.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -105,7 +106,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             children: [
               const Text(
                 'Bạn có thể điền trực tiếp vào file .env ở thư mục gốc dự án hoặc dán nhanh tại đây:',
-                style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+                style: TextStyle(
+                  fontSize: 12.5,
+                  color: AppColors.textSecondary,
+                ),
               ),
               const SizedBox(height: 12),
               TextField(
@@ -390,7 +394,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${item.quantity}x ${item.productName}',
+                                    '${item.quantity}x ${ProductDisplay.shortName(item.productName)}',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 13.5,
@@ -550,7 +554,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                       title: const Text(
                         'Thanh toán khi nhận hàng (COD)',
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13.5,
+                        ),
                       ),
                       subtitle: const Text(
                         'Kiểm tra nguyên seal máy trước khi thanh toán',
@@ -571,7 +578,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                       title: const Text(
                         'Chuyển khoản VietQR qua PayOS',
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13.5,
+                        ),
                       ),
                       subtitle: Text(
                         EnvConfig.isPayosConfigured
@@ -595,7 +605,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       activeThumbColor: AppColors.brand700,
                       title: const Text(
                         'Xác thực vân tay / Face ID',
-                        style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13.5,
+                        ),
                       ),
                       subtitle: const Text(
                         'Bảo mật bổ sung cho đơn hàng giá trị cao',
