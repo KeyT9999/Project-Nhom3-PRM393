@@ -1198,6 +1198,11 @@ class ProductRepository {
     ],
   };
 
+  static const Set<String> _removedProductIds = {
+    'payos_test_10k',
+    'xiaomi_15_pro',
+  };
+
   static final List<ProductModel> _initialProducts =
       List<ProductModel>.unmodifiable(_products);
   static final Map<String, List<VariantModel>> _initialVariants =
@@ -1254,6 +1259,7 @@ class ProductRepository {
     }
 
     for (final product in _products) {
+      if (_removedProductIds.contains(product.id)) continue;
       final prodRef = db
           .collection(FirestoreCollections.products)
           .doc(product.id);
@@ -1278,7 +1284,8 @@ class ProductRepository {
     String? brandFilter,
     bool includeInactive = false,
   }) async {
-    List<ProductModel> result = List<ProductModel>.from(_products);
+    List<ProductModel> result = List<ProductModel>.from(_products)
+      ..removeWhere((p) => _removedProductIds.contains(p.id));
 
     if (_isFirebaseReady) {
       try {
@@ -1288,13 +1295,23 @@ class ProductRepository {
         if (snapshot.docs.isEmpty) {
           await seedDemoDataToFirestore();
         } else {
+          // Xóa triệt để các sản phẩm không có ảnh khỏi Firestore
+          for (final doc in snapshot.docs) {
+            if (_removedProductIds.contains(doc.id)) {
+              doc.reference.delete().catchError((_) {});
+            }
+          }
+
           result = snapshot.docs
+              .where((doc) => !_removedProductIds.contains(doc.id))
               .map((doc) => ProductModel.fromJson(doc.id, doc.data()))
               .toList();
+
           // Đảm bảo toàn bộ các sản phẩm và biến thể chuẩn của hệ thống luôn có mặt đầy đủ
           final existingIds = result.map((p) => p.id).toSet();
           for (final initP in _initialProducts) {
-            if (!existingIds.contains(initP.id)) {
+            if (!_removedProductIds.contains(initP.id) &&
+                !existingIds.contains(initP.id)) {
               result.add(initP);
               try {
                 final prodRef = FirebaseFirestore.instance
@@ -1318,6 +1335,7 @@ class ProductRepository {
             ..clear()
             ..addAll(result);
           for (final doc in snapshot.docs) {
+            if (_removedProductIds.contains(doc.id)) continue;
             final variants = await doc.reference
                 .collection(FirestoreCollections.variants)
                 .get();
@@ -1331,6 +1349,7 @@ class ProductRepository {
             }
           }
           for (final entry in _initialVariants.entries) {
+            if (_removedProductIds.contains(entry.key)) continue;
             if (!_variants.containsKey(entry.key) ||
                 _variants[entry.key]!.isEmpty) {
               _variants[entry.key] = entry.value;
@@ -1343,9 +1362,12 @@ class ProductRepository {
       if (cached.isNotEmpty) {
         result = cached
             .map((data) => ProductModel.fromJson(data['id'].toString(), data))
+            .where((p) => !_removedProductIds.contains(p.id))
             .toList();
       }
     }
+
+    result.removeWhere((p) => _removedProductIds.contains(p.id));
 
     // Lưu cache danh mục xuống catalog_cache.json phục vụ F23 Offline Mode
     await _localStorage.saveCatalogCache(
