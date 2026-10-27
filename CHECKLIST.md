@@ -16,8 +16,8 @@ Kiểm tra gần nhất (Claude): `flutter analyze` → No issues found. Chưa c
 
 ## B. Lệch giữa báo cáo và code (cần chốt)
 - [x] ✅ B1. Giỏ hàng đã chuyển sang **SQLite (sqflite)**, bảng `Cart` khớp báo cáo mục 3.3 (thêm `variant_id`, `variant_label`, `updated_at`), có di trú một lần từ JSON cũ. Vẫn đồng bộ Firestore khi đăng nhập. 20/20 test pass (TASK-4, TASK-5 ĐẠT). Báo cáo nên ghi thêm 3 cột mở rộng này.
-- [ ] ⚠️ B2. Báo cáo ghi "chưa tích hợp thanh toán online, dữ liệu mock" nhưng code đã có PayOS (`payos_service.dart`, `payos_payment_screen.dart`) và nhiều dữ liệu sản phẩm. → cập nhật mục 6 của báo cáo.
-- [ ] ⚠️ B3. Báo cáo ghi chat "Firebase Realtime"; code dùng Cloud Firestore. → sửa chữ trong báo cáo.
+- [x] ✅ B2. Mục 6 của báo cáo đã sửa: ghi hỗ trợ COD + PayOS (chưa có VNPay/MoMo), dữ liệu sản phẩm là dữ liệu demo nạp lên Firestore. Xem `Sample_Project_updated.docx`.
+- [x] ✅ B3. Mục 5 (Messaging) đã sửa thành chat qua Cloud Firestore. Xem `Sample_Project_updated.docx`.
 
 ## C. Testing (mục 4.2)
 - [x] ✅ C1. Unit test tổng tiền giỏ hàng – `test/cart_provider_test.dart`, 5/5 pass (Claude đã chạy lại, TASK-1 ĐẠT)
@@ -28,4 +28,4 @@ Kiểm tra gần nhất (Claude): `flutter analyze` → No issues found. Chưa c
 - [ ] ❌ D1. `flutter build apk --release` thành công + chụp màn hình + giữ file APK (cần cấu hình `.env`/keystore, **người làm**)
 
 ## E. Tài liệu
-- [ ] ❌ E1. Cập nhật báo cáo theo B1–B3 (sau khi chốt B1)
+- [x] ✅ E1. Báo cáo đã cập nhật theo B1–B3 thành `..Sample_Project_updated.docx` (file gốc giữ nguyên, cần mở bằng Word kiểm tra định dạng).
