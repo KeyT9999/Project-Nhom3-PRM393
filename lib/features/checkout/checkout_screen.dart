@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../../core/utils/product_display.dart';
+
 import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -33,6 +35,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   CouponModel? _appliedCoupon;
   bool _requireBiometric = false;
   String _paymentMethod = 'cod'; // 'cod' | 'payos'
+
+  /// Chế độ thử nghiệm: mã VietQR PayOS luôn thu 10.000₫, tổng đơn không đổi.
+  static const int _payosTestAmountVnd = 10000;
   bool _isCreatingPayosLink = false;
   late String _requestId;
 
@@ -194,7 +199,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             DateTime.now().millisecondsSinceEpoch % 1000000000;
         final linkData = await PayosService.createPaymentLink(
           orderCode: payosOrderCode,
-          amount: totalVnd,
+          amount: _payosTestAmountVnd,
           description: 'SMARTSTORE $payosOrderCode',
           items: cart.items
               .map(
@@ -245,7 +250,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       notifProv.addNotification(
         title: 'Đặt hàng thành công ${order.orderCode}',
         body: _paymentMethod == 'payos'
-            ? 'Đơn hàng ${CurrencyFormatter.formatVnd(order.totalVnd)} đã thanh toán qua PayOS.'
+            ? 'Đơn hàng ${CurrencyFormatter.formatVnd(order.totalVnd)} đã thanh toán thử ${CurrencyFormatter.formatVnd(_payosTestAmountVnd)} qua PayOS.'
             : 'Đơn hàng ${CurrencyFormatter.formatVnd(order.totalVnd)} đang chờ xác nhận.',
         orderId: order.id,
       );
@@ -255,7 +260,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           id: order.hashCode & 0x7fffffff,
           title: 'Đặt hàng thành công! (${order.orderCode})',
           body: _paymentMethod == 'payos'
-              ? 'Đã thanh toán ${CurrencyFormatter.formatVnd(order.totalVnd)} qua PayOS VietQR.'
+              ? 'Đã thanh toán thử ${CurrencyFormatter.formatVnd(_payosTestAmountVnd)} qua PayOS VietQR.'
               : 'Đơn hàng trị giá ${CurrencyFormatter.formatVnd(order.totalVnd)} đang chờ SmartStore xác nhận.',
           orderId: order.id,
         );
@@ -585,8 +590,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                       subtitle: Text(
                         EnvConfig.isPayosConfigured
-                            ? 'Tự động tạo mã VietQR & đối soát tức thì'
-                            : 'Quét mã VietQR thanh toán thực tế',
+                            ? 'Thanh toán thử nghiệm: mã VietQR luôn thu 10.000₫'
+                            : 'Cần cấu hình khóa PayOS • mã VietQR luôn thu 10.000₫',
                         style: TextStyle(
                           fontSize: 11.5,
                           color: EnvConfig.isPayosConfigured
