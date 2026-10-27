@@ -98,39 +98,6 @@ class ProductRepository {
     ),
   ];
 
-  static final ProductModel _payosTestProduct = ProductModel(
-    id: 'payos_test_10k',
-    name: 'Miếng Dán Cường Lực SmartStore (Test PayOS 10.000₫)',
-    slug: 'mieng-dan-cuong-luc-test-payos-10k',
-    brandId: 'Phụ kiện',
-    categoryId: 'accessories',
-    description: 'Sản phẩm 10.000₫ dùng để kiểm thử thanh toán VietQR qua PayOS.',
-    priceFromVnd: 10000,
-    specs: const {
-      'Loại sản phẩm': 'Phụ kiện bảo vệ màn hình • Test PayOS',
-      'Mệnh giá': '10.000₫ (Free Ship)',
-      'Thanh toán': 'Hỗ trợ VietQR PayOS & COD',
-    },
-    isFeatured: false,
-    soldCount: 250,
-    ratingAvg: 5.0,
-    reviewCount: 42,
-    ramOptions: const [0],
-    storageOptions: const [0],
-    defaultColorHex: '#10B981',
-    createdAt: DateTime(2026, 10, 26),
-  );
-
-  static const VariantModel _payosTestVariant = VariantModel(
-    id: 'payos_10k_std',
-    sku: 'PAYOS-TEST-10K',
-    color: 'Trong Suốt (Tiêu chuẩn)',
-    colorHex: '#10B981',
-    ramGB: 0,
-    storageGB: 0,
-    priceVnd: 10000,
-    stock: 99,
-  );
 
   static final List<ProductModel> _products = [
     ProductModel(
@@ -157,7 +124,6 @@ class ProductRepository {
       defaultColorHex: '#C5B4A5',
       createdAt: DateTime(2026, 10, 20),
     ),
-    _payosTestProduct,
     ProductModel(
       id: 'iphone_16',
       name: 'iPhone 16 Chính Hãng VN/A',
@@ -466,30 +432,6 @@ class ProductRepository {
       storageOptions: const [128, 256],
       defaultColorHex: '#93C5FD',
       createdAt: DateTime(2026, 10, 11),
-    ),
-    ProductModel(
-      id: 'xiaomi_15_pro',
-      name: 'Xiaomi 15 Pro Leica Summilux 5G',
-      slug: 'xiaomi-15-pro',
-      brandId: 'Xiaomi',
-      categoryId: 'smartphones',
-      description: 'Màn hình 6.73 inch 2K AMOLED 120Hz, chip Snapdragon 8 Elite, ba camera Leica 50MP, pin 6100 mAh, sạc 90W có dây.',
-      priceFromVnd: 21990000,
-      specs: const {
-        'Màn hình': '6.73 inch 2K AMOLED LTPO 120Hz 3200 nits',
-        'Chip xử lý': 'Snapdragon 8 Elite (3nm thế hệ 2)',
-        'Camera': '3 ống kính Leica 50MP (Chính + Siêu rộng + Tiềm vọng 5x)',
-        'Pin & Sạc': '6100 mAh Silicon-Carbon • Sạc nhanh 90W có dây, 50W không dây',
-        'Hệ điều hành': 'Xiaomi HyperOS 2.0 tối ưu AI',
-      },
-      isFeatured: true,
-      soldCount: 48,
-      ratingAvg: 4.8,
-      reviewCount: 20,
-      ramOptions: const [12, 16],
-      storageOptions: const [256, 512, 1024],
-      defaultColorHex: '#374151',
-      createdAt: DateTime(2026, 10, 13),
     ),
     ProductModel(
       id: 'xiaomi_poco_f6_pro',
@@ -874,7 +816,6 @@ class ProductRepository {
         stock: 25,
       ),
     ],
-    'payos_test_10k': [_payosTestVariant],
     'iphone_16_pro': [
       const VariantModel(
         id: 'ip16p_128_natural',
@@ -1065,38 +1006,6 @@ class ProductRepository {
         storageGB: 256,
         priceVnd: 10490000,
         stock: 12,
-      ),
-    ],
-    'xiaomi_15_pro': [
-      const VariantModel(
-        id: 'xm15p_256_gray',
-        sku: 'XM15P-256-GRY',
-        color: 'Xám Titan',
-        colorHex: '#374151',
-        ramGB: 12,
-        storageGB: 256,
-        priceVnd: 21990000,
-        stock: 8,
-      ),
-      const VariantModel(
-        id: 'xm15p_512_white',
-        sku: 'XM15P-512-WHT',
-        color: 'Trắng Sứ',
-        colorHex: '#F8FAFC',
-        ramGB: 16,
-        storageGB: 512,
-        priceVnd: 24490000,
-        stock: 5,
-      ),
-      const VariantModel(
-        id: 'xm15p_1024_green',
-        sku: 'XM15P-1TB-GRN',
-        color: 'Xanh Lục Bảo',
-        colorHex: '#065F46',
-        ramGB: 16,
-        storageGB: 1024,
-        priceVnd: 27990000,
-        stock: 2,
       ),
     ],
     'xiaomi_poco_f6_pro': [
