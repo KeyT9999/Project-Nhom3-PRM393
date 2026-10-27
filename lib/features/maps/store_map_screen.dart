@@ -73,7 +73,7 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
     final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Bản đồ cửa hàng SmartStore (F21)')),
+      appBar: AppBar(title: const Text('Bản đồ cửa hàng SmartStore')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

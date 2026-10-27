@@ -54,11 +54,11 @@ class _AdminCustomersChatScreenState extends State<AdminCustomersChatScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Khách hàng & CSKH (A07, A09)'),
+          title: const Text('Khách hàng & CSKH'),
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'Danh sách Khách hàng (A07)'),
-              Tab(text: 'Phản hồi Chat CSKH (A09)'),
+              Tab(text: 'Danh sách Khách hàng'),
+              Tab(text: 'Phản hồi Chat CSKH'),
             ],
           ),
         ),

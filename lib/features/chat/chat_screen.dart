@@ -58,8 +58,8 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text(
           widget.asAdmin
-              ? 'Phản hồi khách hàng (A09)'
-              : 'Chat hỗ trợ SmartStore (F20)',
+              ? 'Phản hồi khách hàng'
+              : 'Chat hỗ trợ SmartStore',
         ),
       ),
       body: Column(

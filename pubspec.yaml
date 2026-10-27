@@ -94,6 +94,27 @@ flutter:
   assets:
     - .env
     - assets/images/
+    - assets/images/products/airpods_pro_2/
+    - assets/images/products/apple_20w_adapter/
+    - assets/images/products/clear_case_magsafe/
+    - assets/images/products/iphone_15/
+    - assets/images/products/iphone_16/
+    - assets/images/products/iphone_16_plus/
+    - assets/images/products/iphone_16_pro/
+    - assets/images/products/iphone_16_pro_max/
+    - assets/images/products/magsafe_charger_25w/
+    - assets/images/products/oppo_find_x8/
+    - assets/images/products/oppo_find_x8_pro/
+    - assets/images/products/oppo_reno_12_f/
+    - assets/images/products/oppo_reno_13_pro/
+    - assets/images/products/samsung_a55/
+    - assets/images/products/samsung_s25/
+    - assets/images/products/samsung_s25_plus/
+    - assets/images/products/samsung_s25_ultra/
+    - assets/images/products/samsung_z_fold6/
+    - assets/images/products/xiaomi_15/
+    - assets/images/products/xiaomi_poco_f6_pro/
+    - assets/images/products/xiaomi_redmi_note_14_pro/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

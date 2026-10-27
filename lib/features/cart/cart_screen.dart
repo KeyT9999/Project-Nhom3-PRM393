@@ -5,8 +5,9 @@ import 'package:provider/provider.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../core/utils/currency_formatter.dart';
+import '../../core/utils/product_display.dart';
 import '../../core/widgets/lm_glass_widgets.dart';
-import '../../core/widgets/phone_studio_illustration.dart';
+import '../../core/widgets/product_image.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/cart_provider.dart';
 import '../checkout/checkout_screen.dart';
@@ -26,7 +27,7 @@ class CartScreen extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w800, fontSize: 17),
           ),
           content: const Text(
-            'Túi hàng hoạt động hoàn toàn Offline nhờ lưu vào file cart.json.\n\nTuy nhiên, bước Đặt hàng cần kết nối Internet để hệ thống kiểm tra tồn kho và xác nhận thanh toán.',
+            'Giỏ hàng được lưu trên máy nên vẫn dùng được khi không có mạng.\n\nTuy nhiên, bước Đặt hàng cần kết nối Internet để hệ thống kiểm tra tồn kho và xác nhận thanh toán.',
             style: TextStyle(fontSize: 13, height: 1.4),
           ),
           actions: [
@@ -71,7 +72,7 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Túi Hàng Của Bạn'),
+        title: const Text('Giỏ hàng'),
         actions: [
           IconButton(
             tooltip: 'Giả lập Offline',
@@ -95,7 +96,7 @@ class CartScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    title: const Text('Xác nhận xóa túi hàng?'),
+                    title: const Text('Xóa toàn bộ giỏ hàng?'),
                     content: const Text('Toàn bộ sản phẩm sẽ được xóa khỏi giỏ.'),
                     actions: [
                       TextButton(
@@ -121,40 +122,10 @@ class CartScreen extends StatelessWidget {
         ],
       ),
       body: LiquidAmbientCanvas(
-        animate: true,
         child: SafeArea(
           bottom: false,
           child: Column(
             children: [
-              // Offline sync banner pill in Glass
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
-                child: LiquidGlassCard(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  borderRadius: 14,
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.cloud_done_rounded,
-                        size: 17,
-                        color: AppColors.brand700,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Đồng bộ tức thì: cart_${authProvider.activeUserId}.json ↔ Cloud',
-                          style: const TextStyle(
-                            fontSize: 11.5,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.inkSecondary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
               // Cart Items List or Empty State
               Expanded(
                 child: items.isEmpty
@@ -167,29 +138,28 @@ class CartScreen extends StatelessWidget {
                               Container(
                                 width: 84,
                                 height: 84,
-                                decoration: BoxDecoration(
-                                  color: AppColors.brand700.withValues(alpha: 0.08),
+                                decoration: const BoxDecoration(
+                                  color: AppColors.surfaceLightSlate,
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
                                   Icons.shopping_bag_outlined,
-                                  size: 44,
-                                  color: AppColors.brand700,
+                                  size: 40,
+                                  color: AppColors.inkMuted,
                                 ),
                               ),
                               const SizedBox(height: 16),
                               const Text(
-                                'Túi Hàng Đang Trống',
+                                'Giỏ hàng trống',
                                 style: TextStyle(
                                   fontSize: 18,
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w700,
                                   color: AppColors.ink,
-                                  letterSpacing: -0.3,
                                 ),
                               ),
                               const SizedBox(height: 6),
                               const Text(
-                                'Hãy chọn một phiên bản iPhone 16 hoặc phụ kiện chính hãng để bắt đầu đặt hàng.',
+                                'Chọn sản phẩm từ trang chủ để thêm vào giỏ.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 12.5,
@@ -210,19 +180,19 @@ class CartScreen extends StatelessWidget {
                           final item = items[index];
 
                           return LiquidGlassCard(
-                            padding: const EdgeInsets.all(14),
-                            borderRadius: 18,
+                            padding: const EdgeInsets.all(12),
                             child: Row(
                               children: [
                                 SizedBox(
                                   width: 68,
                                   height: 74,
                                   child: Center(
-                                    child: PhoneStudioIllustration(
-                                      brandId: 'Apple',
-                                      productName: item.productName,
-                                      colorHex: '#C5B4A5',
-                                      height: 68,
+                                    child: RepaintBoundary(
+                                      child: ProductImage(
+                                        productId: item.productId,
+                                        fallbackUrl: item.imageUrl,
+                                        padding: const EdgeInsets.all(2),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -232,14 +202,13 @@ class CartScreen extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        item.productName,
-                                        maxLines: 1,
+                                        ProductDisplay.shortName(item.productName),
+                                        maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
                                           color: AppColors.ink,
-                                          letterSpacing: -0.2,
                                         ),
                                       ),
                                       const SizedBox(height: 2),
@@ -256,10 +225,9 @@ class CartScreen extends StatelessWidget {
                                           item.lineTotalVnd,
                                         ),
                                         style: const TextStyle(
-                                          color: AppColors.brand700,
+                                          color: AppColors.primary,
                                           fontWeight: FontWeight.w800,
-                                          fontSize: 14.5,
-                                          letterSpacing: -0.3,
+                                          fontSize: 16,
                                         ),
                                       ),
                                     ],
@@ -269,8 +237,8 @@ class CartScreen extends StatelessWidget {
                                 // Quantity Stepper
                                 Container(
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.8),
-                                    borderRadius: BorderRadius.circular(999),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
                                     border: Border.all(color: AppColors.border),
                                   ),
                                   child: Row(
@@ -336,20 +304,10 @@ class CartScreen extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.82),
-                    border: Border(
-                      top: BorderSide(
-                        color: Colors.white.withValues(alpha: 0.9),
-                        width: 1.2,
-                      ),
+                    color: Colors.white.withValues(alpha: 0.92),
+                    border: const Border(
+                      top: BorderSide(color: AppColors.border, width: 1),
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF0F172A).withValues(alpha: 0.08),
-                        blurRadius: 20,
-                        offset: const Offset(0, -6),
-                      ),
-                    ],
                   ),
                   child: SafeArea(
                     top: false,
@@ -360,7 +318,7 @@ class CartScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Tổng phụ (${cartProvider.totalQuantity} món):',
+                              'Tạm tính (${cartProvider.totalQuantity} sản phẩm)',
                               style: const TextStyle(
                                 fontSize: 13.5,
                                 color: AppColors.inkMuted,
@@ -374,16 +332,14 @@ class CartScreen extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w800,
-                                color: AppColors.brand700,
-                                letterSpacing: -0.4,
+                                color: AppColors.primary,
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 10),
                         LiquidPillButton(
-                          label: 'Tiến Hành Đặt Hàng',
-                          icon: Icons.shopping_bag_outlined,
+                          label: 'Đặt hàng',
                           onPressed: () => _proceedToCheckout(context),
                         ),
                       ],

@@ -33,7 +33,7 @@ class OfflineModeBanner extends StatelessWidget {
           const SizedBox(width: 8),
           const Expanded(
             child: Text(
-              'Chế độ Offline (F23): Giỏ hàng & Yêu thích đang lưu tại file JSON cục bộ.',
+              'Đang offline: giỏ hàng và yêu thích được lưu trên máy.',
               style: TextStyle(
                 color: Color(0xFF92400E),
                 fontSize: 12,

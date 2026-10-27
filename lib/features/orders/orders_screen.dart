@@ -65,7 +65,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Lịch sử đơn hàng (F14)')),
+      appBar: AppBar(title: const Text('Lịch sử đơn hàng')),
       body: Column(
         children: [
           SizedBox(

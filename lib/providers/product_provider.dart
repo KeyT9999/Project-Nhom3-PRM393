@@ -178,6 +178,10 @@ class ProductProvider extends ChangeNotifier {
     _currentVariants = await _productRepository.getVariantsByProductId(
       productId,
     );
+    _currentVariants.sort((a, b) {
+      final byPrice = a.priceVnd.compareTo(b.priceVnd);
+      return byPrice != 0 ? byPrice : a.storageGB.compareTo(b.storageGB);
+    });
     if (_currentVariants.isNotEmpty) {
       _selectedVariant = _currentVariants.firstWhere(
         (v) => v.isInStock,

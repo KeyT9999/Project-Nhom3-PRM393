@@ -104,8 +104,7 @@ class ProductRepository {
     slug: 'mieng-dan-cuong-luc-test-payos-10k',
     brandId: 'Phụ kiện',
     categoryId: 'accessories',
-    description:
-        'Sản phẩm mệnh giá 10.000₫ (Miễn phí vận chuyển) dùng để kiểm thử thanh toán chuyển khoản thực tế VietQR qua cổng PayOS.',
+    description: 'Sản phẩm 10.000₫ dùng để kiểm thử thanh toán VietQR qua PayOS.',
     priceFromVnd: 10000,
     specs: const {
       'Loại sản phẩm': 'Phụ kiện bảo vệ màn hình • Test PayOS',
@@ -140,7 +139,7 @@ class ProductRepository {
       slug: 'iphone-16-pro-max',
       brandId: 'Apple',
       categoryId: 'smartphones',
-      description: 'Tuyệt tác khung viền Titan cấp độ 5, màn hình 6.9 inch Super Retina XDR lớn nhất lịch sử, chip A18 Pro tiến trình 3nm thế hệ 2 và nút Điều khiển Camera chuyên nghiệp.',
+      description: 'Màn hình 6.9 inch Super Retina XDR 120Hz, chip A18 Pro, khung Titan, camera 48MP kèm tele 5x.',
       priceFromVnd: 31990000,
       specs: const {
         'Màn hình': '6.9 inch Super Retina XDR ProMotion 120Hz',
@@ -165,7 +164,7 @@ class ProductRepository {
       slug: 'iphone-16',
       brandId: 'Apple',
       categoryId: 'smartphones',
-      description: 'Điện thoại Apple iPhone 16 với chip A18 mạnh mẽ vượt trội, cụm Camera Fusion 48MP chụp cận cảnh Macro sắc nét, nút Tác Vụ (Action Button) và thời lượng pin ấn tượng.',
+      description: 'Màn hình 6.1 inch Super Retina XDR OLED, chip A18, camera Fusion 48MP, kháng nước IP68.',
       priceFromVnd: 18990000,
       specs: const {
         'Màn hình': '6.1 inch Super Retina XDR OLED',
@@ -189,7 +188,7 @@ class ProductRepository {
       slug: 'samsung-galaxy-s25-ultra',
       brandId: 'Samsung',
       categoryId: 'smartphones',
-      description: 'Đỉnh cao quyền năng Galaxy AI đi kèm bút S-Pen tích hợp, khung viền Titanium bo cong công thái học và hệ thống Quad Telephoto 200MP.',
+      description: 'Màn hình 6.8 inch Dynamic AMOLED 2X 120Hz, chip Snapdragon 8 Elite, camera chính 200MP, pin 5000 mAh, có bút S-Pen.',
       priceFromVnd: 29990000,
       specs: const {
         'Màn hình': '6.8 inch Dynamic AMOLED 2X QHD+ 120Hz',
@@ -213,7 +212,7 @@ class ProductRepository {
       slug: 'samsung-galaxy-s25',
       brandId: 'Samsung',
       categoryId: 'smartphones',
-      description: 'Thiết kế nhỏ gọn đẳng cấp, màn hình viền siêu mỏng 120Hz kết hợp vi xử lý Snapdragon 8 Elite mạnh mẽ và bộ công cụ Galaxy AI tiếng Việt.',
+      description: 'Màn hình 6.2 inch Dynamic AMOLED 2X 120Hz, chip Snapdragon 8 Elite, camera chính 50MP, pin 4000 mAh, kháng nước IP68.',
       priceFromVnd: 20990000,
       specs: const {
         'Màn hình': '6.2 inch Dynamic AMOLED 2X FHD+ 120Hz',
@@ -237,7 +236,7 @@ class ProductRepository {
       slug: 'xiaomi-15',
       brandId: 'Xiaomi',
       categoryId: 'smartphones',
-      description: 'Hiệu năng dẫn đầu kết hợp hệ thống ống kính quang học Leica Summilux thế hệ mới, cảm biến Light Fusion 900 và pin Silicon-Carbon 5240mAh.',
+      description: 'Màn hình 6.36 inch AMOLED 120Hz, chip Snapdragon 8 Elite, bộ ba camera Leica 50MP, pin 5240 mAh, sạc 90W.',
       priceFromVnd: 17490000,
       specs: const {
         'Màn hình': '6.36 inch CrystalRes LTPO AMOLED 120Hz',
@@ -261,7 +260,7 @@ class ProductRepository {
       slug: 'oppo-find-x8',
       brandId: 'OPPO',
       categoryId: 'smartphones',
-      description: 'Camera tiềm vọng kép Hasselblad chân dung chuyên nghiệp, thiết kế mỏng nhẹ 7.85mm cùng viên pin Silicon-Carbon 5630mAh.',
+      description: 'Màn hình 6.59 inch AMOLED 120Hz, chip Dimensity 9400, ba camera 50MP Hasselblad, pin 5630 mAh, kháng nước IP68 và IP69.',
       priceFromVnd: 19990000,
       specs: const {
         'Màn hình': '6.59 inch AMOLED 1.5K 120Hz 4500 nits',
@@ -285,7 +284,7 @@ class ProductRepository {
       slug: 'airpods-pro-2-usbc',
       brandId: 'Phụ kiện',
       categoryId: 'accessories',
-      description: 'Chống ồn chủ động (ANC) gấp 2 lần, âm thanh thích ứng Adaptive Audio, chip Apple H2 và hộp sạc MagSafe cổng USB-C tích hợp loa tìm kiếm.',
+      description: 'Tai nghe chống ồn chủ động, chip H2, hộp sạc USB-C hỗ trợ MagSafe, nghe liên tục 6 giờ.',
       priceFromVnd: 5690000,
       specs: const {
         'Chip âm thanh': 'Apple H2 + Chip U1 trong hộp sạc',
@@ -308,7 +307,7 @@ class ProductRepository {
       slug: 'apple-magsafe-25w',
       brandId: 'Phụ kiện',
       categoryId: 'accessories',
-      description: 'Sạc không dây từ tính chuẩn Qi2 công suất 25W thế hệ mới dành cho iPhone 16 Series, nạp 50% pin chỉ trong 30 phút.',
+      description: 'Sạc không dây MagSafe 25W (Qi2), cáp dài 1 m đầu USB-C, dùng cho iPhone 12 đến iPhone 16 và AirPods.',
       priceFromVnd: 1190000,
       specs: const {
         'Công suất': 'Sạc nhanh không dây MagSafe 25W (Qi2)',
@@ -330,7 +329,7 @@ class ProductRepository {
       slug: 'iphone-16-pro',
       brandId: 'Apple',
       categoryId: 'smartphones',
-      description: 'Khung viền Titan cấp độ 5, màn hình 6.3 inch Super Retina XDR ProMotion 120Hz, chip A18 Pro và nút Camera Control hỗ trợ quay ProRes 4K 120fps.',
+      description: 'Màn hình 6.3 inch Super Retina XDR 120Hz, chip A18 Pro, khung Titan, camera 48MP kèm tele 5x.',
       priceFromVnd: 28490000,
       specs: const {
         'Màn hình': '6.3 inch Super Retina XDR ProMotion 120Hz',
@@ -354,7 +353,7 @@ class ProductRepository {
       slug: 'iphone-16-plus',
       brandId: 'Apple',
       categoryId: 'smartphones',
-      description: 'Màn hình lớn 6.7 inch rực rỡ, pin trâu vượt trội đến 27 giờ phát video, trang bị chip A18 3nm và camera góc siêu rộng chụp Macro sắc nét.',
+      description: 'Màn hình 6.7 inch Super Retina XDR OLED, chip A18, camera Fusion 48MP, có nút Camera Control và Action Button.',
       priceFromVnd: 22990000,
       specs: const {
         'Màn hình': '6.7 inch Super Retina XDR OLED',
@@ -378,7 +377,7 @@ class ProductRepository {
       slug: 'iphone-15',
       brandId: 'Apple',
       categoryId: 'smartphones',
-      description: 'Thiết kế mặt lưng kính pha màu sang trọng, Dynamic Island tiện ích, camera 48MP bắt trọn chi tiết và cổng kết nối USB-C chuẩn hóa.',
+      description: 'Màn hình 6.1 inch OLED có Dynamic Island, chip A16 Bionic, camera chính 48MP, cổng USB-C, kháng nước IP68.',
       priceFromVnd: 16490000,
       specs: const {
         'Màn hình': '6.1 inch Super Retina XDR OLED với Dynamic Island',
@@ -402,7 +401,7 @@ class ProductRepository {
       slug: 'samsung-galaxy-s25-plus',
       brandId: 'Samsung',
       categoryId: 'smartphones',
-      description: 'Màn hình 6.7 inch Dynamic AMOLED 2X sắc nét QHD+, vi xử lý Snapdragon 8 Elite đỉnh cao, pin 4900mAh và hệ sinh thái Galaxy AI thế hệ mới.',
+      description: 'Màn hình 6.7 inch Dynamic AMOLED 2X QHD+ 120Hz, chip Snapdragon 8 Elite, pin 4900 mAh, sạc 45W.',
       priceFromVnd: 25990000,
       specs: const {
         'Màn hình': '6.7 inch Dynamic AMOLED 2X QHD+ 120Hz',
@@ -426,7 +425,7 @@ class ProductRepository {
       slug: 'samsung-galaxy-z-fold6',
       brandId: 'Samsung',
       categoryId: 'smartphones',
-      description: 'Siêu phẩm màn hình gập mỏng nhẹ nhất dòng Fold, bản lề Flex Hinge kép bền bỉ, màn hình trong 7.6 inch đa nhiệm cực đỉnh cùng Galaxy AI chuyên sâu.',
+      description: 'Điện thoại gập với màn hình trong 7.6 inch và màn hình ngoài 6.3 inch, chip Snapdragon 8 Gen 3, kháng nước IP48.',
       priceFromVnd: 41990000,
       specs: const {
         'Màn hình chính': '7.6 inch Dynamic AMOLED 2X 120Hz gập mở',
@@ -450,7 +449,7 @@ class ProductRepository {
       slug: 'samsung-galaxy-a55',
       brandId: 'Samsung',
       categoryId: 'smartphones',
-      description: 'Điện thoại quốc dân phân khúc dưới 10 triệu với khung viền kim loại cao cấp, màn hình 120Hz rực rỡ, chip Exynos 1480 đồ họa AMD và bảo mật Knox Vault.',
+      description: 'Màn hình 6.6 inch Super AMOLED 120Hz, chip Exynos 1480, camera chính 50MP, pin 5000 mAh, khung kim loại.',
       priceFromVnd: 8990000,
       specs: const {
         'Màn hình': '6.6 inch Super AMOLED FHD+ 120Hz Vision Booster',
@@ -474,7 +473,7 @@ class ProductRepository {
       slug: 'xiaomi-15-pro',
       brandId: 'Xiaomi',
       categoryId: 'smartphones',
-      description: 'Flagship nhiếp ảnh Leica cao cấp nhất với cảm biến Light Fusion 900, ống kính tiềm vọng Leica 5x, chip Snapdragon 8 Elite và pin khủng 6100mAh.',
+      description: 'Màn hình 6.73 inch 2K AMOLED 120Hz, chip Snapdragon 8 Elite, ba camera Leica 50MP, pin 6100 mAh, sạc 90W có dây.',
       priceFromVnd: 21990000,
       specs: const {
         'Màn hình': '6.73 inch 2K AMOLED LTPO 120Hz 3200 nits',
@@ -498,7 +497,7 @@ class ProductRepository {
       slug: 'xiaomi-poco-f6-pro',
       brandId: 'Xiaomi',
       categoryId: 'smartphones',
-      description: 'Quái vật hiệu năng trong tầm giá với vi xử lý Snapdragon 8 Gen 2, màn hình 2K WQHD+ 4000 nits siêu sáng và sạc nhanh thần tốc HyperCharge 120W.',
+      description: 'Màn hình 6.67 inch WQHD+ AMOLED 120Hz, chip Snapdragon 8 Gen 2, camera chính 50MP, pin 5000 mAh, sạc 120W.',
       priceFromVnd: 12990000,
       specs: const {
         'Màn hình': '6.67 inch WQHD+ Flow AMOLED 120Hz 4000 nits',
@@ -522,7 +521,7 @@ class ProductRepository {
       slug: 'xiaomi-redmi-note-14-pro-plus',
       brandId: 'Xiaomi',
       categoryId: 'smartphones',
-      description: 'Chuẩn mực độ bền mới với chuẩn kháng nước IP68/IP69K, camera 50MP Light Hunter 800 kèm telephoto, pin 6200mAh và sạc siêu tốc 90W.',
+      description: 'Màn hình 6.67 inch AMOLED 1.5K 120Hz, chip Snapdragon 7s Gen 3, camera chính 50MP, pin 6200 mAh, kháng nước IP68.',
       priceFromVnd: 8490000,
       specs: const {
         'Màn hình': '6.67 inch AMOLED 1.5K 120Hz cong đối xứng',
@@ -546,7 +545,7 @@ class ProductRepository {
       slug: 'oppo-find-x8-pro',
       brandId: 'OPPO',
       categoryId: 'smartphones',
-      description: 'Đỉnh cao nhiếp ảnh chân dung Hasselblad với hệ thống camera tiềm vọng kép 50MP, chip Dimensity 9400 thế hệ mới và phím Quick Button chụp ảnh tức thì.',
+      description: 'Màn hình 6.78 inch AMOLED 120Hz, chip Dimensity 9400, bốn camera 50MP Hasselblad, pin 5910 mAh, kháng nước IP68 và IP69.',
       priceFromVnd: 26990000,
       specs: const {
         'Màn hình': '6.78 inch AMOLED 1.5K Micro-Quad Curved 120Hz',
@@ -570,7 +569,7 @@ class ProductRepository {
       slug: 'oppo-reno-13-pro',
       brandId: 'OPPO',
       categoryId: 'smartphones',
-      description: 'Thiết kế cánh bướm tinh tế, viền siêu mỏng đối xứng, camera chân dung 50MP OIS Sony IMX890 và khả năng kháng nước chuẩn IP69 có thể quay phim dưới nước.',
+      description: 'Màn hình 6.83 inch AMOLED 120Hz, chip Dimensity 8350, camera chính 50MP, pin 5800 mAh, sạc 80W, kháng nước IP68 và IP69.',
       priceFromVnd: 14490000,
       specs: const {
         'Màn hình': '6.83 inch AMOLED 1.5K 120Hz viền cong siêu mỏng',
@@ -594,7 +593,7 @@ class ProductRepository {
       slug: 'oppo-reno-12-f',
       brandId: 'OPPO',
       categoryId: 'smartphones',
-      description: 'Sở hữu dải đèn viền Halo Light thông minh phát sáng theo nhạc và thông báo, thiết kế chống va đập toàn diện All-Round Armour và kết nối 5G mượt mà.',
+      description: 'Màn hình 6.67 inch OLED 120Hz, chip Dimensity 6300, camera chính 50MP, pin 5000 mAh, sạc 45W.',
       priceFromVnd: 7990000,
       specs: const {
         'Màn hình': '6.67 inch OLED 120Hz bảo vệ mắt Splash Touch',
@@ -618,7 +617,7 @@ class ProductRepository {
       slug: 'apple-20w-adapter',
       brandId: 'Phụ kiện',
       categoryId: 'accessories',
-      description: 'Củ sạc nhanh chính hãng Apple công suất 20W chuẩn Power Delivery, thiết kế nhỏ gọn, kiểm soát nhiệt độ an toàn tuyệt đối cho iPhone và iPad.',
+      description: 'Củ sạc 20W chuẩn Power Delivery, cổng USB-C, dùng cho iPhone 8 đến iPhone 16 và iPad.',
       priceFromVnd: 490000,
       specs: const {
         'Công suất': '20W Chuẩn sạc nhanh Power Delivery (PD)',
@@ -640,7 +639,7 @@ class ProductRepository {
       slug: 'clear-case-magsafe',
       brandId: 'Phụ kiện',
       categoryId: 'accessories',
-      description: 'Chất liệu Bayer Polycarbonate cao cấp chống ố vàng, vòng nam châm MagSafe từ tính mạnh mẽ chuẩn Qi2, đệm khí chống sốc 4 góc bảo vệ toàn diện.',
+      description: 'Ốp lưng nhựa Polycarbonate trong suốt, hỗ trợ sạc MagSafe, chịu rơi từ độ cao 2 m.',
       priceFromVnd: 350000,
       specs: const {
         'Chất liệu': 'Nhựa Polycarbonate trong suốt chống tia UV',

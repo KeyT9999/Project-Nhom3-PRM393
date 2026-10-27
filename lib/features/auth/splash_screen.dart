@@ -48,7 +48,7 @@ class SplashScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Hệ thống bán lẻ Điện thoại & Phụ kiện chính hãng\nFlutter Android • Local JSON • Cloud Firestore',
+                    'Điện thoại & phụ kiện chính hãng',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: AppColors.textSecondary,

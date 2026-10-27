@@ -105,7 +105,7 @@ class AddressManagementScreen extends StatelessWidget {
     final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sổ địa chỉ giao hàng (F18)')),
+      appBar: AppBar(title: const Text('Sổ địa chỉ giao hàng')),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: addresses.length,

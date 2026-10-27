@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final accent = Theme.of(context).colorScheme.primary;
     return Scaffold(
-      appBar: AppBar(title: const Text('Đăng nhập tài khoản (F02)')),
+      appBar: AppBar(title: const Text('Đăng nhập tài khoản')),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    'Giỏ hàng Offline từ cart.json sẽ tự động hợp nhất với tài khoản của bạn sau khi đăng nhập.',
+                    'Giỏ hàng đã lưu trên máy sẽ tự động hợp nhất với tài khoản của bạn sau khi đăng nhập.',
                     style: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 13,
@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         );
                       },
-                      child: const Text('Quên mật khẩu? (F03)'),
+                      child: const Text('Quên mật khẩu?'),
                     ),
                   ),
                   const SizedBox(height: 6),
@@ -220,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         child: const Text(
-                          'Đăng ký ngay (F01)',
+                          'Đăng ký ngay',
                           style: TextStyle(fontWeight: FontWeight.w700),
                         ),
                       ),

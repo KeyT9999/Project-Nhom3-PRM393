@@ -23,7 +23,7 @@ class AdminBrandsBannersScreen extends StatelessWidget {
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
           title: Text(
-            existing == null ? 'Thêm Thương hiệu (A05)' : 'Sửa Thương hiệu',
+            existing == null ? 'Thêm Thương hiệu' : 'Sửa Thương hiệu',
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -87,7 +87,7 @@ class AdminBrandsBannersScreen extends StatelessWidget {
         builder: (ctx, setState) => AlertDialog(
           title: Text(
             existing == null
-                ? 'Thêm Banner Trang chủ (A08)'
+                ? 'Thêm Banner Trang chủ'
                 : 'Cập nhật Banner',
           ),
           content: Column(
@@ -159,11 +159,11 @@ class AdminBrandsBannersScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Thương hiệu & Banner (A05, A08)'),
+          title: const Text('Thương hiệu & Banner'),
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'Thương hiệu (A05)'),
-              Tab(text: 'Banner quảng cáo (A08)'),
+              Tab(text: 'Thương hiệu'),
+              Tab(text: 'Banner quảng cáo'),
             ],
           ),
         ),

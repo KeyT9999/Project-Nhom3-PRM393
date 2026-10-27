@@ -29,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Cập nhật hồ sơ cá nhân (F17)'),
+        title: const Text('Cập nhật hồ sơ cá nhân'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -61,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
-                    'Đã cập nhật hồ sơ cá nhân lên Firestore (F17)!',
+                    'Đã cập nhật hồ sơ cá nhân lên Firestore!',
                   ),
                 ),
               );
@@ -80,7 +80,7 @@ class ProfileScreen extends StatelessWidget {
     final accent = Theme.of(context).colorScheme.primary;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Tài khoản & Cài đặt (F17)')),
+      appBar: AppBar(title: const Text('Tài khoản & Cài đặt')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -137,7 +137,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 if (auth.isAuthenticated)
                   IconButton(
-                    tooltip: 'Chỉnh sửa hồ sơ (F17)',
+                    tooltip: 'Chỉnh sửa hồ sơ',
                     icon: const Icon(Icons.edit_outlined),
                     onPressed: () => _showEditProfileDialog(context),
                   )
@@ -164,12 +164,12 @@ class ProfileScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Bảng màu giao diện (UI DESIGN Theme Engine)',
+                  'Màu giao diện',
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14.5),
                 ),
                 const SizedBox(height: 4),
                 const Text(
-                  'Nền giữ tông trắng tinh khiết, màu nhấn áp dụng cho nút bấm, từ khóa và vòng chọn.',
+                  'Màu nhấn áp dụng cho nút bấm, giá và vòng chọn.',
                   style: TextStyle(
                     fontSize: 12,
                     color: AppColors.textSecondary,
@@ -180,17 +180,22 @@ class ProfileScreen extends StatelessWidget {
                   spacing: 8,
                   children: [
                     ChoiceChip(
-                      label: const Text('Blue (#2F6BFF)'),
+                      label: const Text('Titan'),
+                      selected: auth.themeType == LmThemeType.titanium,
+                      onSelected: (_) => auth.setThemeType(LmThemeType.titanium),
+                    ),
+                    ChoiceChip(
+                      label: const Text('Xanh dương'),
                       selected: auth.themeType == LmThemeType.blue,
                       onSelected: (_) => auth.setThemeType(LmThemeType.blue),
                     ),
                     ChoiceChip(
-                      label: const Text('Mono (#1F1E1C)'),
+                      label: const Text('Đen trắng'),
                       selected: auth.themeType == LmThemeType.mono,
                       onSelected: (_) => auth.setThemeType(LmThemeType.mono),
                     ),
                     ChoiceChip(
-                      label: const Text('Orange (#F37021)'),
+                      label: const Text('Cam'),
                       selected: auth.themeType == LmThemeType.orange,
                       onSelected: (_) => auth.setThemeType(LmThemeType.orange),
                     ),
@@ -200,11 +205,11 @@ class ProfileScreen extends StatelessWidget {
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
                   title: const Text(
-                    'Chế độ Offline Mode (F23 / Test TC07)',
+                    'Chế độ offline',
                     style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
                   ),
                   subtitle: const Text(
-                    'Kiểm thử đọc/ghi cart.json & favorites.json khi ngắt mạng',
+                    'Mô phỏng ngắt mạng để dùng giỏ hàng và yêu thích ngoại tuyến',
                     style: TextStyle(fontSize: 12),
                   ),
                   value: auth.isOfflineSimulated,
@@ -223,7 +228,7 @@ class ProfileScreen extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.receipt_long_outlined, color: accent),
                   title: const Text(
-                    'Lịch sử đơn hàng của tôi (F14, F15, F16)',
+                    'Lịch sử đơn hàng của tôi',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
@@ -237,7 +242,7 @@ class ProfileScreen extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.location_on_outlined, color: accent),
                   title: const Text(
-                    'Sổ địa chỉ nhận hàng (F18)',
+                    'Sổ địa chỉ nhận hàng',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
@@ -253,7 +258,7 @@ class ProfileScreen extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.favorite_border_rounded, color: accent),
                   title: const Text(
-                    'Danh sách điện thoại yêu thích (F12)',
+                    'Danh sách điện thoại yêu thích',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
@@ -283,7 +288,7 @@ class ProfileScreen extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.support_agent_rounded, color: accent),
                   title: const Text(
-                    'Chat hỗ trợ trực tuyến với cửa hàng (F20)',
+                    'Chat hỗ trợ trực tuyến với cửa hàng',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
@@ -297,7 +302,7 @@ class ProfileScreen extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.map_outlined, color: accent),
                   title: const Text(
-                    'Bản đồ hệ thống cửa hàng SmartStore (F21)',
+                    'Bản đồ hệ thống cửa hàng SmartStore',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                   trailing: const Icon(Icons.chevron_right_rounded),
@@ -315,7 +320,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   title: Text(
                     auth.isAdmin
-                        ? 'Admin Portal – Quản trị hệ thống (A01–A10)'
+                        ? 'Admin Portal – Quản trị hệ thống'
                         : 'Mở nhanh Admin Portal (Chế độ Demo Đồ án)',
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
@@ -355,7 +360,7 @@ class ProfileScreen extends StatelessWidget {
                 );
               },
               icon: const Icon(Icons.logout_rounded),
-              label: const Text('Đăng xuất tài khoản (TC16)'),
+              label: const Text('Đăng xuất tài khoản'),
             ),
           ],
         ],

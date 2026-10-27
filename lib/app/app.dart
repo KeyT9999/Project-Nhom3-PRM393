@@ -17,6 +17,7 @@ import '../providers/order_provider.dart';
 import '../providers/product_provider.dart';
 import '../providers/wishlist_provider.dart';
 import 'routes/app_router.dart';
+import '../core/widgets/count_bump.dart';
 import 'theme/app_colors.dart';
 import 'theme/app_theme.dart';
 
@@ -102,23 +103,13 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
       ),
       bottomNavigationBar: ClipRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+          filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.82),
-              border: Border(
-                top: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.9),
-                  width: 1.2,
-                ),
+              color: Colors.white.withValues(alpha: 0.92),
+              border: const Border(
+                top: BorderSide(color: AppColors.border, width: 1),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF0F172A).withValues(alpha: 0.06),
-                  blurRadius: 20,
-                  offset: const Offset(0, -6),
-                ),
-              ],
             ),
             child: NavigationBarTheme(
               data: NavigationBarThemeData(
@@ -157,15 +148,21 @@ class _SmartStoreMainShellState extends State<SmartStoreMainShell> {
                     label: 'Dòng iPhone',
                   ),
                   NavigationDestination(
-                    icon: Badge(
-                      isLabelVisible: cartCount > 0,
-                      label: Text('$cartCount'),
-                      child: const Icon(Icons.shopping_bag_outlined),
+                    icon: CountBump(
+                      count: cartCount,
+                      child: Badge(
+                        isLabelVisible: cartCount > 0,
+                        label: Text('$cartCount'),
+                        child: const Icon(Icons.shopping_bag_outlined),
+                      ),
                     ),
-                    selectedIcon: Badge(
-                      isLabelVisible: cartCount > 0,
-                      label: Text('$cartCount'),
-                      child: const Icon(Icons.shopping_bag_rounded),
+                    selectedIcon: CountBump(
+                      count: cartCount,
+                      child: Badge(
+                        isLabelVisible: cartCount > 0,
+                        label: Text('$cartCount'),
+                        child: const Icon(Icons.shopping_bag_rounded),
+                      ),
                     ),
                     label: 'Túi Hàng',
                   ),

@@ -79,7 +79,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     final top3Products = topProducts.take(3).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Admin Portal – SmartStore (A01–A10)')),
+      appBar: AppBar(title: const Text('Admin Portal – SmartStore')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -94,7 +94,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     LmStatusPill(
-                      text: 'DOANH THU & THỐNG KÊ (A02, A10)',
+                      text: 'DOANH THU & THỐNG KÊ',
                       color: palette.primary,
                     ),
                     Icon(Icons.insights_rounded, color: palette.primary),
@@ -153,7 +153,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Tỷ trọng Doanh số theo Thương hiệu (A10)',
+                  'Tỷ trọng Doanh số theo Thương hiệu',
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
@@ -269,7 +269,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ),
           const SizedBox(height: 18),
           const Text(
-            'PHÂN HỆ QUẢN TRỊ CỬA HÀNG (A03 – A09)',
+            'PHÂN HỆ QUẢN TRỊ CỬA HÀNG',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w800,
@@ -282,7 +282,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             context: context,
             palette: palette,
             icon: Icons.smartphone_rounded,
-            badge: 'A03 • A04',
+            badge: 'Sản phẩm',
             title: 'Quản lý Sản phẩm & Biến thể SKU / Tồn kho',
             subtitle:
                 '${products.length} sản phẩm • Thêm/Sửa điện thoại, cấu hình RAM/ROM, màu sắc & số lượng kho',
@@ -296,7 +296,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             context: context,
             palette: palette,
             icon: Icons.local_shipping_outlined,
-            badge: 'A06 • S05',
+            badge: 'Đơn hàng',
             title: 'Xử lý Đơn hàng & Quét QR Vận đơn',
             subtitle:
                 '${orders.length} đơn hàng ($pendingCount chờ xác nhận) • Duyệt đơn, hoàn kho tự động & đẩy thông báo',
@@ -310,7 +310,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             context: context,
             palette: palette,
             icon: Icons.campaign_outlined,
-            badge: 'A05 • A08',
+            badge: 'Thương hiệu',
             title: 'Quản lý Thương hiệu & Banner Trang chủ',
             subtitle:
                 '${prodProv.allBrandsAdmin.length} thương hiệu • ${prodProv.allBannersAdmin.length} banner chiến dịch',
@@ -326,7 +326,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             context: context,
             palette: palette,
             icon: Icons.support_agent_rounded,
-            badge: 'A07 • A09',
+            badge: 'Khách hàng',
             title: 'Danh sách Khách hàng & Phản hồi Chat CSKH',
             subtitle: 'Tra cứu tài khoản khách hàng & trả lời tin nhắn hỗ trợ trực tuyến',
             onTap: () => Navigator.push(

@@ -148,7 +148,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Đơn hàng ${order.orderCode} (F15)'),
+        title: Text('Đơn hàng ${order.orderCode}'),
         actions: [
           IconButton(
             tooltip: 'Chia sẻ Hóa đơn điện tử',
@@ -417,13 +417,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text(
-                      'Đã hủy đơn hàng & hoàn lại số lượng tồn kho (F16)!',
+                      'Đã hủy đơn hàng & hoàn lại số lượng tồn kho!',
                     ),
                   ),
                 );
               },
               icon: const Icon(Icons.cancel_outlined),
-              label: const Text('Hủy đơn hàng (F16)'),
+              label: const Text('Hủy đơn hàng'),
             ),
         ],
       ),
