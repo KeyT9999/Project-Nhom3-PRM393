@@ -28,4 +28,4 @@ Kiểm tra gần nhất (Claude): `flutter analyze` → No issues found. Chưa c
 - [ ] ❌ D1. `flutter build apk --release` thành công + chụp màn hình + giữ file APK (cần cấu hình `.env`/keystore, **người làm**)
 
 ## E. Tài liệu
-- [x] ✅ E1. Báo cáo đã cập nhật theo B1–B3 thành `..Sample_Project_updated.docx` (file gốc giữ nguyên, cần mở bằng Word kiểm tra định dạng).
+- [x] ✅ E1. Báo cáo đã cập nhật theo B1–B3 thành `F:\PRM_PROJECT_GROUP3\Sample_Project_updated.docx` (file gốc giữ nguyên, cần mở bằng Word kiểm tra định dạng).
