@@ -16,7 +16,6 @@ import '../../providers/cart_provider.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/wishlist_provider.dart';
 import '../checkout/checkout_screen.dart';
-import 'compare_phones_screen.dart';
 import 'product_gallery.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -216,19 +215,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 'Giá tại SmartStore: $priceText\n'
                                 'Đánh giá: ${product.ratingAvg}/5.0 (${product.reviewCount} lượt)\n'
                                 'Xem trên ứng dụng SmartStore',
-                          ),
-                        );
-                      },
-                    ),
-                    IconButton(
-                      tooltip: 'So sánh cấu hình',
-                      icon: const Icon(Icons.compare_arrows_rounded),
-                      color: AppColors.brand700,
-                      onPressed: () {
-                        productProvider.toggleCompareProduct(product.id);
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const ComparePhonesScreen(),
                           ),
                         );
                       },

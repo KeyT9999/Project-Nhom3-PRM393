@@ -54,6 +54,7 @@ class LiquidGlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = Theme.of(context).colorScheme.primary;
     final radius = BorderRadius.circular(borderRadius > 14 ? 12 : borderRadius);
     final card = Container(
       margin: margin,
@@ -62,8 +63,7 @@ class LiquidGlassCard extends StatelessWidget {
         color: AppColors.surface,
         borderRadius: radius,
         border: Border.all(
-          color: borderColor ??
-              (isSelected ? AppColors.primary : AppColors.border),
+          color: borderColor ?? (isSelected ? accent : AppColors.border),
           width: isSelected ? 1.5 : 1,
         ),
       ),
@@ -149,7 +149,8 @@ class LiquidPillButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = isDark ? AppColors.brand700 : Colors.white;
+    final accent = Theme.of(context).colorScheme.primary;
+    final bgColor = isDark ? accent : Colors.white;
     final fgColor = isDark ? Colors.white : AppColors.brand900;
     final disabled = onPressed == null || isLoading;
 

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../core/errors/app_exception.dart';
 import '../data/models/address_model.dart';
 import '../data/models/cart_item_model.dart';
 import '../data/models/order_model.dart';
@@ -46,6 +47,15 @@ class OrderProvider extends ChangeNotifier {
     String paymentMethod = 'cod',
     String paymentStatus = 'unpaid',
   }) async {
+    if (shippingAddress.fullName.trim().isEmpty ||
+        shippingAddress.phone.trim().isEmpty ||
+        shippingAddress.addressLine.trim().isEmpty) {
+      throw const AppException(
+        'Vui lòng thêm đầy đủ địa chỉ nhận hàng trước khi đặt đơn.',
+        code: 'MISSING_ADDRESS',
+      );
+    }
+
     _isSubmitting = true;
     notifyListeners();
     try {

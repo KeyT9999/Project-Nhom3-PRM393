@@ -34,18 +34,10 @@ class AuthProvider extends ChangeNotifier {
   bool get isOfflineSimulated => _isOfflineSimulated;
 
   List<AddressModel> get addresses => List.unmodifiable(_addresses);
+  bool get hasShippingAddress => _addresses.isNotEmpty;
 
-  AddressModel get defaultAddress {
-    if (_addresses.isEmpty) {
-      return const AddressModel(
-        id: 'addr_default',
-        fullName: 'Nguyễn Văn A',
-        phone: '0901234567',
-        addressLine:
-            'Lô E2a-7, Đường D1, Khu Công Nghệ Cao, TP. Thủ Đức, TP.HCM',
-        isDefault: true,
-      );
-    }
+  AddressModel? get defaultAddress {
+    if (_addresses.isEmpty) return null;
     return _addresses.firstWhere(
       (a) => a.isDefault,
       orElse: () => _addresses.first,
@@ -75,7 +67,20 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> addOrUpdateAddress(AddressModel address) async {
-    if (address.isDefault) {
+    final shouldForceDefault =
+        _addresses.isEmpty ||
+        (_addresses.length == 1 && _addresses.first.id == address.id);
+    final effective = shouldForceDefault && !address.isDefault
+        ? AddressModel(
+            id: address.id,
+            fullName: address.fullName,
+            phone: address.phone,
+            addressLine: address.addressLine,
+            isDefault: true,
+          )
+        : address;
+
+    if (effective.isDefault) {
       _addresses = _addresses
           .map(
             (a) => AddressModel(
@@ -89,11 +94,11 @@ class AuthProvider extends ChangeNotifier {
           .toList();
     }
 
-    final idx = _addresses.indexWhere((a) => a.id == address.id);
+    final idx = _addresses.indexWhere((a) => a.id == effective.id);
     if (idx >= 0) {
-      _addresses[idx] = address;
+      _addresses[idx] = effective;
     } else {
-      _addresses.insert(0, address);
+      _addresses.insert(0, effective);
     }
     notifyListeners();
     await _authRepository.saveAddresses(activeUserId, _addresses);
@@ -172,11 +177,13 @@ class AuthProvider extends ChangeNotifier {
     required String name,
     required String phone,
     String? photoUrl,
+    bool clearPhoto = false,
   }) async {
     await _authRepository.updateProfile(
       name: name,
       phone: phone,
       photoUrl: photoUrl,
+      clearPhoto: clearPhoto,
     );
     notifyListeners();
   }

@@ -132,6 +132,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             child: const Text('Đóng'),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(125, 42),
+            ),
             onPressed: () async {
               await EnvConfig.saveRuntimePayosKeys(
                 clientId: clientCtrl.text,
@@ -150,7 +153,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return saved ?? false;
   }
 
-  Future<void> _submitOrder(AddressModel shippingAddress, int totalVnd) async {
+  Future<void> _submitOrder(
+    AddressModel? shippingAddress,
+    int totalVnd,
+  ) async {
     final cart = context.read<CartProvider>();
     final orderProv = context.read<OrderProvider>();
     final authProv = context.read<AuthProvider>();
@@ -161,6 +167,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         orderProv.isSubmitting ||
         _isCreatingPayosLink ||
         authProv.isOfflineSimulated) {
+      return;
+    }
+
+    if (shippingAddress == null ||
+        shippingAddress.fullName.trim().isEmpty ||
+        shippingAddress.phone.trim().isEmpty ||
+        shippingAddress.addressLine.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: AppColors.error,
+          content: Text(
+            'Bạn chưa có địa chỉ nhận hàng. Vui lòng thêm địa chỉ để đặt đơn!',
+          ),
+        ),
+      );
+      await showAddressFormSheet(context);
       return;
     }
 
@@ -266,6 +288,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final coupons = context.watch<ProductProvider>().coupons;
 
     final selectedAddress = auth.defaultAddress;
+    final accent = Theme.of(context).colorScheme.primary;
     final subtotal = cart.subtotalVnd;
     final shippingFee = subtotal <= 10000
         ? 0
@@ -290,64 +313,128 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
             physics: const BouncingScrollPhysics(),
             children: [
-              // 1. Địa chỉ giao hàng (F18)
+              // 1. Địa chỉ giao hàng (F18 - Bắt buộc phải có địa chỉ mới được đặt đơn)
               LiquidGlassCard(
                 borderRadius: 20,
+                borderColor: selectedAddress == null
+                    ? AppColors.error.withValues(alpha: 0.45)
+                    : null,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Địa Chỉ Nhận Hàng',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 15.5,
-                            color: AppColors.ink,
-                          ),
-                        ),
-                        TextButton.icon(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const AddressManagementScreen(),
-                              ),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.edit_location_alt_outlined,
-                            size: 17,
-                            color: AppColors.brand700,
-                          ),
-                          label: const Text(
-                            'Thay đổi',
-                            style: TextStyle(
-                              color: AppColors.brand700,
-                              fontWeight: FontWeight.w700,
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on_outlined,
+                              size: 19,
+                              color: selectedAddress == null
+                                  ? AppColors.error
+                                  : accent,
                             ),
-                          ),
+                            const SizedBox(width: 6),
+                            const Text(
+                              'Địa Chỉ Nhận Hàng',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 15.5,
+                                color: AppColors.ink,
+                              ),
+                            ),
+                          ],
                         ),
+                        if (selectedAddress != null)
+                          TextButton.icon(
+                            style: TextButton.styleFrom(
+                              visualDensity: VisualDensity.compact,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      const AddressManagementScreen(),
+                                ),
+                              );
+                            },
+                            icon: Icon(
+                              Icons.edit_location_alt_outlined,
+                              size: 17,
+                              color: accent,
+                            ),
+                            label: Text(
+                              'Thay đổi',
+                              style: TextStyle(
+                                color: accent,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          )
+                        else
+                          const LmStatusPill(
+                            text: 'Bắt buộc',
+                            color: AppColors.error,
+                          ),
                       ],
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      '${selectedAddress.fullName} • ${selectedAddress.phone}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13.5,
-                        color: AppColors.ink,
+                    const SizedBox(height: 8),
+                    if (selectedAddress != null) ...[
+                      Text(
+                        '${selectedAddress.fullName} • ${selectedAddress.phone}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13.5,
+                          color: AppColors.ink,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      selectedAddress.addressLine,
-                      style: const TextStyle(
-                        color: AppColors.inkSecondary,
-                        fontSize: 12.5,
-                        height: 1.35,
+                      const SizedBox(height: 4),
+                      Text(
+                        selectedAddress.addressLine,
+                        style: const TextStyle(
+                          color: AppColors.inkSecondary,
+                          fontSize: 12.5,
+                          height: 1.35,
+                        ),
                       ),
-                    ),
+                    ] else ...[
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.errorSoft.withValues(alpha: 0.55),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.info_outline_rounded,
+                              size: 18,
+                              color: AppColors.error,
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Tài khoản này chưa có địa chỉ nhận hàng. Vui lòng thêm địa chỉ giao hàng trước khi đặt đơn.',
+                                style: TextStyle(
+                                  fontSize: 12.5,
+                                  color: AppColors.inkSecondary,
+                                  height: 1.35,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      LiquidPillButton(
+                        label: 'Thêm địa chỉ nhận hàng ngay',
+                        icon: Icons.add_location_alt_outlined,
+                        height: 42,
+                        width: double.infinity,
+                        onPressed: () => showAddressFormSheet(context),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -642,12 +729,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               const SizedBox(height: 20),
 
               LiquidPillButton(
-                label: _paymentMethod == 'payos'
-                    ? 'Tạo Mã VietQR PayOS & Thanh Toán'
-                    : 'Xác Nhận Đặt Hàng Ngay',
-                icon: _paymentMethod == 'payos'
-                    ? Icons.qr_code_scanner_rounded
-                    : Icons.check_circle_outline_rounded,
+                label: selectedAddress == null
+                    ? 'Thêm Địa Chỉ Nhận Hàng Để Đặt Đơn'
+                    : (_paymentMethod == 'payos'
+                          ? 'Tạo Mã VietQR PayOS & Thanh Toán'
+                          : 'Xác Nhận Đặt Hàng Ngay'),
+                icon: selectedAddress == null
+                    ? Icons.add_location_alt_outlined
+                    : (_paymentMethod == 'payos'
+                          ? Icons.qr_code_scanner_rounded
+                          : Icons.check_circle_outline_rounded),
                 isLoading: orderProv.isSubmitting || _isCreatingPayosLink,
                 onPressed: () => _submitOrder(selectedAddress, totalVnd),
               ),

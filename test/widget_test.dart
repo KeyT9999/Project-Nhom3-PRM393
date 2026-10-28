@@ -11,12 +11,25 @@ import 'package:smartstore/providers/wishlist_provider.dart';
 
 void main() {
   testWidgets(
-    'TC01: SmartStore hiển thị Trang chủ Frosted-Glass & 5 tab điều hướng chính',
+    'TC01: SmartStore hiển thị Slide 3 trang giới thiệu ứng dụng & 5 tab điều hướng chính',
     (WidgetTester tester) async {
       await tester.pumpWidget(const SmartStoreApp());
       await tester.pumpAndSettle();
+
+      // Trang giới thiệu 1/3 -> bấm Tiếp tục sang trang 2/3
+      expect(find.text('THẾ GIỚI FLAGSHIP CHÍNH HÃNG'), findsOneWidget);
+      expect(find.text('Bỏ qua'), findsOneWidget);
+      await tester.tap(find.text('Tiếp tục'));
+      await tester.pumpAndSettle();
+
+      // Trang giới thiệu 2/3 -> bấm Tiếp tục sang trang 3/3
+      expect(find.text('CHỌN MÁY CHUẨN XÁC'), findsOneWidget);
+      await tester.tap(find.text('Tiếp tục'));
+      await tester.pumpAndSettle();
+
+      // Trang giới thiệu 3/3 -> bấm Khám phá ngay vào màn hình chính
+      expect(find.text('THANH TOÁN & GIAO NHẬN'), findsOneWidget);
       await tester.tap(find.text('Khám phá ngay'));
-      // HomeScreen có LiquidAmbientCanvas lặp vô hạn nên không dùng pumpAndSettle.
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 500));
 

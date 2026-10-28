@@ -11,7 +11,6 @@ import '../../core/widgets/product_skeleton.dart';
 import '../../data/models/product_model.dart';
 import '../../providers/product_provider.dart';
 import '../../providers/wishlist_provider.dart';
-import '../products/compare_phones_screen.dart';
 import '../products/product_detail_screen.dart';
 import '../wishlist/wishlist_screen.dart';
 
@@ -100,9 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
             physics: const BouncingScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
-                child: Consumer2<ProductProvider, WishlistProvider>(
-                  builder: (_, products, wishlist, _) =>
-                      _buildHeader(products, wishlist),
+                child: Consumer<WishlistProvider>(
+                  builder: (_, wishlist, _) => _buildHeader(wishlist),
                 ),
               ),
               SliverToBoxAdapter(child: _buildSearch(productProvider)),
@@ -326,7 +324,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildHeader(ProductProvider products, WishlistProvider wishlist) {
+  Widget _buildHeader(WishlistProvider wishlist) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 8, 4),
       child: Row(
@@ -340,17 +338,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const Spacer(),
-          IconButton(
-            tooltip: 'So sánh cấu hình',
-            icon: Badge(
-              isLabelVisible: products.comparedProductIds.isNotEmpty,
-              label: Text('${products.comparedProductIds.length}'),
-              child: const Icon(Icons.compare_arrows_rounded, color: AppColors.ink),
-            ),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const ComparePhonesScreen()),
-            ),
-          ),
           IconButton(
             tooltip: 'Yêu thích',
             icon: Badge(

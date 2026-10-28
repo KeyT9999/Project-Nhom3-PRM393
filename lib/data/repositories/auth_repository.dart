@@ -99,7 +99,7 @@ class AuthRepository {
         uid: fbUser.uid,
         name: customName ?? fbUser.displayName ?? email.split('@').first,
         email: email,
-        phone: customPhone ?? '0901234567',
+        phone: customPhone ?? fbUser.phoneNumber ?? '',
         photoUrl: fbUser.photoURL,
         role: role,
       );
@@ -238,6 +238,7 @@ class AuthRepository {
     required String name,
     required String phone,
     String? photoUrl,
+    bool clearPhoto = false,
   }) async {
     final current = _currentUser;
     if (current == null) {
@@ -249,12 +250,15 @@ class AuthRepository {
       name: name,
       email: current.email,
       phone: phone,
-      photoUrl: photoUrl ?? current.photoUrl,
+      photoUrl: clearPhoto ? null : (photoUrl ?? current.photoUrl),
       role: current.role,
     );
     _upsertKnownCustomer(_currentUser!);
 
     if (_isFirebaseReady) {
+      try {
+        await FirebaseAuth.instance.currentUser?.updateDisplayName(name);
+      } catch (_) {}
       try {
         await FirebaseFirestore.instance
             .collection(FirestoreCollections.users)
@@ -292,24 +296,7 @@ class AuthRepository {
       } catch (_) {}
     }
 
-    if (userId != 'guest') return [];
-    return const [
-      AddressModel(
-        id: 'addr_default_1',
-        fullName: 'Nguyễn Văn A',
-        phone: '0901234567',
-        addressLine:
-            'Lô E2a-7, Đường D1, Khu Công Nghệ Cao, TP. Thủ Đức, TP.HCM',
-        isDefault: true,
-      ),
-      AddressModel(
-        id: 'addr_office_2',
-        fullName: 'Nguyễn Văn A (Văn phòng)',
-        phone: '0901234567',
-        addressLine: 'Tòa nhà Bitexco, Số 2 Hải Triều, Quận 1, TP.HCM',
-        isDefault: false,
-      ),
-    ];
+    return [];
   }
 
   /// F18: Lưu danh sách Sổ địa chỉ

@@ -8,7 +8,6 @@ import '../../core/widgets/lm_glass_widgets.dart';
 import '../../core/widgets/product_image.dart';
 import '../../core/widgets/product_skeleton.dart';
 import '../../providers/product_provider.dart';
-import 'compare_phones_screen.dart';
 import 'product_detail_screen.dart';
 
 class CatalogScreen extends StatelessWidget {
@@ -201,24 +200,6 @@ class CatalogScreen extends StatelessWidget {
             icon: const Icon(Icons.tune_rounded, color: AppColors.brand700),
             onPressed: () => _showFilterBottomSheet(context),
           ),
-          IconButton(
-            tooltip: 'Xem so sánh',
-            icon: Badge(
-              isLabelVisible: prov.comparedProductIds.isNotEmpty,
-              label: Text('${prov.comparedProductIds.length}'),
-              child: const Icon(
-                Icons.compare_arrows_rounded,
-                color: AppColors.brand700,
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const ComparePhonesScreen(),
-                ),
-              );
-            },
-          ),
         ],
       ),
       body: LiquidAmbientCanvas(
@@ -346,9 +327,6 @@ class CatalogScreen extends StatelessWidget {
                         separatorBuilder: (_, _) => const SizedBox(height: 12),
                         itemBuilder: (context, index) {
                           final product = products[index];
-                          final isCompared = prov.comparedProductIds.contains(
-                            product.id,
-                          );
 
                           return LiquidGlassCard(
                             padding: const EdgeInsets.all(12),
@@ -416,83 +394,34 @@ class CatalogScreen extends StatelessWidget {
                                               fontSize: 16,
                                             ),
                                           ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              prov.toggleCompareProduct(
-                                                product.id,
-                                              );
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                SnackBar(
-                                                  duration: const Duration(
-                                                    seconds: 2,
-                                                  ),
-                                                  action: SnackBarAction(
-                                                    label: 'Xem so sánh',
-                                                    onPressed: () {
-                                                      Navigator.of(
-                                                        context,
-                                                      ).push(
-                                                        MaterialPageRoute(
-                                                          builder: (_) =>
-                                                              const ComparePhonesScreen(),
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                  content: Text(
-                                                    isCompared
-                                                        ? 'Đã bỏ ${ProductDisplay.shortName(product.name)} khỏi so sánh'
-                                                        : 'Đã thêm vào danh sách so sánh!',
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 9,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFF1F5F9),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: const Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                  'Chi tiết',
+                                                  style: TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w700,
+                                                    color: AppColors.brand700,
                                                   ),
                                                 ),
-                                              );
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.symmetric(
-                                                horizontal: 9,
-                                                vertical: 4,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: isCompared
-                                                    ? AppColors.brand700
-                                                    : Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(6),
-                                                border: Border.all(
+                                                SizedBox(width: 2),
+                                                Icon(
+                                                  Icons.chevron_right_rounded,
+                                                  size: 14,
                                                   color: AppColors.brand700,
-                                                  width: 1,
                                                 ),
-                                              ),
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Icon(
-                                                    isCompared
-                                                        ? Icons.check_rounded
-                                                        : Icons
-                                                            .compare_arrows_rounded,
-                                                    size: 13,
-                                                    color: isCompared
-                                                        ? Colors.white
-                                                        : AppColors.brand700,
-                                                  ),
-                                                  const SizedBox(width: 4),
-                                                  Text(
-                                                    isCompared
-                                                        ? 'Đã chọn'
-                                                        : 'So sánh',
-                                                    style: TextStyle(
-                                                      fontSize: 11,
-                                                      fontWeight: FontWeight.w700,
-                                                      color: isCompared
-                                                        ? Colors.white
-                                                        : AppColors.brand700,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                              ],
                                             ),
                                           ),
                                         ],

@@ -26,12 +26,6 @@ class ProductProvider extends ChangeNotifier {
   bool _onlyInStock = false;
   ProductSortOption _sortOption = ProductSortOption.bestSelling;
 
-  // Danh sách so sánh điện thoại (Stage 3)
-  final Set<String> _comparedProductIds = {
-    'iphone_16_pro_max',
-    'samsung_s25_ultra',
-  };
-
   bool _isLoading = false;
 
   ProductProvider({ProductRepository? productRepository})
@@ -61,10 +55,6 @@ class ProductProvider extends ChangeNotifier {
   List<BannerModel> get allBannersAdmin =>
       _productRepository.getBanners(includeInactive: true);
   List<CouponModel> get coupons => _productRepository.getCoupons();
-
-  Set<String> get comparedProductIds => Set.unmodifiable(_comparedProductIds);
-  List<ProductModel> get comparedProducts =>
-      _allProducts.where((p) => _comparedProductIds.contains(p.id)).toList();
 
   /// Áp dụng đồng thời Tìm kiếm (F06), Bộ lọc (F07) và Sắp xếp (F08)
   List<ProductModel> get filteredProducts {
@@ -195,18 +185,6 @@ class ProductProvider extends ChangeNotifier {
 
   void selectVariant(VariantModel variant) {
     _selectedVariant = variant;
-    notifyListeners();
-  }
-
-  void toggleCompareProduct(String productId) {
-    if (_comparedProductIds.contains(productId)) {
-      _comparedProductIds.remove(productId);
-    } else {
-      if (_comparedProductIds.length >= 3) {
-        _comparedProductIds.remove(_comparedProductIds.first);
-      }
-      _comparedProductIds.add(productId);
-    }
     notifyListeners();
   }
 
