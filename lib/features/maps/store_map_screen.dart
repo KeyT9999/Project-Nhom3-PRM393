@@ -82,19 +82,19 @@ class _StoreMapScreenState extends State<StoreMapScreen> {
   }
 
   void _zoomIn() {
+    final nextZoom = (_mapController.camera.zoom + 1).clamp(10.0, 19.0);
     setState(() {
-      _currentZoom = (_currentZoom + 1).clamp(10.0, 19.0);
+      _currentZoom = nextZoom;
     });
-    final target = _branches[_selectedBranchIndex];
-    _mapController.move(target.latLng, _currentZoom);
+    _mapController.move(_mapController.camera.center, nextZoom);
   }
 
   void _zoomOut() {
+    final nextZoom = (_mapController.camera.zoom - 1).clamp(10.0, 19.0);
     setState(() {
-      _currentZoom = (_currentZoom - 1).clamp(10.0, 19.0);
+      _currentZoom = nextZoom;
     });
-    final target = _branches[_selectedBranchIndex];
-    _mapController.move(target.latLng, _currentZoom);
+    _mapController.move(_mapController.camera.center, nextZoom);
   }
 
   void _recenter() {
